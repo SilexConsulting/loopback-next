@@ -37,7 +37,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/strongloop/loopback-next.git",
-    "directory": "packages/authentication"
+    "directory": "extensions/authentication-passport"
   },
   "dependencies": {
     "@loopback/authentication": "^3.0.0",

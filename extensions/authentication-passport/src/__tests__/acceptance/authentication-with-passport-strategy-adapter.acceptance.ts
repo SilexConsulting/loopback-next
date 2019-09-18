@@ -115,6 +115,7 @@ describe('Basic Authentication', () => {
         [CoreTags.EXTENSION_FOR]:
           AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
       });
+
     server = await app.getServer(RestServer);
   }
 
