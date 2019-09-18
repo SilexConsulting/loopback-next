@@ -16,7 +16,7 @@ import {AuthenticateOptions, Strategy} from 'passport';
 export class MockPassportStrategy extends Strategy {
   // user to return for successful authentication
   private mockUser: UserProfile;
-  public name: string = 'mock-strategy';
+  public name = 'mock-strategy';
 
   setMockUser(userObj: UserProfile) {
     this.mockUser = userObj;
