@@ -10,6 +10,7 @@ import {
   AuthenticationComponent,
   AUTHENTICATION_STRATEGY_NOT_FOUND,
   USER_PROFILE_NOT_FOUND,
+  registerAuthenticationStrategy,
 } from '@loopback/authentication';
 import {UserProfile, securityId} from '@loopback/security';
 import {inject} from '@loopback/context';
@@ -115,6 +116,7 @@ describe('Basic Authentication', () => {
         [CoreTags.EXTENSION_FOR]:
           AuthenticationBindings.AUTHENTICATION_STRATEGY_EXTENSION_POINT_NAME,
       });
+
     server = await app.getServer(RestServer);
   }
 

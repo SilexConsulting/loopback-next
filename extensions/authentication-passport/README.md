@@ -1,12 +1,12 @@
 # Passport Strategy Adapter
 
-_Important: We strongly suggest that users understand LoopBack's
+_Important: We strongly recommend that users learn LoopBack's
 [authentication system](https://loopback.io/doc/en/lb4/Loopback-component-authentication.html)
-before using this module_
+before using this module._
 
 This is an adapter module created for plugging in
 [`passport`](https://www.npmjs.com/package/passport) based strategies to the
-authentication system in `@loopback/authentication@2.x`.
+authentication system in `@loopback/authentication@3.x`.
 
 ## Installation
 
@@ -16,7 +16,7 @@ npm i @loopback/authentication-passport --save
 
 ## Background
 
-`@loopback/authentication@2.x` allows users to register authentication
+`@loopback/authentication@3.x` allows users to register authentication
 strategies that implement the interface
 [`AuthenticationStrategy`](https://apidocs.strongloop.com/@loopback%2fdocs/authentication.html#AuthenticationStrategy)
 
@@ -48,7 +48,7 @@ function verify(username: string, password: string, cb: Function) {
 const basicStrategy = new BasicStrategy(verify);
 ```
 
-It's a similar configuration as you do when adding a strategy to a `passport` by
+It's a similar configuration as you add a strategy to a `passport` by
 calling `passport.use()`.
 
 2. Apply the adapter to the strategy
