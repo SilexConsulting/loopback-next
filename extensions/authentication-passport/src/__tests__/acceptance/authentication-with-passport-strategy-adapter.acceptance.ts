@@ -47,17 +47,17 @@ describe('Basic Authentication', () => {
   it('authenticates successfully for correct credentials', async () => {
     const client = whenIMakeRequestTo(server);
     const credential =
-      users.list.joe.profile[securityId] + ':' + users.list.joe.password;
+      users.list.joe.profile.id + ':' + users.list.joe.password;
     const hash = Buffer.from(credential).toString('base64');
     await client
       .get('/whoAmI')
       .set('Authorization', 'Basic ' + hash)
-      .expect(users.list.joe.profile[securityId]);
+      .expect(users.list.joe.profile.id);
   });
 
   it('returns error for invalid credentials', async () => {
     const client = whenIMakeRequestTo(server);
-    const credential = users.list.Simpson.profile[securityId] + ':' + 'invalid';
+    const credential = users.list.Simpson.profile.id + ':' + 'invalid';
     const hash = Buffer.from(credential).toString('base64');
     await client
       .get('/whoAmI')
@@ -79,13 +79,12 @@ describe('Basic Authentication', () => {
       .expect(200, {running: true});
   });
 
-  // FIXME: In a real database the column/field won't be a symbol
   function givenUserRepository() {
     users = new UserRepository({
-      joe: {profile: {[securityId]: 'joe'}, password: '12345'},
-      Simpson: {profile: {[securityId]: 'sim123'}, password: 'alpha'},
-      Flinstone: {profile: {[securityId]: 'Flint'}, password: 'beta'},
-      George: {profile: {[securityId]: 'Curious'}, password: 'gamma'},
+      joe: {profile: {id: 'joe'}, password: '12345'},
+      Simpson: {profile: {id: 'sim123'}, password: 'alpha'},
+      Flinstone: {profile: {id: 'Flint'}, password: 'beta'},
+      George: {profile: {id: 'Curious'}, password: 'gamma'},
     });
   }
 
@@ -99,10 +98,18 @@ describe('Basic Authentication', () => {
   function verify(username: string, password: string, cb: Function) {
     users.find(username, password, cb);
   }
+
+  function converter(user: UserProfileInDB): UserProfile {
+    let userProfile = Object.assign({}, user, {[securityId]: user.id});
+    delete userProfile.id;
+    return userProfile;
+  }
+
   const basicStrategy = new BasicStrategy(verify);
   const basicAuthStrategy = new StrategyAdapter(
     basicStrategy,
     AUTH_STRATEGY_NAME,
+    converter
   );
 
   async function givenAServer() {
@@ -217,14 +224,15 @@ describe('Basic Authentication', () => {
   }
 });
 
+type UserProfileInDB = Omit<UserProfile, typeof securityId> & {id: string};
 class UserRepository {
   constructor(
-    readonly list: {[key: string]: {profile: UserProfile; password: string}},
+    readonly list: {[key: string]: {profile: UserProfileInDB; password: string}},
   ) {}
   find(username: string, password: string, cb: Function): void {
     const userList = this.list;
     function search(key: string) {
-      return userList[key].profile[securityId] === username;
+      return userList[key].profile.id === username;
     }
     const found = Object.keys(userList).find(search);
     if (!found) return cb(null, false);
