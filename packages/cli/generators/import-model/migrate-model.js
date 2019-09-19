@@ -92,8 +92,6 @@ function importModelDefinition(modelCtor, log) {
 
      All other model settings should be copied as-is to LB4 model definition.
 
-     IMPORTANT: settings can be specified either at top-level or inside options
-     property, we need to support both flavors.
      Notable settings to test & support:
       - forceId
       - strict
@@ -107,9 +105,7 @@ function importModelDefinition(modelCtor, log) {
 
   // FIXME: parse LB3 "strict" setting
   templateData.allowAdditionalProperties = true;
-  templateData.modelSettings = stringifyModelSettings(
-    // FIXME: load model settings from top-level entries and `.options` prop
-    templateData.settings || {},
-  );
+
+  templateData.modelSettings = stringifyModelSettings(templateData.settings);
   return templateData;
 }
