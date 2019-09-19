@@ -75,6 +75,14 @@ export interface OrderRelations {
 export type OrderWithRelations = Order & OrderRelations;
 ```
 
+
+Definition of `belongsTo` relation can also include explicit `keyFrom`, `keyTo` and `name` attributes.
+
+- keyFrom is foreign key of the referenced model, whereas keyTo is primary key of referenced model, name is the referenced model name. Usage of keyFrom and keyTo in a belongsTo relation is similar to the use in legacy datasource juggler.
+- In the above example for the model Order, keyFrom is `customerId` and keyTo is `id`. keyFrom defaults to `{decorated-belongsTo-property-name}`, keyTo defaults to `id` and the referenced model name defaults to the decorated property name after stripping the trailing `Id` suffix.
+- In case in the above example, the property name `customerId` has to be customized to say `cust_id`, then the keyFrom,  keyTo and name values needs to be explicitly defined as `@belongsTo(() => Customer, { keyFrom: 'customerId', keyTo: 'id'}, { name: 'customer' })`.
+
+
 The definition of the `belongsTo` relation is inferred by using the `@belongsTo`
 decorator. The decorator takes in a function resolving the target model class
 constructor and designates the relation type. It also calls `property()` to
