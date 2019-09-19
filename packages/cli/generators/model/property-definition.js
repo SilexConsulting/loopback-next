@@ -5,12 +5,14 @@
 
 'use strict';
 
-module.exports = {
-  createPropertyTemplateData,
-};
-
 const TS_TYPES = ['string', 'number', 'object', 'boolean', 'any'];
 const NON_TS_TYPES = ['geopoint', 'date'];
+const BUILTIN_TYPES = [...TS_TYPES, ...NON_TS_TYPES];
+
+module.exports = {
+  createPropertyTemplateData,
+  BUILTIN_TYPES,
+};
 
 /**
  * Convert property definition in LB4 style to data needed by model template

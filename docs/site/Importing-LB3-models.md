@@ -17,8 +17,10 @@ A single model can be imported by running `lb4 import-model` command.
 
 ### Arguments
 
-`modelFile`: Path to the JSON file with model definition, e.g.
-`lb3app/common/models/my-model.json`.
+`lb3app`: Path to the directory containing your LoopBack 3.x application.
+
+**IMPORTANT** The generator loads the application via `require()`, it does not
+support applications that are unable to boot (throw errors).
 
 ### Options
 

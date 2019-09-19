@@ -79,7 +79,7 @@ module.exports = class ArtifactGenerator extends BaseGenerator {
    * >> Model MyModel will be created in src/models/my-model.model.ts
    **/
   promptClassFileName(type, typePlural, name) {
-    utils.printClassFileName(type, typePlural, name, this.log.bind(log));
+    utils.printClassFileName(type, typePlural, name, this.log.bind(this));
   }
 
   scaffold() {

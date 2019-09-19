@@ -9,19 +9,35 @@ const chalk = require('chalk');
 const path = require('path');
 const BaseGenerator = require('../../lib/base-generator');
 const modelUtils = require('../../lib/model-discoverer');
-const debug = require('../../lib/debug')('import-model-generator');
+const debug = require('../../lib/debug')('import-model');
 const utils = require('../../lib/utils');
+const {loadLb3App} = require('./lb3app-loader');
+const {importModelDefinition} = require('./migrate-model');
+
+// List of built-in LB models to exclude from the prompt
+const EXCLUDED_MODEL_NAMES = [
+  // base models
+  'Model',
+  'PersistedModel',
+  'KeyValueModel',
+  // change tracking & replication
+  'Change',
+  'Checkpoint',
+  // Email - a dummy model used to attach email-connector methods only
+  'Email',
+];
 
 module.exports = class ModelImporter extends BaseGenerator {
   constructor(args, opts) {
     super(args, opts);
 
-    this.argument('modelFile', {
+    this.argument('lb3app', {
       type: String,
       required: true,
       description:
-        'Path to the model JSON file to import, ' +
-        'e.g. "lb3app/common/models/{model-name}.json"',
+        'Path to your LoopBack 3.x application. ' +
+        'This can be a project directory (e.g. "my-lb3-app") or ' +
+        'the server file (e.g. "my-lb3-app/server/server.js").',
     });
 
     this.option('outDir', {
@@ -32,7 +48,7 @@ module.exports = class ModelImporter extends BaseGenerator {
   }
 
   async setOptions() {
-    this.modelFile = this.args[0];
+    this.sourceAppDir = this.args[0];
     this.artifactInfo.outDir = this.options.outDir;
     this.artifactInfo.relPath = path.relative(
       this.destinationPath(),
@@ -61,69 +77,70 @@ module.exports = class ModelImporter extends BaseGenerator {
     return super.checkLoopBackProject();
   }
 
-  async loadModelFile() {
-    if (this.shouldExit()) return;
-    this.log(`Loading LoopBack 3.x model from ${chalk.yellow(this.modelFile)}`);
-    const fullModelPath = path.resolve(this.destinationPath(), this.modelFile);
-    this.modelDefinition = this.fs.readJSON(fullModelPath);
+  async loadTheApp() {
+    this.lb3app = await loadLb3App(this.sourceAppDir);
+    this.modelRegistry = this.lb3app.registry.modelBuilder.models;
   }
 
-  async migrateModel() {
+  async promptModels() {
+    const modelNames = Object.keys(this.modelRegistry).filter(
+      canImportModelName,
+    );
+
+    debug('Available LB3 models', modelNames);
+
+    const prompts = [
+      {
+        name: 'modelNames',
+        message: 'Select models to import:',
+        type: 'checkbox',
+        choices: modelNames,
+        validate: result => !!result.length,
+        // TODO: add a CLI flag to supply these names programmatically
+      },
+    ];
+
+    const answers = await this.prompt(prompts);
+    debug('Models chosen:', answers.modelNames);
+    this.modelNames = answers.modelNames;
+  }
+
+  async migrateModels() {
     if (this.shouldExit()) return;
-    this.artifactInfo.name = this.modelDefinition.name;
-    const result = utils.validateClassName(this.artifactInfo.name);
-    if (!result) {
-      return this.exit(
-        `Cannot import model: the name ${this.artifactInfo.name} is not valid. ${result}`,
-      );
+    this.modelFiles = [];
+
+    try {
+      for (const name of this.modelNames) {
+        utils.printClassFileName('model', 'models', name, this.log.bind(this));
+
+        const templateData = importModelDefinition(
+          this.modelRegistry[name],
+          this.log.bind(this),
+        );
+        debug('LB4 model data', templateData);
+
+        const fileName = utils.getModelFileName(name);
+        const fullTargetPath = path.resolve(
+          this.artifactInfo.relPath,
+          fileName,
+        );
+        debug('Model %s output file', name, fullTargetPath);
+
+        this.copyTemplatedFiles(
+          modelUtils.MODEL_TEMPLATE_PATH,
+          fullTargetPath,
+          templateData,
+        );
+
+        this.modelFiles.push(fileName);
+      }
+    } catch (err) {
+      if (err.exit) {
+        this.exit(err.message);
+      } else {
+        throw err;
+      }
     }
-    utils.remindAboutNamingRules(this.artifactInfo.name, this.log.bind(this));
-
-    this.templateData = this.modelDefinition;
-
-    Object.entries(this.templateData.properties).forEach(([k, v]) =>
-      // FIXME: handle properties with array type, e.g. `{type: [object]}`
-      // We need to apply sanitization recursively on nested properties too
-      modelUtils.sanitizeProperty(v),
-    );
-
-    // FIXME: Handle missing PK property. In LB3, PK is typically defined at runtime by the connector
-
-    /* FIXME: The following base model classes should be recognized and mapped to LB4:
-      - Model -> Model
-      - PersistedModel -> Entity
-      - KeyValueModel -> (to be determined)
-    When the base model class is not recognized, the CLI should abort with a descriptive error.
-     */
-    this.templateData.modelBaseClass = 'Entity';
-    this.templateData.isModelBaseBuiltin = true;
-
-    this.templateData.className = utils.pascalCase(this.templateData.name);
-
-    /* FIXME
-    The following model settings should trigger a warning when a non-empty value is provided in LB3 model file:
-     - relations
-     - methods
-     - mixins
-     - acls
-
-     All other model settings should be copied as-is to LB4 model definition.
-
-     IMPORTANT: settings can be specified either at top-level or inside options
-     property, we need to support both flavors.
-     Notable settings to test & support:
-      - forceId
-      - strict
-      - connector-specific config like SQL table name and MongoDB collection name
-    */
-
-    // FIXME: parse LB3 "strict" setting
-    this.templateData.allowAdditionalProperties = true;
-    this.templateData.modelSettings = utils.stringifyModelSettings(
-      // FIXME: load model settings from top-level entries and `.options` prop
-      this.templateData.settings || {},
-    );
-    debug('LB4 model data', this.templateData);
   }
 
   /**
@@ -131,24 +148,6 @@ module.exports = class ModelImporter extends BaseGenerator {
    */
   async scaffold() {
     if (this.shouldExit()) return;
-    utils.printClassFileName(
-      'model',
-      'models',
-      this.artifactInfo.name,
-      this.log.bind(this),
-    );
-
-    const fullTargetPath = path.resolve(
-      this.artifactInfo.relPath,
-      utils.getModelFileName(this.artifactInfo.name),
-    );
-    debug('Output file', fullTargetPath);
-
-    this.copyTemplatedFiles(
-      modelUtils.MODEL_TEMPLATE_PATH,
-      fullTargetPath,
-      this.templateData,
-    );
   }
 
   async end() {
@@ -157,19 +156,19 @@ module.exports = class ModelImporter extends BaseGenerator {
       return;
     }
 
-    await this._updateIndexFile(
-      this.artifactInfo.outDir,
-      utils.getModelFileName(this.artifactInfo.name),
-    );
-
-    this.log();
-    this.log(
-      'Model',
-      chalk.yellow(this.artifactInfo.name),
-      'was created in',
-      chalk.yellow(`${this.artifactInfo.relPath}/`),
-    );
+    for (const f of this.modelFiles) {
+      await this._updateIndexFile(this.artifactInfo.outDir, f);
+    }
 
     await super.end();
   }
 };
+
+function canImportModelName(name) {
+  if (EXCLUDED_MODEL_NAMES.includes(name)) return false;
+  // TODO: find out where are anonymous models coming from
+  // (perhaps from object types defined inside property definitions?)
+  // and add test cases to verify that we are handling those scenarios correctly
+  if (name.startsWith('AnonymousModel_')) return false;
+  return true;
+}
