@@ -216,6 +216,23 @@ export function RepositoryMixin<T extends Class<any>>(superClass: T) {
           debug('Skipping migration of dataSource %s', b.key);
         }
       }
+
+      // LB3 datasources
+      const lb3App = await this.get('lb3App');
+      const lb3Ds = lb3App && lb3App.datasources;
+      if (lb3Ds) {
+        const processedDs: string[] = [];
+        Object.keys(lb3Ds).forEach(async key => {
+          key = key.toLowerCase();
+          if (!processedDs.includes(key)) {
+            const ds = lb3Ds[key];
+            if (operation in ds && typeof ds[operation] === 'function') {
+              await ds[operation](options.models);
+              processedDs.push(key);
+            }
+          }
+        });
+      }
     }
   };
 }

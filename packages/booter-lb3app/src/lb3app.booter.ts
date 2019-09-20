@@ -62,6 +62,8 @@ export class Lb3AppBooter implements Booter {
       this.mountRoutesOnly(lb3App, spec);
     }
 
+    this.app.bind('lb3App').to(lb3App);
+
     // TODO(bajtos) Listen for the following events to update the OpenAPI spec:
     // - modelRemoted
     // - modelDeleted
