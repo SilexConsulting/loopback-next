@@ -9,7 +9,7 @@ const chalk = require('chalk');
 const path = require('path');
 const BaseGenerator = require('../../lib/base-generator');
 const modelUtils = require('../../lib/model-discoverer');
-const debug = require('../../lib/debug')('import-model');
+const debug = require('../../lib/debug')('import-lb3-model');
 const utils = require('../../lib/utils');
 const {loadLb3App} = require('./lb3app-loader');
 const {importModelDefinition} = require('./migrate-model');
@@ -27,7 +27,7 @@ const EXCLUDED_MODEL_NAMES = [
   'Email',
 ];
 
-module.exports = class ModelImporter extends BaseGenerator {
+module.exports = class Lb3ModelImporter extends BaseGenerator {
   constructor(args, opts) {
     super(args, opts);
 

@@ -5,7 +5,7 @@
 
 'use strict';
 
-const debug = require('../../lib/debug')('import-model');
+const debug = require('../../lib/debug')('import-lb3-model');
 const path = require('path');
 const pEvent = require('p-event');
 

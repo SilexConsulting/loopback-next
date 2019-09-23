@@ -13,7 +13,7 @@ Available commands:
   lb4 extension
   lb4 controller
   lb4 datasource
-  lb4 import-model
+  lb4 import-lb3-model
   lb4 model
   lb4 repository
   lb4 service
@@ -32,7 +32,7 @@ Available commands:
   lb4 extension
   lb4 controller
   lb4 datasource
-  lb4 import-model
+  lb4 import-lb3-model
   lb4 model
   lb4 repository
   lb4 service

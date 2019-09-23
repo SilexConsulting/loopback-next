@@ -13,7 +13,7 @@ LoopBack 3 models into your LoopBack 4 project.
 
 ## Overview
 
-A single model can be imported by running `lb4 import-model` command.
+A single model can be imported by running `lb4 import-lb3-model` command.
 
 ### Arguments
 

@@ -63,8 +63,8 @@ function setupGenerators() {
     PREFIX + 'datasource',
   );
   env.register(
-    path.join(__dirname, '../generators/import-model'),
-    PREFIX + 'import-model',
+    path.join(__dirname, '../generators/import-lb3-model'),
+    PREFIX + 'import-lb3-model',
   );
   env.register(path.join(__dirname, '../generators/model'), PREFIX + 'model');
   env.register(
