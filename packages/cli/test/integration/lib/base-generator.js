@@ -11,12 +11,14 @@ const path = require('path');
 const mockStdin = require('mock-stdin');
 const process = require('process');
 
-module.exports = function(generator) {
+module.exports = function(generator, env = {}) {
+  if (!env.args) env.args = [];
+
   return function() {
     describe('usage', () => {
       it('prints lb4', () => {
         process.chdir(path.resolve(__dirname, '..', '..', '..'));
-        const gen = testUtils.testSetUpGen(generator);
+        const gen = testUtils.testSetUpGen(generator, env);
         const helpText = gen.help();
         assert(helpText.match(/lb4 /));
         assert(!helpText.match(/loopback4:/));
@@ -25,17 +27,17 @@ module.exports = function(generator) {
 
     describe('exit', () => {
       it('does nothing if false is passed', () => {
-        const gen = testUtils.testSetUpGen(generator);
+        const gen = testUtils.testSetUpGen(generator, env);
         gen.exit(false);
         assert(gen.exitGeneration === undefined);
       });
       it('sets "exitGeneration" to true if called with no argument', () => {
-        const gen = testUtils.testSetUpGen(generator);
+        const gen = testUtils.testSetUpGen(generator, env);
         gen.exit();
         assert(gen.exitGeneration === true);
       });
       it('sets "exitGeneration" to the error passed to itself', () => {
-        const gen = testUtils.testSetUpGen(generator);
+        const gen = testUtils.testSetUpGen(generator, env);
         gen.exit(new Error('oh no'));
         assert(gen.exitGeneration instanceof Error);
         assert.equal(gen.exitGeneration.message, 'oh no');
@@ -51,7 +53,7 @@ module.exports = function(generator) {
       it('accepts --config', async () => {
         const jsonFile = path.join(__dirname, 'base-config.json');
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--config', jsonFile],
+          args: ['--config', jsonFile, ...env.args],
         });
         await gen.setOptions();
         assert.equal(gen.options['config'], jsonFile);
@@ -61,7 +63,7 @@ module.exports = function(generator) {
       it('options from json file do not override', async () => {
         const jsonFile = path.join(__dirname, 'base-config.json');
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--name', 'abc', '--config', jsonFile],
+          args: ['--name', 'abc', '--config', jsonFile, ...env.args],
         });
         await gen.setOptions();
         assert.equal(gen.options['config'], jsonFile);
@@ -71,7 +73,11 @@ module.exports = function(generator) {
 
       it('fails fast if --config has invalid value', async () => {
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--config', path.join(__dirname, 'base-config-invalid.json')],
+          args: [
+            '--config',
+            path.join(__dirname, 'base-config-invalid.json'),
+            ...env.args,
+          ],
         });
         await gen.setOptions();
         assert(gen.exitGeneration instanceof Error);
@@ -91,7 +97,7 @@ module.exports = function(generator) {
 
       it('accepts --config', async () => {
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--config', jsonValue],
+          args: ['--config', jsonValue, ...env.args],
         });
         await gen.setOptions();
         assert.equal(gen.options['config'], jsonValue);
@@ -100,7 +106,7 @@ module.exports = function(generator) {
 
       it('options from json file do not override', async () => {
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--name', 'abc', '--config', jsonValue],
+          args: ['--name', 'abc', '--config', jsonValue, ...env.args],
         });
         await gen.setOptions();
         assert.equal(gen.options['config'], jsonValue);
@@ -110,7 +116,7 @@ module.exports = function(generator) {
 
       it('fails fast if --config has invalid value', async () => {
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--config', invalidJsonValue],
+          args: ['--config', invalidJsonValue, ...env.args],
         });
         await gen.setOptions();
         assert(gen.exitGeneration instanceof Error);
@@ -134,7 +140,7 @@ module.exports = function(generator) {
 
       it('accepts --config stdin', () => {
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--config', 'stdin'],
+          args: ['--config', 'stdin', ...env.args],
         });
         const promise = gen.setOptions();
         assert.equal(gen.options['config'], 'stdin');
@@ -151,7 +157,7 @@ module.exports = function(generator) {
 
       it('reports invalid json from stdin', () => {
         const gen = testUtils.testSetUpGen(generator, {
-          args: ['--config', 'stdin'],
+          args: ['--config', 'stdin', ...env.args],
         });
         const promise = gen.setOptions();
         assert.equal(gen.options['config'], 'stdin');

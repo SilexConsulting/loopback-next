@@ -18,7 +18,7 @@ const {
 } = require('../model/property-definition');
 
 module.exports = {
-  importModelDefinition,
+  importLb3ModelDefinition,
 };
 
 /**
@@ -27,7 +27,7 @@ module.exports = {
  * @param {(msg: string, ...args: any) => void} log Logging function
  * @returns {object} Template data for model source file template
  */
-function importModelDefinition(modelCtor, log) {
+function importLb3ModelDefinition(modelCtor, log) {
   const modelName = modelCtor.modelName;
   const result = validateClassName(modelName);
   if (!result) {
@@ -80,6 +80,7 @@ function importModelDefinition(modelCtor, log) {
      */
   templateData.modelBaseClass = 'Entity';
   templateData.isModelBaseBuiltin = true;
+  delete templateData.settings.base;
 
   templateData.className = pascalCase(modelName);
 
@@ -105,6 +106,17 @@ function importModelDefinition(modelCtor, log) {
 
   // FIXME: parse LB3 "strict" setting
   templateData.allowAdditionalProperties = true;
+
+  if (templateData.settings.forceId === 'auto') {
+    // The value 'auto' is used when a parent model wants to let the child
+    // model make the decision automatically, depending on whether the child
+    // model has a database-generated PK.
+    // See https://github.com/strongloop/loopback-datasource-juggler/blob/15251880a1d07ccc2ca6d2dccdd065d00a7375eb/lib/model-builder.js#L347-L355
+    //
+    // Let's delete the flag from the generated model settings and
+    // leave it up to the runtime to decide.
+    delete templateData.settings.forceId;
+  }
 
   templateData.modelSettings = stringifyModelSettings(templateData.settings);
   return templateData;

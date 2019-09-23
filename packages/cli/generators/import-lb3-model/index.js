@@ -12,20 +12,8 @@ const modelUtils = require('../../lib/model-discoverer');
 const debug = require('../../lib/debug')('import-lb3-model');
 const utils = require('../../lib/utils');
 const {loadLb3App} = require('./lb3app-loader');
-const {importModelDefinition} = require('./migrate-model');
-
-// List of built-in LB models to exclude from the prompt
-const EXCLUDED_MODEL_NAMES = [
-  // base models
-  'Model',
-  'PersistedModel',
-  'KeyValueModel',
-  // change tracking & replication
-  'Change',
-  'Checkpoint',
-  // Email - a dummy model used to attach email-connector methods only
-  'Email',
-];
+const {importLb3ModelDefinition} = require('./migrate-model');
+const {canImportModelName} = require('./model-names');
 
 module.exports = class Lb3ModelImporter extends BaseGenerator {
   constructor(args, opts) {
@@ -111,10 +99,23 @@ module.exports = class Lb3ModelImporter extends BaseGenerator {
 
     try {
       for (const name of this.modelNames) {
+        // TODO verify that `name` is in `this.modelRegistry`
+        // This is important for JSON input & integration tests
         utils.printClassFileName('model', 'models', name, this.log.bind(this));
+        const modelCtor = this.modelRegistry[name];
+        if (typeof modelCtor !== 'function') {
+          const availableModels = Object.keys(this.modelRegistry)
+            .filter(canImportModelName)
+            .join(', ');
 
-        const templateData = importModelDefinition(
-          this.modelRegistry[name],
+          this.exit(
+            `Unknown model name ${name}. Available models: ${availableModels}.`,
+          );
+          return;
+        }
+
+        const templateData = importLb3ModelDefinition(
+          modelCtor,
           this.log.bind(this),
         );
         debug('LB4 model data', templateData);
@@ -163,12 +164,3 @@ module.exports = class Lb3ModelImporter extends BaseGenerator {
     await super.end();
   }
 };
-
-function canImportModelName(name) {
-  if (EXCLUDED_MODEL_NAMES.includes(name)) return false;
-  // TODO: find out where are anonymous models coming from
-  // (perhaps from object types defined inside property definitions?)
-  // and add test cases to verify that we are handling those scenarios correctly
-  if (name.startsWith('AnonymousModel_')) return false;
-  return true;
-}
