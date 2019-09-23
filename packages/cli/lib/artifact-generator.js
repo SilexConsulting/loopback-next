@@ -7,7 +7,6 @@
 const BaseGenerator = require('./base-generator');
 const debug = require('./debug')('artifact-generator');
 const utils = require('./utils');
-const updateIndex = require('./update-index');
 const path = require('path');
 const chalk = require('chalk');
 
