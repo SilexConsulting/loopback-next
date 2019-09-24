@@ -348,6 +348,7 @@ export function modelToJsonSchema<T extends object>(
   if (meta.description) {
     result.description = meta.description;
   }
+  result.type = 'object';
 
   for (const p in meta.properties) {
     if (options.exclude && options.exclude.includes(p as keyof T)) {

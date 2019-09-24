@@ -350,6 +350,7 @@ describe('build-schema', () => {
           expect(jsonSchema.definitions).to.deepEqual({
             CustomType: {
               title: 'CustomType',
+              type: 'object',
               properties: {
                 prop: {
                   type: 'string',
@@ -406,6 +407,7 @@ describe('build-schema', () => {
           expect(jsonSchema.definitions).to.deepEqual({
             CustomType: {
               title: 'CustomType',
+              type: 'object',
               properties: {
                 prop: {
                   type: 'string',
@@ -478,6 +480,7 @@ describe('build-schema', () => {
           expect(jsonSchema.definitions).to.deepEqual({
             Address: {
               title: 'Address',
+              type: 'object',
               properties: {
                 city: {
                   type: 'string',
@@ -569,6 +572,7 @@ describe('build-schema', () => {
           expect(schemaDefs).to.deepEqual({
             CustomTypeFoo: {
               title: 'CustomTypeFoo',
+              type: 'object',
               properties: {
                 prop: {
                   type: 'string',
@@ -577,6 +581,7 @@ describe('build-schema', () => {
             },
             CustomTypeBar: {
               title: 'CustomTypeBar',
+              type: 'object',
               properties: {
                 prop: {
                   type: 'array',
@@ -607,6 +612,7 @@ describe('build-schema', () => {
 
       const expectedSchema = {
         title: 'Category',
+        type: 'object',
         properties: {
           products: {
             type: 'array',
@@ -616,6 +622,7 @@ describe('build-schema', () => {
         definitions: {
           Product: {
             title: 'Product',
+            type: 'object',
             properties: {
               category: {
                 $ref: '#/definitions/Category',
@@ -723,6 +730,7 @@ describe('build-schema', () => {
 
       const expectedSchemaForCategory = {
         title: 'Category',
+        type: 'object',
         properties: {
           products: {
             type: 'array',
@@ -732,6 +740,7 @@ describe('build-schema', () => {
         definitions: {
           Product: {
             title: 'Product',
+            type: 'object',
             properties: {
               category: {
                 $ref: '#/definitions/Category',
@@ -770,6 +779,7 @@ describe('build-schema', () => {
         definitions: {
           ProductWithRelations: {
             title: 'ProductWithRelations',
+            type: 'object',
             properties: {
               id: {type: 'number'},
               categoryId: {type: 'number'},
@@ -785,6 +795,7 @@ describe('build-schema', () => {
           },
         },
         title: 'CategoryWithRelations',
+        type: 'object',
       };
       const jsonSchema = getJsonSchema(Category, {includeRelations: true});
       expect(jsonSchema).to.deepEqual(expectedSchema);
@@ -809,6 +820,7 @@ describe('build-schema', () => {
         definitions: {
           ProductWithRelations: {
             title: 'ProductWithRelations',
+            type: 'object',
             properties: {
               id: {type: 'number'},
               categoryId: {type: 'number'},
@@ -825,6 +837,7 @@ describe('build-schema', () => {
           },
         },
         title: 'CategoryWithoutPropWithRelations',
+        type: 'object',
       };
 
       // To check for case when there are no other properties than relational
@@ -857,6 +870,7 @@ describe('build-schema', () => {
         definitions: {
           ProductWithRelations: {
             title: 'ProductWithRelations',
+            type: 'object',
             properties: {
               id: {type: 'number'},
               categoryId: {type: 'number'},
@@ -873,6 +887,7 @@ describe('build-schema', () => {
           },
         },
         title: 'CategoryWithRelations',
+        type: 'object',
       };
       MetadataInspector.defineMetadata(
         JSON_SCHEMA_KEY,
@@ -906,6 +921,7 @@ describe('build-schema', () => {
         definitions: {
           ProductWithRelations: {
             title: 'ProductWithRelations',
+            type: 'object',
             properties: {
               id: {type: 'number'},
               categoryId: {type: 'number'},
@@ -922,6 +938,7 @@ describe('build-schema', () => {
           },
         },
         title: 'CategoryWithRelations',
+        type: 'object',
       };
       MetadataInspector.defineMetadata(
         JSON_SCHEMA_KEY,
@@ -936,6 +953,7 @@ describe('build-schema', () => {
           id: {type: 'number'},
         },
         title: 'Category',
+        type: 'object',
       });
     });
 
