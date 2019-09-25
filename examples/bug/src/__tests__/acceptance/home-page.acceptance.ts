@@ -20,6 +20,50 @@ describe('HomePage', () => {
       .expect(200)
       .expect('Content-Type', /text\/html/);
   });
+  it('should validate a good document', async () => {
+    await client
+      .post('/orders' )
+      .send(
+        {
+          "orderNumber": "12341",
+
+          "customer": {
+            "id": 0,
+            "name": "Customer 0"
+          }
+        }
+      )
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+  });
+
+  it('should not validate a document with an empty customer object', async () => {
+    await client
+      .post('/orders' )
+      .send(
+        {
+          "orderNumber": "12341",
+
+          "customer": {}
+        }
+      )
+      .expect(422)
+      .expect('Content-Type', /application\/json/);
+  });
+
+  it('should not validate a document with an empty customer field', async () => {
+    await client
+      .post('/orders' )
+      .send(
+        {
+          "orderNumber": "12341",
+
+          "customer": ""
+        }
+      )
+      .expect(422)
+      .expect('Content-Type', /application\/json/);
+  });
 
   it('exposes self-hosted explorer', async () => {
     await client
