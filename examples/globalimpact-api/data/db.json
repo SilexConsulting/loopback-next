@@ -1,0 +1,12 @@
+{
+  "ids": {
+    "UserCredentials": 12,
+    "User": 12
+  },
+  "models": {
+    "UserCredentials": {
+    },
+    "User": {
+    }
+  }
+}
