@@ -8,11 +8,13 @@ import {StrategyAdapter} from '@loopback/authentication-passport';
 import {Request, RedirectRoute} from '@loopback/rest';
 import {UserProfile, securityId} from '@loopback/security';
 import {User} from '../models';
+import {inject} from '@loopback/core';
 import {bind} from '@loopback/context';
 import {Strategy, IVerifyOptions} from 'passport-local';
 import {repository} from '@loopback/repository';
 import {UserRepository} from '../repositories';
 import {PasswordHasher} from '../services/hash.password.bcryptjs';
+import {PasswordHasherBindings} from '../keys';
 
 @bind(asAuthStrategy)
 export class LocalAuthStrategy implements AuthenticationStrategy {
@@ -26,6 +28,7 @@ export class LocalAuthStrategy implements AuthenticationStrategy {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
   ) {
     /**
