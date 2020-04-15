@@ -247,4 +247,52 @@ export class UserController {
 
     return {token};
   }
+
+  /***
+  @post('/signup')
+  async signup(
+    @requestBody({
+      description: 'signup user locally',
+      required: true,
+      content: {
+        'application/x-www-form-urlencoded': {schema: CredentialsSchema},
+      },
+    })
+      credentials: Credentials,
+    @inject(RestBindings.Http.RESPONSE) response: Response,
+  ) {
+    let userCredentials;
+    try {
+      userCredentials = await this.userCredentialsRepository.findById(
+        credentials.email,
+      );
+    } catch (err) {
+      if (err.code !== 'ENTITY_NOT_FOUND') {
+        throw err;
+      }
+    }
+    if (!userCredentials) {
+      const user = await this.userRepository.create({
+        email: credentials.email,
+        username: credentials.email,
+        name: credentials.name,
+      });
+      userCredentials = await this.userCredentialsRepository.create({
+        id: credentials.email,
+        password: credentials.password,
+        userId: user.id,
+      });
+      response.redirect('/login');
+      return response;
+    } else {
+      /**
+       * The express app that routed the /signup call to LB App, will handle the error event.
+       * /
+      response.emit(
+        'User Exists',
+        credentials.email + ' is already registered',
+      );
+      return response;
+    }
+  }*/
 }

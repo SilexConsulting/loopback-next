@@ -73,6 +73,15 @@ export class GlobalimpactApiApplication extends BootMixin(
 ) {
   constructor(options?: ApplicationConfig) {
     super(options);
+    options = options ? options : {};
+    const oauth2Providers = require('../oauth2-providers');
+    options.facebookOptions = oauth2Providers['facebook-login'];
+    options.googleOptions = oauth2Providers['google-login'];
+    options.oauth2Options = oauth2Providers['oauth2'];
+
+
+    this.bind('facebookOAuth2Options').to(options.facebookOptions);;
+    this.bind('customOAuth2Options').to(options.oauth2Options);
 
     this.basePath('/api');
 
