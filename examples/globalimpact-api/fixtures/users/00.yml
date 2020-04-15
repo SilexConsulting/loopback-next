@@ -1,4 +1,4 @@
 email: admin@example.com
-firstName: Administrator
+name: Administrator
 password: admin12345678
 roles: ['admin']

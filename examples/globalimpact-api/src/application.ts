@@ -40,8 +40,12 @@ import {
 import {MyAuthenticationSequence} from './sequence';
 import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTService} from './services/jwt-service';
-import {MyUserService} from './services/user-service';
+import {PassportUserIdentityService} from './services/user.service';
 import YAML = require('yaml');
+import {FaceBookOauth2Authorization} from './authentication-strategies/facebook';
+import {Oauth2AuthStrategy} from './authentication-strategies/oauth2';
+import {LocalAuthStrategy} from './authentication-strategies/local';
+import {SessionStrategy} from './authentication-strategies/session';
 
 /**
  * Information from package.json
@@ -123,7 +127,15 @@ export class GlobalimpactApiApplication extends BootMixin(
     this.bind(PasswordHasherBindings.ROUNDS).to(10);
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
 
-    this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(PassportUserIdentityService);
+    this.bind(UserServiceBindings.PASSPORT_USER_IDENTITY_SERVICE).toClass(
+      PassportUserIdentityService,
+    );
+    this.add(createBindingFromClass(LocalAuthStrategy));
+    this.add(createBindingFromClass(FaceBookOauth2Authorization));
+    this.add(createBindingFromClass(Oauth2AuthStrategy));
+    this.add(createBindingFromClass(SessionStrategy));
+
   }
 
   async start() {

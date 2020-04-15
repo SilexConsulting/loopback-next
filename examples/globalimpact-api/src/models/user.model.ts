@@ -5,6 +5,7 @@
 
 import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
+import {UserIdentity} from './user-identity.model';
 
 @model({
   settings: {
@@ -22,10 +23,11 @@ import {UserCredentials} from './user-credentials.model';
 })
 export class User extends Entity {
   @property({
-    type: 'string',
+    type: 'number',
     id: true,
+    generated: true,
   })
-  id: string;
+  id: number;
 
   @property({
     type: 'string',
@@ -40,15 +42,31 @@ export class User extends Entity {
   @property({
     type: 'string',
   })
-  firstName?: string;
+  name?: string;
 
   @property({
     type: 'string',
   })
-  lastName?: string;
+  realm?: string;
+
+  @property({
+    type: 'boolean',
+  })
+  emailVerified?: boolean;
+
+  @property({
+    type: 'string',
+  })
+  verificationToken?: string;
+
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
+
+  @hasMany(() => UserIdentity)
+  profiles?: UserIdentity[];
+
+
 
   @property({
     type: 'array',

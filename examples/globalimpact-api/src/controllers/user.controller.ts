@@ -141,7 +141,7 @@ export class UserController {
   async set(
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
-    @param.path.string('userId') userId: string,
+    @param.path.number('userId') userId: number,
     @requestBody({description: 'update user'}) user: User,
   ): Promise<void> {
     try {
@@ -176,7 +176,7 @@ export class UserController {
     allowedRoles: ['admin', 'user'],
     voters: [basicAuthorization],
   })
-  async findById(@param.path.string('userId') userId: string): Promise<User> {
+  async findById(@param.path.number('userId') userId: number): Promise<User> {
     return this.userRepository.findById(userId);
   }
 
@@ -201,7 +201,7 @@ export class UserController {
     // (@jannyHou)FIXME: explore a way to generate OpenAPI schema
     // for symbol property
 
-    const userId = currentUserProfile[securityId];
+    const userId = Number(currentUserProfile[securityId]);
     return this.userRepository.findById(userId);
   }
 

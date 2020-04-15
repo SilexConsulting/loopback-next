@@ -8,6 +8,8 @@ import {PasswordHasher} from './services/hash.password.bcryptjs';
 import {TokenService, UserService} from '@loopback/authentication';
 import {User} from './models';
 import {Credentials} from './repositories';
+import {Profile as PassportProfile} from 'passport';
+import {UserIdentityService} from '@loopback/authentication';
 
 export namespace TokenServiceConstants {
   export const TOKEN_SECRET_VALUE = process.env.TOKEN_SECRET || 'token_secret';
@@ -28,13 +30,18 @@ export namespace TokenServiceBindings {
 
 export namespace PasswordHasherBindings {
   export const PASSWORD_HASHER = BindingKey.create<PasswordHasher>(
-    'services.hasher',
-  );
+    'services.hasher');
   export const ROUNDS = BindingKey.create<number>('services.hasher.round');
 }
 
 export namespace UserServiceBindings {
-  export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>>(
-    'services.user.service',
-  );
+  export const USER_SERVICE = BindingKey.create<UserService<User, Credentials>
+    >('services.user.service');
 }
+
+export namespace UserServiceBindings {
+  export const PASSPORT_USER_IDENTITY_SERVICE = BindingKey.create<
+    UserIdentityService<PassportProfile, User>
+    >('services.passport.identity');
+}
+

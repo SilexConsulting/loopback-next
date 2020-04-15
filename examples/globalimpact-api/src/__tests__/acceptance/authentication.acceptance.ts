@@ -27,8 +27,7 @@ describe('authentication services', function () {
 
   const userData = {
     email: 'unittest@loopback.io',
-    firstName: 'unit',
-    lastName: 'test',
+    name: 'unit test',
     roles: ['user'],
   };
 
@@ -118,17 +117,17 @@ describe('authentication services', function () {
     const expectedUserProfile = {
       [securityId]: newUser.id,
       id: newUser.id,
-      name: `${newUser.firstName} ${newUser.lastName}`,
+      name: newUser.name,
       roles: ['user'],
     };
     const userProfile = userService.convertToUserProfile(newUser);
     expect(expectedUserProfile).to.deepEqual(userProfile);
   });
 
-  it('user service convertToUserProfile() succeeds without optional fields : firstName, lastName', () => {
+  it('user service convertToUserProfile() succeeds without optional fields : name', () => {
     const userWithoutFirstOrLastName = Object.assign({}, newUser);
-    delete userWithoutFirstOrLastName.firstName;
-    delete userWithoutFirstOrLastName.lastName;
+    delete userWithoutFirstOrLastName.name;
+    delete userWithoutFirstOrLastName.name;
 
     const userProfile = userService.convertToUserProfile(
       userWithoutFirstOrLastName,
@@ -139,20 +138,20 @@ describe('authentication services', function () {
 
   it('user service convertToUserProfile() succeeds without optional field : lastName', () => {
     const userWithoutLastName = Object.assign({}, newUser);
-    delete userWithoutLastName.lastName;
+    delete userWithoutLastName.name;
 
     const userProfile = userService.convertToUserProfile(userWithoutLastName);
     expect(userProfile[securityId]).to.equal(newUser.id);
-    expect(userProfile.name).to.equal(newUser.firstName);
+    expect(userProfile.name).to.equal(newUser.name);
   });
 
-  it('user service convertToUserProfile() succeeds without optional field : firstName', () => {
-    const userWithoutFirstName = Object.assign({}, newUser);
-    delete userWithoutFirstName.firstName;
+  it('user service convertToUserProfile() succeeds without optional field : name', () => {
+    const userWithoutname = Object.assign({}, newUser);
+    delete userWithoutname.name;
 
-    const userProfile = userService.convertToUserProfile(userWithoutFirstName);
+    const userProfile = userService.convertToUserProfile(userWithoutname);
     expect(userProfile[securityId]).to.equal(newUser.id);
-    expect(userProfile.name).to.equal(newUser.lastName);
+    expect(userProfile.name).to.equal(newUser.name);
   });
 
   it('token service generateToken() succeeds', async () => {
@@ -212,8 +211,6 @@ describe('authentication services', function () {
     bcryptHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
     const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
     newUser = await userRepo.create(userData);
-    // MongoDB returns an id object we need to convert to string
-    newUser.id = newUser.id.toString();
 
     await userRepo.userCredentials(newUser.id).create({
       password: encryptedPassword,

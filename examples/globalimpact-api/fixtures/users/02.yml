@@ -1,5 +1,4 @@
 email: jane@example.com
-firstName: Jane
-lastName: Doe
+name: Jane Doe
 password: jane12345678
 roles: ['user']

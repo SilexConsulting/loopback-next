@@ -45,9 +45,6 @@ describe('authorization', function () {
     const encryptedPassword = await passwordHasher.hashPassword(userPassword);
     const aUser = await userRepo.create(userData);
 
-    // MongoDB returns an id object we need to convert to string
-    aUser.id = aUser.id.toString();
-
     await userRepo.userCredentials(aUser.id).create({
       password: encryptedPassword,
     });
