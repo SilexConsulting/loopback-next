@@ -1,8 +1,8 @@
 {
   "ids": {
-    "UserCredentials": 28,
+    "UserCredentials": 31,
     "UserIdentity": 1,
-    "User": 28
+    "User": 31
   },
   "models": {
     "UserCredentials": {
@@ -32,13 +32,16 @@
       "24": "{\"password\":\"$2a$10$5f5GE.HKu4j0wIUu5LKg6.rnIthIR6vyNEXUzZofCooH7MqglWq0K\",\"userId\":\"24\",\"id\":\"24\"}",
       "25": "{\"password\":\"$2a$10$AYekpdU9DUp1v1/mjsBApu1ZpUlLfjfiXCqEscFiRv3vdcvLt76Ve\",\"userId\":\"25\",\"id\":\"25\"}",
       "26": "{\"password\":\"$2a$10$Tvnr4TOYparRxKC9h/Bis.d84GxbsMbuux5KKXl9WWc7CxIOdo9Qe\",\"userId\":\"26\",\"id\":\"26\"}",
-      "27": "{\"password\":\"$2a$10$Q/7BoF8ysB62yh9crLL7ieJooLMgocpmAWl1qlL4w2pQrS8MZKFdG\",\"userId\":\"27\",\"id\":\"27\"}"
+      "27": "{\"password\":\"$2a$10$Q/7BoF8ysB62yh9crLL7ieJooLMgocpmAWl1qlL4w2pQrS8MZKFdG\",\"userId\":\"27\",\"id\":\"27\"}",
+      "28": "{\"password\":\"$2a$10$74s0/xHcI.4k6b2fCbbPsucwEgX7nZxjOYpM2cJZiRxM5mF..dFOS\",\"userId\":\"28\",\"id\":\"28\"}",
+      "29": "{\"password\":\"$2a$10$6BwjaHAng4wP/8n.yhrTteqff1cFWg6kKzT8b75ByTryd.QePEM8S\",\"userId\":\"29\",\"id\":\"29\"}",
+      "30": "{\"password\":\"$2a$10$69NpCAYsh5M4Rh6oTruVPurfQ3YQw358.Se/3x1ydm1m6rPfVJyAi\",\"userId\":\"30\",\"id\":\"30\"}"
     },
     "UserIdentity": {},
     "User": {
-      "25": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"roles\":[\"admin\"],\"id\":25}",
-      "26": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"roles\":[\"user\"],\"id\":26}",
-      "27": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"roles\":[\"user\"],\"id\":27}"
+      "28": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"roles\":[\"admin\"],\"id\":28}",
+      "29": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"roles\":[\"user\"],\"id\":29}",
+      "30": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"roles\":[\"user\"],\"id\":30}"
     }
   }
 }
