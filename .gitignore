@@ -20,6 +20,7 @@ packages/tsdocs/fixtures/monorepo/packages/pkg1/docs
 /docs/apidocs/reports-temp
 /docs/apidocs/models
 *.tsbuildinfo
+/examples/globalimpact-api/oauth2-providers.json
 
 # TBD: Exclude api reports from git for now
 /docs/apidocs/reports
