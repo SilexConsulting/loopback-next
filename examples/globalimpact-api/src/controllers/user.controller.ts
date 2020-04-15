@@ -13,9 +13,8 @@ import {
   requestBody,
   HttpErrors,
   getModelSchemaRef,
-  Response,
   RestBindings,
-  RequestWithSession,
+  Response,
 } from '@loopback/rest';
 import {User} from '../models';
 import {UserCredentialsRepository, UserRepository} from '../repositories';

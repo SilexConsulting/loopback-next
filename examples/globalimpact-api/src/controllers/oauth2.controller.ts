@@ -57,7 +57,7 @@ export class Oauth2Controller {
     const profile = {
       ...user.profile,
     };
-    request.session.user = profile;
+    //request.session.user = profile;
     response.redirect('/auth/account');
     return response;
   }
