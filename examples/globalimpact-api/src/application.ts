@@ -42,10 +42,12 @@ import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTService} from './services/jwt-service';
 import {PassportUserIdentityService} from './services/user.service';
 import YAML = require('yaml');
-import {FaceBookOauth2Authorization} from './authentication-strategies/facebook';
-import {Oauth2AuthStrategy} from './authentication-strategies/oauth2';
-import {LocalAuthStrategy} from './authentication-strategies/local';
-import {SessionStrategy} from './authentication-strategies/session';
+import {
+  FaceBookOauth2Authorization,
+  Oauth2AuthStrategy,
+  LocalAuthStrategy,
+  SessionStrategy,
+} from './authentication-strategies';
 
 /**
  * Information from package.json
