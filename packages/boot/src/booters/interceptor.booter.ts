@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/boot
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -13,7 +13,7 @@ import {
   Provider,
 } from '@loopback/context';
 import {Application, CoreBindings} from '@loopback/core';
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {BootBindings} from '../keys';
 import {ArtifactOptions, booter} from '../types';
 import {BaseArtifactBooter} from './base-artifact.booter';

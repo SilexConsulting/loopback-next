@@ -28,7 +28,7 @@ $ lb4 app
  ◉ Enable mocha: install mocha to run tests
  ◉ Enable loopbackBuild: use @loopback/build helpers (e.g. lb-eslint)
  ◉ Enable vscode: add VSCode config files
-❯◯ Enable docker: include Dockerfile and .dockerignore
+ ◉ Enable docker: include Dockerfile and .dockerignore
  ◉ Enable repositories: include repository imports and RepositoryMixin
  ◉ Enable services: include service-proxy imports and ServiceMixin
  # npm will install dependencies now
@@ -36,8 +36,7 @@ $ lb4 app
 ```
 
 For this tutorial, when prompted with the options for enabling certain project
-features (LoopBack's build, eslint, mocha, etc.), leave them all enabled except
-for `docker`.
+features (LoopBack's build, eslint, mocha, etc.), leave them all enabled.
 
 ### Structure
 
@@ -76,10 +75,12 @@ index.js
 index.ts
 package.json
 tsconfig.json
-eslint.build.json
-eslint.json
+.eslintrc.js
+.prettierrc
 .mocharc.json
 ```
+
+Note that there might be extra files not listed here.
 
 | File                                                     | Purpose                                                                                                                                                                                                                                                                                                                                                                  |
 | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -87,8 +88,8 @@ eslint.json
 | `index.js`                                               | Top-level file connecting components of the application.                                                                                                                                                                                                                                                                                                                 |
 | `package.json`                                           | Your application's package manifest. See [package.json](https://docs.npmjs.com/files/package.json) for details.                                                                                                                                                                                                                                                          |
 | `tsconfig.json`                                          | The TypeScript project configuration. See [tsconfig.json](http://www.typescriptlang.org/docs/handbook/tsconfig-json.html) for details.                                                                                                                                                                                                                                   |
-| `eslint.json`                                            | [ESLint configuration](https://palantir.github.io/eslint/usage/eslint-json/)                                                                                                                                                                                                                                                                                             |
-| `eslint.build.json`                                      | [ESLint configuration (build only)](https://palantir.github.io/eslint/usage/eslint-json/)                                                                                                                                                                                                                                                                                |
+| `.eslintrc.js`                                           | [ESLint configuration](https://eslint.org/docs/user-guide/configuring)                                                                                                                                                                                                                                                                                                   |
+| `.prettierrc`                                            | [Prettier configuration](https://prettier.io/docs/en/configuration.html)                                                                                                                                                                                                                                                                                                 |
 | `README.md`                                              | The Markdown-based README generated for your application.                                                                                                                                                                                                                                                                                                                |
 | `LICENSE`                                                | A copy of the MIT license. If you do not wish to use this license, please delete this file.                                                                                                                                                                                                                                                                              |
 | `src/application.ts`                                     | The application class, which extends [`RestApplication`](https://loopback.io/doc/en/lb4/apidocs.rest.restapplication.html) by default. This is the root of your application, and is where your application will be configured. It also extends [`RepositoryMixin`](https://loopback.io/doc/en/lb4/apidocs.repository.repositorymixin.html) which defines the datasource. |

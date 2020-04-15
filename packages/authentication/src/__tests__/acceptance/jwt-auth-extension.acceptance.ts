@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/authentication
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -11,14 +11,16 @@ import {SecurityBindings, securityId, UserProfile} from '@loopback/security';
 import {Client, createClientForHandler, expect} from '@loopback/testlab';
 import {
   authenticate,
+  AuthenticationBindings,
   AuthenticationStrategy,
   registerAuthenticationStrategy,
 } from '../..';
+import {UserProfileFactory} from '../../types';
 import {
   createBearerAuthorizationHeaderValue,
-  createUserProfile,
   getApp,
   getUserRepository,
+  myUserProfileFactory,
 } from '../fixtures/helper';
 import {JWTAuthenticationStrategyBindings, USER_REPO} from '../fixtures/keys';
 import {MyAuthenticationSequence} from '../fixtures/sequences/authentication.sequence';
@@ -47,6 +49,8 @@ describe('JWT Authentication', () => {
         public tokenService: JWTService,
         @inject(USER_REPO)
         public users: UserRepository,
+        @inject(AuthenticationBindings.USER_PROFILE_FACTORY)
+        public userProfileFactory: UserProfileFactory<User>,
       ) {}
 
       @post('/login')
@@ -56,7 +60,9 @@ describe('JWT Authentication', () => {
         //
 
         // Now with a valid userProfile, let's create a JSON web token
-        return this.tokenService.generateToken(createUserProfile(joeUser));
+        return this.tokenService.generateToken(
+          this.userProfileFactory(joeUser),
+        );
       }
 
       @get('/whoAmI')
@@ -64,35 +70,37 @@ describe('JWT Authentication', () => {
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
         if (!userProfile[securityId])
-          return 'userProfile securityId is undefined';
+          return 'userProfile[securityId] is undefined';
         return userProfile[securityId];
       }
     }
 
     app.controller(InfoController);
 
-    token = (await whenIMakeRequestTo(server)
-      .post('/login')
-      .expect(200)).text;
+    token = (await whenIMakeRequestTo(server).post('/login').expect(200)).text;
 
     expect(token).to.be.not.null();
     expect(token).to.be.String();
 
-    const id = (await whenIMakeRequestTo(server)
-      .get('/whoAmI')
-      .set('Authorization', createBearerAuthorizationHeaderValue(token))
-      .expect(200)).text;
+    const id = (
+      await whenIMakeRequestTo(server)
+        .get('/whoAmI')
+        .set('Authorization', createBearerAuthorizationHeaderValue(token))
+        .expect(200)
+    ).text;
 
     expect(id).to.equal(joeUser.id);
   });
 
-  it(`returns error for missing Authorization header`, async () => {
+  it('returns error for missing Authorization header', async () => {
     class InfoController {
       constructor(
         @inject(JWTAuthenticationStrategyBindings.TOKEN_SERVICE)
         public tokenService: JWTService,
         @inject(USER_REPO)
         public users: UserRepository,
+        @inject(AuthenticationBindings.USER_PROFILE_FACTORY)
+        public userProfileFactory: UserProfileFactory<User>,
       ) {}
 
       @post('/login')
@@ -102,23 +110,24 @@ describe('JWT Authentication', () => {
         //
 
         // Now with a valid userProfile, let's create a JSON web token
-        return this.tokenService.generateToken(createUserProfile(joeUser));
+        return this.tokenService.generateToken(
+          this.userProfileFactory(joeUser),
+        );
       }
 
       @get('/whoAmI')
       @authenticate('jwt')
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
-        if (!userProfile.id) return 'userProfile id is undefined';
-        return userProfile.id;
+        if (!userProfile[securityId])
+          return 'userProfile[securityId] is undefined';
+        return userProfile[securityId];
       }
     }
 
     app.controller(InfoController);
 
-    token = (await whenIMakeRequestTo(server)
-      .post('/login')
-      .expect(200)).text;
+    token = (await whenIMakeRequestTo(server).post('/login').expect(200)).text;
 
     expect(token).to.be.not.null();
     expect(token).to.be.String();
@@ -141,6 +150,8 @@ describe('JWT Authentication', () => {
         public tokenService: JWTService,
         @inject(USER_REPO)
         public users: UserRepository,
+        @inject(AuthenticationBindings.USER_PROFILE_FACTORY)
+        public userProfileFactory: UserProfileFactory<User>,
       ) {}
 
       @post('/login')
@@ -150,23 +161,24 @@ describe('JWT Authentication', () => {
         //
 
         // Now with a valid userProfile, let's create a JSON web token
-        return this.tokenService.generateToken(createUserProfile(joeUser));
+        return this.tokenService.generateToken(
+          this.userProfileFactory(joeUser),
+        );
       }
 
       @get('/whoAmI')
       @authenticate('jwt')
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
-        if (!userProfile.id) return 'userProfile id is undefined';
-        return userProfile.id;
+        if (!userProfile[securityId])
+          return 'userProfile[securityId] is undefined';
+        return userProfile[securityId];
       }
     }
 
     app.controller(InfoController);
 
-    token = (await whenIMakeRequestTo(server)
-      .post('/login')
-      .expect(200)).text;
+    token = (await whenIMakeRequestTo(server).post('/login').expect(200)).text;
 
     expect(token).to.be.not.null();
     expect(token).to.be.String();
@@ -193,6 +205,8 @@ describe('JWT Authentication', () => {
         public tokenService: JWTService,
         @inject(USER_REPO)
         public users: UserRepository,
+        @inject(AuthenticationBindings.USER_PROFILE_FACTORY)
+        public userProfileFactory: UserProfileFactory<User>,
       ) {}
 
       @post('/login')
@@ -201,23 +215,24 @@ describe('JWT Authentication', () => {
         // ...Other code for verifying a valid user (e.g. basic or local strategy)...
         //
 
-        return this.tokenService.generateToken(createUserProfile(joeUser));
+        return this.tokenService.generateToken(
+          this.userProfileFactory(joeUser),
+        );
       }
 
       @get('/whoAmI')
       @authenticate('jwt')
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
-        if (!userProfile.id) return 'userProfile id is undefined';
-        return userProfile.id;
+        if (!userProfile[securityId])
+          return 'userProfile[securityId] is undefined';
+        return userProfile[securityId];
       }
     }
 
     app.controller(InfoController);
 
-    token = (await whenIMakeRequestTo(server)
-      .post('/login')
-      .expect(200)).text;
+    token = (await whenIMakeRequestTo(server).post('/login').expect(200)).text;
 
     expect(token).to.be.not.null();
     expect(token).to.be.String();
@@ -245,8 +260,9 @@ describe('JWT Authentication', () => {
       @authenticate('jwt')
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
-        if (!userProfile.id) return 'userProfile id is undefined';
-        return userProfile.id;
+        if (!userProfile[securityId])
+          return 'userProfile[securityId] is undefined';
+        return userProfile[securityId];
       }
     }
 
@@ -274,8 +290,9 @@ describe('JWT Authentication', () => {
       @authenticate('jwt')
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
-        if (!userProfile.id) return 'userProfile id is undefined';
-        return userProfile.id;
+        if (!userProfile[securityId])
+          return 'userProfile[securityId] is undefined';
+        return userProfile[securityId];
       }
     }
 
@@ -303,8 +320,9 @@ describe('JWT Authentication', () => {
       @authenticate('jwt')
       whoAmI(@inject(SecurityBindings.USER) userProfile: UserProfile) {
         if (!userProfile) return 'userProfile is undefined';
-        if (!userProfile.id) return 'userProfile id is undefined';
-        return userProfile.id;
+        if (!userProfile[securityId])
+          return 'userProfile[securityId] is undefined';
+        return userProfile[securityId];
       }
     }
 
@@ -324,13 +342,15 @@ describe('JWT Authentication', () => {
       });
   });
 
-  it('creates a json web token and throws error for userProfle that is undefined', async () => {
+  it('creates a json web token and throws error for userProfile that is undefined', async () => {
     class InfoController {
       constructor(
         @inject(JWTAuthenticationStrategyBindings.TOKEN_SERVICE)
         public tokenService: JWTService,
         @inject(USER_REPO)
         public users: UserRepository,
+        @inject(AuthenticationBindings.USER_PROFILE_FACTORY)
+        public userProfileFactory: UserProfileFactory<User>,
       ) {}
 
       @get('/createtoken')
@@ -418,6 +438,22 @@ describe('JWT Authentication', () => {
       });
   });
 
+  it('adds security scheme component to apiSpec', async () => {
+    const EXPECTED_SPEC = {
+      components: {
+        securitySchemes: {
+          jwt: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+    };
+    const spec = await server.getApiSpec();
+    expect(spec).to.containDeep(EXPECTED_SPEC);
+  });
+
   async function givenAServer() {
     app = getApp();
     server = await app.getServer(RestServer);
@@ -430,7 +466,7 @@ describe('JWT Authentication', () => {
    * token is automatically expired
    */
   async function getExpiredToken() {
-    const userProfile = createUserProfile(joeUser);
+    const userProfile = myUserProfileFactory(joeUser);
     const tokenService = new JWTService(TOKEN_SECRET_VALUE, '-10');
     return tokenService.generateToken(userProfile);
   }
@@ -458,6 +494,9 @@ describe('JWT Authentication', () => {
     testUsers = getUserRepository();
     joeUser = testUsers.list['joe888'];
     server.bind(USER_REPO).to(testUsers);
+    server
+      .bind(AuthenticationBindings.USER_PROFILE_FACTORY)
+      .to(myUserProfileFactory);
   }
 
   function whenIMakeRequestTo(restServer: RestServer): Client {

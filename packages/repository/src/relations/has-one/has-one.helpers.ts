@@ -1,9 +1,9 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {camelCase} from 'lodash';
 import {InvalidRelationError} from '../../errors';
 import {isTypeResolver} from '../../type-resolver';
@@ -50,7 +50,16 @@ export function resolveHasOneMetadata(
     throw new InvalidRelationError(reason, relationMeta);
   }
 
-  const keyFrom = sourceModel.getIdProperties()[0];
+  // keyFrom defaults to id property
+  let keyFrom;
+  if (
+    relationMeta.keyFrom &&
+    relationMeta.source.definition.properties[relationMeta.keyFrom]
+  ) {
+    keyFrom = relationMeta.keyFrom;
+  } else {
+    keyFrom = sourceModel.getIdProperties()[0];
+  }
 
   // Make sure that if it already keys to the foreign key property,
   // the key exists in the target model

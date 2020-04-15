@@ -1,25 +1,25 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {
+  isReferenceObject,
   ReferenceObject,
   RequestBodyObject,
   SchemaObject,
   SchemasObject,
 } from '@loopback/openapi-v3';
-import * as AJV from 'ajv';
-import * as debugModule from 'debug';
-import * as _ from 'lodash';
-import * as util from 'util';
+import ajv, {Ajv} from 'ajv';
+import debugModule from 'debug';
+import _ from 'lodash';
+import util from 'util';
 import {HttpErrors, RequestBody, RestHttpErrors} from '..';
 import {RequestBodyValidationOptions, SchemaValidatorCache} from '../types';
+import {AjvFactoryProvider} from './ajv-factory.provider';
 
-const toJsonSchema = require('openapi-schema-to-json-schema');
+const toJsonSchema = require('@openapi-contrib/openapi-schema-to-json-schema');
 const debug = debugModule('loopback:rest:validation');
-
-const ajvKeywords = require('ajv-keywords');
 
 /**
  * Check whether the request body is valid according to the provided OpenAPI schema.
@@ -31,13 +31,13 @@ const ajvKeywords = require('ajv-keywords');
  * @param globalSchemas - The referenced schemas generated from `OpenAPISpec.components.schemas`.
  * @param options - Request body validation options for AJV
  */
-export function validateRequestBody(
+export async function validateRequestBody(
   body: RequestBody,
   requestBodySpec?: RequestBodyObject,
   globalSchemas: SchemasObject = {},
   options: RequestBodyValidationOptions = {},
 ) {
-  const required = requestBodySpec && requestBodySpec.required;
+  const required = requestBodySpec?.required;
 
   if (required && body.value == null) {
     const err = Object.assign(
@@ -53,12 +53,20 @@ export function validateRequestBody(
   const schema = body.schema;
   /* istanbul ignore if */
   if (debug.enabled) {
-    debug('Request body schema: %j', util.inspect(schema, {depth: null}));
+    debug('Request body schema:', util.inspect(schema, {depth: null}));
+    if (
+      schema &&
+      isReferenceObject(schema) &&
+      schema.$ref.startsWith('#/components/schemas/')
+    ) {
+      const ref = schema.$ref.slice('#/components/schemas/'.length);
+      debug('  referencing:', util.inspect(globalSchemas[ref], {depth: null}));
+    }
   }
   if (!schema) return;
 
-  options = Object.assign({coerceTypes: !!body.coercionRequired}, options);
-  validateValueAgainstSchema(body.value, schema, globalSchemas, options);
+  options = {coerceTypes: !!body.coercionRequired, ...options};
+  await validateValueAgainstSchema(body.value, schema, globalSchemas, options);
 }
 
 /**
@@ -107,37 +115,45 @@ function getKeyForOptions(options: RequestBodyValidationOptions) {
  * @param globalSchemas - Schema references.
  * @param options - Request body validation options.
  */
-function validateValueAgainstSchema(
+async function validateValueAgainstSchema(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: any,
   schema: SchemaObject | ReferenceObject,
   globalSchemas: SchemasObject = {},
   options: RequestBodyValidationOptions = {},
 ) {
-  let validate: AJV.ValidateFunction | undefined;
+  let validate: ajv.ValidateFunction | undefined;
 
-  const cache = options.compiledSchemaCache || DEFAULT_COMPILED_SCHEMA_CACHE;
+  const cache = options.compiledSchemaCache ?? DEFAULT_COMPILED_SCHEMA_CACHE;
   const key = getKeyForOptions(options);
 
-  let validatorMap: Map<string, AJV.ValidateFunction> | undefined;
+  let validatorMap: Map<string, ajv.ValidateFunction> | undefined;
   if (cache.has(schema)) {
     validatorMap = cache.get(schema)!;
     validate = validatorMap.get(key);
   }
 
   if (!validate) {
-    validate = createValidator(schema, globalSchemas, options);
-    validatorMap = validatorMap || new Map();
+    const ajvFactory =
+      options.ajvFactory ?? new AjvFactoryProvider(options).value();
+    const ajvInst = ajvFactory(options);
+    validate = createValidator(schema, globalSchemas, ajvInst);
+    validatorMap = validatorMap ?? new Map();
     validatorMap.set(key, validate);
     cache.set(schema, validatorMap);
   }
 
-  if (validate(body)) {
-    debug('Request body passed AJV validation.');
-    return;
+  let validationErrors: ajv.ErrorObject[] = [];
+  try {
+    const validationResult = await validate(body);
+    // When body is optional & values is empty / null, ajv returns null
+    if (validationResult || validationResult === null) {
+      debug('Request body passed AJV validation.');
+      return;
+    }
+  } catch (error) {
+    validationErrors = error.errors;
   }
-
-  let validationErrors = validate.errors as AJV.ErrorObject[];
 
   /* istanbul ignore if */
   if (debug.enabled) {
@@ -164,36 +180,29 @@ function validateValueAgainstSchema(
   throw error;
 }
 
+/**
+ * Create a validate function for the given schema
+ * @param schema - JSON schema for the target
+ * @param globalSchemas - Global schemas
+ * @param ajvInst - An instance of Ajv
+ */
 function createValidator(
   schema: SchemaObject,
-  globalSchemas?: SchemasObject,
-  options?: RequestBodyValidationOptions,
-): AJV.ValidateFunction {
+  globalSchemas: SchemasObject = {},
+  ajvInst: Ajv,
+): ajv.ValidateFunction {
   const jsonSchema = convertToJsonSchema(schema);
 
-  const schemaWithRef = Object.assign({components: {}}, jsonSchema);
-  schemaWithRef.components = {
-    schemas: globalSchemas,
-  };
-
-  // See https://github.com/epoberezkin/ajv#options
-  options = Object.assign(
-    {},
-    {
-      allErrors: true,
-      // nullable: support keyword "nullable" from Open API 3 specification.
-      nullable: true,
-    },
-    options,
-  );
-  debug('AJV options', options);
-  const ajv = new AJV(options);
-
-  if (options.ajvKeywords === true) {
-    ajvKeywords(ajv);
-  } else if (Array.isArray(options.ajvKeywords)) {
-    ajvKeywords(ajv, options.ajvKeywords);
+  // Clone global schemas to set `$async: true` flag
+  const schemas: SchemasObject = {};
+  for (const name in globalSchemas) {
+    // See https://github.com/strongloop/loopback-next/issues/4939
+    schemas[name] = {...globalSchemas[name], $async: true};
   }
+  const schemaWithRef = {components: {schemas}, ...jsonSchema};
 
-  return ajv.compile(schemaWithRef);
+  // See https://ajv.js.org/#asynchronous-validation for async validation
+  schemaWithRef.$async = true;
+
+  return ajvInst.compile(schemaWithRef);
 }

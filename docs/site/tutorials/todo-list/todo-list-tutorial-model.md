@@ -31,7 +31,7 @@ for us as follows:
 ```sh
 $ lb4 model
 ? Model class name: TodoList
-? Please select the model base class Entity
+? Please select the model base class Entity (A persisted model with an ID)
 ? Allow additional (free-form) properties? No
 Model TodoList will be created in src/models/todo-list.model.ts
 
@@ -40,8 +40,9 @@ Enter an empty property name when done
 
 ? Enter the property name: id
 ? Property type: number
-? Is ID field? Yes
-? Required?: No
+? Is id the ID property? Yes
+? Is id generated automatically? No
+? Is it required?: No
 ? Default value [leave blank for none]:
 
 Let's add another property to TodoList
@@ -49,7 +50,7 @@ Enter an empty property name when done
 
 ? Enter the property name: title
 ? Property type: string
-? Required?: Yes
+? Is it required?: Yes
 ? Default value [leave blank for none]:
 
 Let's add another property to TodoList
@@ -57,7 +58,7 @@ Enter an empty property name when done
 
 ? Enter the property name: color
 ? Property type: string
-? Required?: No
+? Is it required?: No
 ? Default value [leave blank for none]:
 
 Let's add another property to TodoList
@@ -70,60 +71,8 @@ Enter an empty property name when done
 Model TodoList was created in src/models/
 ```
 
-Now that we have our new model, we need to define its relation with the `Todo`
-model. Add the following import statements and property to the `TodoList` model
-and update the `TodoListRelations` interface to include `todos`:
-
-{% include code-caption.html content="src/models/todo-list.model.ts" %}
-
-```ts
-import {hasMany} from '@loopback/repository';
-import {Todo, TodoWithRelations} from './todo.model';
-
-@model()
-export class TodoList extends Entity {
-  // ...properties defined by the CLI...
-
-  @hasMany(() => Todo)
-  todos?: Todo[];
-
-  // ...constructor def...
-}
-
-export interface TodoListRelations {
-  todos?: TodoWithRelations[];
-}
-
-export type TodoListWithRelations = TodoList & TodoListRelations;
-```
-
-The `@hasMany()` decorator defines this property. As the decorator's name
-suggests, `@hasMany()` informs LoopBack 4 that a todo list can have many todo
-items.
-
-To complement `TodoList`'s relationship to `Todo`, we'll add in the `todoListId`
-property on the `Todo` model to define the relation on both ends, along with
-updating the `TodoRelations` interface to include `todoList`:
-
-{% include code-caption.html content="src/models/todo.model.ts" %}
-
-```ts
-@model()
-export class Todo extends Entity {
-  // ...properties defined by the CLI...
-
-  @belongsTo(() => TodoList)
-  todoListId: number;
-
-  // ...constructor def...
-}
-
-export interface TodoRelations {
-  todoList?: TodoListWithRelations;
-}
-
-export type TodoWithRelations = Todo & TodoRelations;
-```
+To view the completed file, see the
+[`TodoList` example](https://github.com/strongloop/loopback-next/blob/master/examples/todo-list/src/models/todo-list.model.ts).
 
 Once the models have been completely configured, it's time to move on to adding
 a [repository](todo-list-tutorial-repository.md) for `TodoList`.

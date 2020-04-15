@@ -26,7 +26,7 @@ exports.SANDBOX_FILES = [
   },
   {
     path: DATASOURCE_APP_PATH,
-    file: 'myds.datasource.json',
+    file: 'myds.datasource.config.json',
     content: JSON.stringify({
       name: 'myds',
       connector: 'soap',
@@ -34,7 +34,7 @@ exports.SANDBOX_FILES = [
   },
   {
     path: DATASOURCE_APP_PATH,
-    file: 'map-ds.datasource.json',
+    file: 'map-ds.datasource.config.json',
     content: JSON.stringify({
       name: 'MapDS',
       connector: 'soap',
@@ -47,7 +47,7 @@ exports.SANDBOX_FILES = [
   },
   {
     path: DATASOURCE_APP_PATH,
-    file: 'dbmem.datasource.json',
+    file: 'dbmem.datasource.config.json',
     content: JSON.stringify({
       name: 'dbmem',
       connector: 'memory',
@@ -60,7 +60,7 @@ exports.SANDBOX_FILES = [
   },
   {
     path: DATASOURCE_APP_PATH,
-    file: 'restdb.datasource.json',
+    file: 'restdb.datasource.config.json',
     content: JSON.stringify({
       name: 'restdb',
       connector: 'rest',
@@ -69,6 +69,18 @@ exports.SANDBOX_FILES = [
   {
     path: DATASOURCE_APP_PATH,
     file: 'restdb.datasource.ts',
+    content: DUMMY_CONTENT,
+  },
+  {
+    path: DATASOURCE_APP_PATH,
+    file: 'no-name.datasource.config.json',
+    content: JSON.stringify({
+      connector: 'rest',
+    }),
+  },
+  {
+    path: DATASOURCE_APP_PATH,
+    file: 'no-name.datasource.ts',
     content: DUMMY_CONTENT,
   },
 ];

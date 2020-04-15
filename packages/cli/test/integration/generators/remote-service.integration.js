@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -17,8 +17,7 @@ const SANDBOX_FILES = require('../../fixtures/service').SANDBOX_FILES;
 const testUtils = require('../../test-utils');
 
 // Test Sandbox
-const SANDBOX_PATH = path.resolve(__dirname, '..', '.sandbox');
-const sandbox = new TestSandbox(SANDBOX_PATH);
+const sandbox = new TestSandbox(path.resolve(__dirname, '../.sandbox'));
 
 describe('lb4 service (remote)', () => {
   beforeEach('reset sandbox', async () => {
@@ -30,8 +29,21 @@ describe('lb4 service (remote)', () => {
       return expect(
         testUtils
           .executeGenerator(generator)
-          .inDir(SANDBOX_PATH, () => testUtils.givenLBProject(SANDBOX_PATH)),
+          .inDir(sandbox.path, () => testUtils.givenLBProject(sandbox.path)),
       ).to.be.rejectedWith(/No datasources found/);
+    });
+
+    it('does not accept a datasource file with no name property', async () => {
+      return expect(
+        testUtils
+          .executeGenerator(generator)
+          .inDir(sandbox.path, () =>
+            testUtils.givenLBProject(sandbox.path, {
+              additionalFiles: SANDBOX_FILES,
+            }),
+          )
+          .withArguments('myService --datasource no-name'),
+      ).to.be.rejectedWith(/Datasource config does not have `name` property/);
     });
   });
 
@@ -39,14 +51,14 @@ describe('lb4 service (remote)', () => {
     it('generates a basic soap service from command line arguments', async () => {
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withArguments('myService --datasource myds');
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'my-service.service.ts',
       );
@@ -65,14 +77,14 @@ describe('lb4 service (remote)', () => {
     it('generates a soap service from a config file', async () => {
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withArguments('--config mysoapconfig.json');
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'multi-word-service.service.ts',
       );
@@ -103,15 +115,15 @@ describe('lb4 service (remote)', () => {
       };
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withPrompts(multiItemPrompt);
 
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'my-service.service.ts',
       );
@@ -135,15 +147,15 @@ describe('lb4 service (remote)', () => {
 
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withPrompts(multiItemPrompt);
 
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'myservice.service.ts',
       );
@@ -161,14 +173,14 @@ describe('lb4 service (remote)', () => {
     it('generates a basic rest service from a config file', async () => {
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withArguments('--config myrestconfig.json');
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'myservice.service.ts',
       );
@@ -186,14 +198,14 @@ describe('lb4 service (remote)', () => {
     it('generates a basic rest service from command line arguments', async () => {
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withArguments('myservice --datasource restdb');
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'myservice.service.ts',
       );
@@ -217,15 +229,15 @@ describe('lb4 service (remote)', () => {
 
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withPrompts(multiItemPrompt);
 
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'myservice.service.ts',
       );
@@ -254,4 +266,4 @@ describe('lb4 service (remote)', () => {
 
 // Sandbox constants
 const SERVICE_APP_PATH = 'src/services';
-const INDEX_FILE = path.join(SANDBOX_PATH, SERVICE_APP_PATH, 'index.ts');
+const INDEX_FILE = path.join(sandbox.path, SERVICE_APP_PATH, 'index.ts');

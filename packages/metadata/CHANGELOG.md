@@ -3,6 +3,134 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@2.0.3...@loopback/metadata@2.0.4) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [2.0.3](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@2.0.2...@loopback/metadata@2.0.3) (2020-04-08)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [2.0.2](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@2.0.1...@loopback/metadata@2.0.2) (2020-03-24)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [2.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@2.0.0...@loopback/metadata@2.0.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.4.1...@loopback/metadata@2.0.0) (2020-03-05)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [1.4.1](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.4.0...@loopback/metadata@1.4.1) (2020-02-05)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+# [1.4.0](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.10...@loopback/metadata@1.4.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* clarify the decorator application order ([ab0dc3d](https://github.com/strongloop/loopback-next/commit/ab0dc3d9f1dedb6b61ccf5b4d63854a4f9dfa814))
+* ensure tests follow parameter patterns ([d9d8154](https://github.com/strongloop/loopback-next/commit/d9d815403b8b7c39aa71494f46b352c646324673))
+* makes multi-decorator behavior more predictable ([0e00068](https://github.com/strongloop/loopback-next/commit/0e00068ccee12e004a2684afcf8bec5d651a9a20))
+
+
+### Features
+
+* adds MultiMethodDecoratorFactory ([bf6c787](https://github.com/strongloop/loopback-next/commit/bf6c7872bb8ce492b43ab8f57a641dcbb341e96e))
+
+
+
+
+
+## [1.3.10](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.9...@loopback/metadata@1.3.10) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [1.3.9](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.8...@loopback/metadata@1.3.9) (2019-12-09)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [1.3.8](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.7...@loopback/metadata@1.3.8) (2019-11-25)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [1.3.7](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.6...@loopback/metadata@1.3.7) (2019-11-12)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [1.3.6](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.5...@loopback/metadata@1.3.6) (2019-10-24)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
+## [1.3.5](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.4...@loopback/metadata@1.3.5) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/metadata
+
+
+
+
+
 ## [1.3.4](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@1.3.3...@loopback/metadata@1.3.4) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/metadata

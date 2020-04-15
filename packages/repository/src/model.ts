@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2019. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -90,8 +90,8 @@ export class ModelDefinition {
       }
     }
 
-    this.settings = settings || new Map();
-    this.relations = relations || {};
+    this.settings = settings ?? new Map();
+    this.relations = relations ?? {};
   }
 
   /**
@@ -106,6 +106,16 @@ export class ModelDefinition {
     const definition = (definitionOrType as PropertyDefinition).type
       ? (definitionOrType as PropertyDefinition)
       : {type: definitionOrType};
+
+    if (
+      definition.id === true &&
+      definition.generated === true &&
+      definition.type !== undefined &&
+      definition.useDefaultIdType === undefined
+    ) {
+      definition.useDefaultIdType = false;
+    }
+
     this.properties[name] = definition;
     return this;
   }
@@ -207,7 +217,10 @@ export abstract class Model {
     }
 
     const copyPropertyAsJson = (key: string) => {
-      json[key] = asJSON((this as AnyObject)[key]);
+      const val = asJSON((this as AnyObject)[key]);
+      if (val !== undefined) {
+        json[key] = val;
+      }
     };
 
     const json: AnyObject = {};

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/booter-lb3app
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -11,10 +11,10 @@ import {
   rebaseOpenApiSpec,
   RestApplication,
 } from '@loopback/rest';
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {Application as ExpressApplication} from 'express';
 import pEvent from 'p-event';
-import * as path from 'path';
+import path from 'path';
 
 const {generateSwaggerSpec} = require('loopback-swagger');
 const swagger2openapi = require('swagger2openapi');
@@ -69,10 +69,7 @@ export class Lb3AppBooter implements Booter {
         const ds = dataSources[key];
         if (visited.includes(ds)) return;
         visited.push(ds);
-        this.app
-          .bind(`datasources.lb3-${key}`)
-          .to(ds)
-          .tag('datasource');
+        this.app.bind(`datasources.lb3-${key}`).to(ds).tag('datasource');
       });
     }
 

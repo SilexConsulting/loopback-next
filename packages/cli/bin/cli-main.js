@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -29,6 +29,7 @@ const opts = minimist(process.argv.slice(2), {
   alias: {
     version: 'v', // --version or -v: print versions
     commands: 'l', // --commands or -l: print commands
+    help: 'h', // --help or -h: help
   },
 });
 

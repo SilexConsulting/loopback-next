@@ -1,11 +1,11 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {DecoratorFactory} from '@loopback/metadata';
-import * as assert from 'assert';
-import * as debugFactory from 'debug';
+import assert from 'assert';
+import debugFactory from 'debug';
 import {Context} from './context';
 import {invokeMethodWithInterceptors} from './interceptor';
 import {resolveInjectedArguments} from './resolver';
@@ -27,6 +27,20 @@ export type InvocationResult = any;
 export type InvocationArgs = any[];
 
 /**
+ * An interface to represent the caller of the invocation
+ */
+export interface InvocationSource<T = unknown> {
+  /**
+   * Type of the invoker, such as `proxy` and `route`
+   */
+  readonly type: string;
+  /**
+   * Metadata for the source, such as `ResolutionSession`
+   */
+  readonly value: T;
+}
+
+/**
  * InvocationContext represents the context to invoke interceptors for a method.
  * The context can be used to access metadata about the invocation as well as
  * other dependencies.
@@ -41,12 +55,11 @@ export class InvocationContext extends Context {
    * @param args - An array of arguments
    */
   constructor(
-    // Make `parent` public so that the interceptor can add bindings to
-    // the request context, for example, tracing id
-    public readonly parent: Context,
+    parent: Context,
     public readonly target: object,
     public readonly methodName: string,
     public readonly args: InvocationArgs,
+    public readonly source?: InvocationSource,
   ) {
     super(parent);
   }
@@ -71,7 +84,8 @@ export class InvocationContext extends Context {
    * Description of the invocation
    */
   get description() {
-    return `InvocationContext(${this.name}): ${this.targetName}`;
+    const source = this.source == null ? '' : `${this.source} => `;
+    return `InvocationContext(${this.name}): ${source}${this.targetName}`;
   }
 
   toString() {
@@ -129,6 +143,11 @@ export type InvocationOptions = {
    * Skip invocation of interceptors
    */
   skipInterceptors?: boolean;
+  /**
+   * Information about the source object that makes the invocation. For REST,
+   * it's a `Route`. For injected proxies, it's a `Binding`.
+   */
+  source?: InvocationSource;
 };
 
 /**
@@ -189,7 +208,7 @@ function invokeTargetMethodWithInjection(
   /* istanbul ignore if */
   if (debug.enabled) {
     debug('Invoking method %s', methodName);
-    if (nonInjectedArgs && nonInjectedArgs.length) {
+    if (nonInjectedArgs?.length) {
       debug('Non-injected arguments:', nonInjectedArgs);
     }
   }

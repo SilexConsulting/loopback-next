@@ -1,34 +1,54 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/http-server
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as assert from 'assert';
-import * as http from 'http';
-import {IncomingMessage, ServerResponse} from 'http';
-import * as https from 'https';
+import assert from 'assert';
+import http, {IncomingMessage, ServerResponse} from 'http';
+import https from 'https';
 import {AddressInfo, ListenOptions} from 'net';
-import * as os from 'os';
+import os from 'os';
 import pEvent from 'p-event';
+import stoppable from 'stoppable';
 
+/**
+ * Request listener function for http/https requests
+ */
 export type RequestListener = (
   req: IncomingMessage,
   res: ServerResponse,
 ) => void;
 
 /**
- * HTTP server options
- *
+ * Base options that are common to http and https servers
  */
-export interface HttpOptions extends ListenOptions {
+export interface BaseHttpOptions extends ListenOptions {
+  /**
+   * The `gracePeriodForClose` property controls how to stop the server
+   * gracefully. Its value is the number of milliseconds to wait before
+   * in-flight requests finish when the server is being stopped. With this
+   * setting, we also reject new requests from existing keep-alive connections
+   * in addition to stopping accepting new connections.
+   *
+   * Defaults to Infinity (don't force-close). If you want to immediately
+   * destroy all sockets set its value to `0`.
+   *
+   * See {@link https://www.npmjs.com/package/stoppable | stoppable}
+   */
+  gracePeriodForClose?: number;
+}
+
+/**
+ * HTTP server options
+ */
+export interface HttpOptions extends BaseHttpOptions {
   protocol?: 'http';
 }
 
 /**
  * HTTPS server options
- *
  */
-export interface HttpsOptions extends ListenOptions, https.ServerOptions {
+export interface HttpsOptions extends BaseHttpOptions, https.ServerOptions {
   protocol: 'https';
 }
 
@@ -53,6 +73,7 @@ export class HttpServer {
   private _address: string | AddressInfo;
   private requestListener: RequestListener;
   readonly server: http.Server | https.Server;
+  private _stoppable: stoppable.StoppableServer;
   private serverOptions: HttpServerOptions;
 
   /**
@@ -74,7 +95,7 @@ export class HttpServer {
       // Remove `port` so that `path` is honored
       delete this.serverOptions.port;
     }
-    this._protocol = serverOptions ? serverOptions.protocol || 'http' : 'http';
+    this._protocol = serverOptions ? serverOptions.protocol ?? 'http' : 'http';
     if (this._protocol === 'https') {
       this.server = https.createServer(
         this.serverOptions as https.ServerOptions,
@@ -82,6 +103,13 @@ export class HttpServer {
       );
     } else {
       this.server = http.createServer(this.requestListener);
+    }
+    // Set up graceful stop for http server
+    if (typeof this.serverOptions.gracePeriodForClose === 'number') {
+      this._stoppable = stoppable(
+        this.server,
+        this.serverOptions.gracePeriodForClose,
+      );
     }
   }
 
@@ -103,7 +131,11 @@ export class HttpServer {
    */
   public async stop() {
     if (!this._listening) return;
-    this.server.close();
+    if (this._stoppable != null) {
+      this._stoppable.stop();
+    } else {
+      this.server.close();
+    }
     await pEvent(this.server, 'close');
     this._listening = false;
   }

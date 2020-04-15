@@ -129,7 +129,7 @@ helper method; for example:
 {% include code-caption.html content="src/__tests__/helpers/database.helpers.ts" %}
 
 ```ts
-import {ProductRepository, CategoryRepository} from '../../src/repositories';
+import {ProductRepository, CategoryRepository} from '../../repositories';
 import {testdb} from '../fixtures/datasources/testdb.datasource';
 
 export async function givenEmptyDatabase() {
@@ -145,7 +145,7 @@ belongs to Category, include it in the repository call, for example:
 
 ```ts
 import {Getter} from '@loopback/context';
-import {ProductRepository, CategoryRepository} from '../../src/repositories';
+import {ProductRepository, CategoryRepository} from '../../repositories';
 import {testdb} from '../fixtures/datasources/testdb.datasource';
 
 export async function givenEmptyDatabase() {
@@ -503,8 +503,8 @@ import {
   sinon,
   StubbedInstanceWithSinonAccessor,
 } from '@loopback/testlab';
-import {ProductRepository} from '../../../src/repositories';
-import {ProductController} from '../../../src/controllers';
+import {ProductRepository} from '../../../repositories';
+import {ProductController} from '../../../controllers';
 
 describe('ProductController (unit)', () => {
   let repository: StubbedInstanceWithSinonAccessor<ProductRepository>;
@@ -547,7 +547,7 @@ valid data to create a new model instance.
 {% include code-caption.html content="src/__tests__/unit/models/person.model.unit.ts" %}
 
 ```ts
-import {Person} from '../../../src/models';
+import {Person} from '../../../models';
 import {givenPersonData} from '../../helpers/database.helpers';
 import {expect} from '@loopback/testlab';
 
@@ -638,7 +638,7 @@ import {
   givenEmptyDatabase,
   givenCategory,
 } from '../../helpers/database.helpers';
-import {CategoryRepository} from '../../../src/repositories';
+import {CategoryRepository} from '../../../repositories';
 import {expect} from '@loopback/testlab';
 import {testdb} from '../../fixtures/datasources/testdb.datasource';
 
@@ -671,8 +671,8 @@ ingredient.
 ```ts
 import {expect} from '@loopback/testlab';
 import {givenEmptyDatabase, givenProduct} from '../../helpers/database.helpers';
-import {ProductController} from '../../../src/controllers';
-import {ProductRepository} from '../../../src/repositories';
+import {ProductController} from '../../../controllers';
+import {ProductRepository} from '../../../repositories';
 import {testdb} from '../../fixtures/datasources/testdb.datasource';
 
 describe('ProductController (integration)', () => {
@@ -719,11 +719,8 @@ of the service proxy by invoking the provider. This helper should be typically
 invoked once before the integration test suite begins.
 
 ```ts
-import {
-  GeoService,
-  GeoServiceProvider,
-} from '../../src/services/geo.service.ts';
-import {GeoDataSource} from '../../src/datasources/geo.datasource.ts';
+import {GeoService, GeoServiceProvider} from '../../services/geo.service';
+import {GeoDataSource} from '../../datasources/geo.datasource';
 
 describe('GeoService', () => {
   let service: GeoService;
@@ -743,7 +740,7 @@ instance:
 
 ```ts
 import {merge} from 'lodash';
-import * as GEO_CODER_CONFIG from '../src/datasources/geo.datasource.json';
+import GEO_CODER_CONFIG from '../datasources/geo.datasource.config.json';
 
 function givenGeoService() {
   const config = merge({}, GEO_CODER_CONFIG, {
@@ -983,3 +980,34 @@ that rejects anonymous requests for certain endpoints, then you can write a test
 making an anonymous request to those endpoints to verify that it's correctly
 rejected. These tests are essentially the same as the tests verifying
 implementation of individual endpoints as described in the previous section.
+
+# Code coverage
+
+`@loopback/build` contains a command line tool (`lb-nyc`) that acts as a wrapper
+for [`nyc`](https://github.com/istanbuljs/nyc).
+
+To set up code coverage:
+
+- Create `.nycrc` in your project's root directory
+
+  ```json
+  {
+    "include": ["dist"],
+    "exclude": ["dist/__tests__/"],
+    "extension": [".js", ".ts"],
+    "reporter": ["text", "html"],
+    "exclude-after-remap": false
+  }
+  ```
+
+- Update your `package.json` scripts:
+
+  ```json
+  "precoverage": "npm test",
+  "coverage": "open coverage/index.html",
+  "coverage:ci": "lb-nyc report --reporter=text-lcov | coveralls",
+  "test": "lb-nyc npm run mocha --scripts-prepend-node-path",
+  "test:ci": "lb-nyc npm run mocha --scripts-prepend-node-path"
+  ```
+
+  `converage:ci` sets up integration with [Coveralls](https://coveralls.io/).

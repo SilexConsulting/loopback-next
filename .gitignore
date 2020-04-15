@@ -12,10 +12,11 @@ examples/*/dist
 benchmark/dist
 **/package
 .sandbox
-packages/cli/generators/datasource/connectors.json
 packages/tsdocs/fixtures/monorepo/docs
 packages/tsdocs/fixtures/monorepo/packages/pkg1/docs
 /docs/site/readmes
+/docs/site/changelogs
+/docs/site/CHANGELOG.md
 /docs/apidocs/reports-temp
 /docs/apidocs/models
 *.tsbuildinfo
@@ -32,3 +33,6 @@ packages/tsdocs/fixtures/monorepo/packages/pkg1/docs
 # ESLint cache
 .eslintcache
 
+# Docs preview
+docs/_loopback.io/
+docs/_preview/

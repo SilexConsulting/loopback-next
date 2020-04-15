@@ -1,17 +1,37 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {
-  ControllerRoute,
-  createControllerFactoryForClass,
-  createControllerFactoryForBinding,
-  ControllerFactory,
-} from '../../..';
-import {expect} from '@loopback/testlab';
+import {BindingScope, Context, CoreBindings} from '@loopback/core';
 import {anOperationSpec} from '@loopback/openapi-spec-builder';
-import {Context, CoreBindings, BindingScope} from '@loopback/core';
+import {expect} from '@loopback/testlab';
+import {
+  ControllerFactory,
+  ControllerRoute,
+  createControllerFactoryForBinding,
+  createControllerFactoryForClass,
+  joinPath,
+  RestBindings,
+  RouteSource,
+} from '../../..';
+
+describe('joinPath', () => {
+  it('joins basePath and path', () => {
+    expect(joinPath('', 'a')).to.equal('/a');
+    expect(joinPath('/', '')).to.equal('/');
+    expect(joinPath('/', 'a')).to.equal('/a');
+    expect(joinPath('/root', 'a')).to.equal('/root/a');
+    expect(joinPath('root', 'a')).to.equal('/root/a');
+    expect(joinPath('root/', '/a')).to.equal('/root/a');
+    expect(joinPath('root/', '/a/')).to.equal('/root/a');
+    expect(joinPath('/root/', '/a/')).to.equal('/root/a');
+    expect(joinPath('/root//x', '/a')).to.equal('/root/x/a');
+    expect(joinPath('/root/', '/')).to.equal('/root');
+    expect(joinPath('/root/x', '/a/b')).to.equal('/root/x/a/b');
+    expect(joinPath('//root//x', '//a///b////c')).to.equal('/root/x/a/b/c');
+  });
+});
 
 describe('ControllerRoute', () => {
   it('rejects routes with no methodName', () => {
@@ -86,6 +106,20 @@ describe('ControllerRoute', () => {
     expect(route._controllerName).to.eql('my-controller');
   });
 
+  it('implements toString', () => {
+    const spec = anOperationSpec().build();
+    const route = new MyRoute(
+      'get',
+      '/greet',
+      spec,
+      MyController,
+      myControllerFactory,
+      'greet',
+    );
+    expect(route.toString()).to.equal('MyRoute - get /greet');
+    expect(new RouteSource(route).toString()).to.equal('get /greet');
+  });
+
   describe('updateBindings()', () => {
     let appCtx: Context;
     let requestCtx: Context;
@@ -103,6 +137,12 @@ describe('ControllerRoute', () => {
       expect(
         await requestCtx.get(CoreBindings.CONTROLLER_METHOD_NAME),
       ).to.equal('greet');
+      expect(await requestCtx.get(RestBindings.OPERATION_SPEC_CURRENT)).to.eql({
+        'x-controller-name': 'MyController',
+        'x-operation-name': 'greet',
+        tags: ['MyController'],
+        responses: {'200': {description: 'An undocumented response body.'}},
+      });
     });
 
     it('binds current controller to the request context as singleton', async () => {

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -16,7 +16,7 @@ const testUtils = require('../../test-utils');
 const ALL_EXAMPLES = require('../../../generators/example').getAllExamples();
 const VALID_EXAMPLE = 'todo';
 
-describe('lb4 example', function() {
+describe('lb4 example', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(10000);
 

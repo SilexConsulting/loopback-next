@@ -14,10 +14,12 @@ See [Monorepo overview](./MONOREPO.md) for a list of all packages.
 
 - [Setting up development environment](#setting-up-development-environment)
 - [Building the project](#building-the-project)
+- [Utilizing the monorepo](#utilizing-the-monorepo)
 - [Running tests](#running-tests)
 - [Coding rules](#coding-rules)
 - [Working with dependencies](#working-with-dependencies)
 - [File naming convention](#file-naming-convention)
+- [Documentation](#documentation)
 - [API documentation](#api-documentation)
 - [Commit message guidelines](#commit-message-guidelines)
 - [Making breaking changes](#making-breaking-changes)
@@ -35,7 +37,7 @@ dependencies.
 - [git](https://git-scm.com/): Github's
   [Set Up Git](https://help.github.com/articles/set-up-git/) guide is a good
   source of information.
-- [Node.js 8.x (LTS)](https://nodejs.org/en/download/)
+- [Node.js 10.x (LTS)](https://nodejs.org/en/download/)
 
 You may want to configure your IDE or editor to get better support for
 TypeScript too.
@@ -78,6 +80,36 @@ npm run build
 Please note that we are automatically running the build from `pretest` script,
 therefore you should not need to run this command as part of your
 [red-green-refactor cycle](http://www.jamesshore.com/Blog/Red-Green-Refactor.html).
+
+## Utilizing the monorepo
+
+Source code from the monorepo can be utilized as LoopBack 4 packages that are
+not published to npm registry yet. This is useful to test or debug your
+applications or extensions with project dependencies on LoopBack 4 against a
+local git repo and branch of `loopback-next`.
+
+### Using monorepo packages as dependencies
+
+The `/sandbox` directory in the monorepo can be used to utilize the source code
+as symbolically-linked dependencies. See the
+[README](https://github.com/strongloop/loopback-next/blob/master/sandbox/README.md)
+for usage instructions.
+
+### Using the CLI via the monorepo
+
+The
+[CLI](https://github.com/strongloop/loopback-next/blob/master/packages/cli/bin/cli-main.js)
+can be invoked from the local `loopback-next` git repository:
+
+```bash
+./loopback-next/packages/cli/bin/cli-main.js
+```
+
+The arguments are the same as `lb4`. For example,
+`./loopback-next/packages/cli/bin/cli-main.js model` is the same as `lb4 model`.
+
+{% include important.html content="The LoopBack 4 packages must be built. See
+[Building the project](#building-the-project)" %}
 
 ## Running tests
 
@@ -211,6 +243,85 @@ Examples are:
 src/__tests__/acceptance/application.acceptance.ts
 src/__tests__/integration/user.controller.integration.ts
 src/__tests__/unit/application.unit.ts
+```
+
+## Documentation
+
+The documentation available at [http://loopback.io/doc/en/lb4](loopback.io)
+website is powered by Jekyll and Markdown. The main site content and Jekyll
+configuration is hosted in
+[loopback.io](https://github.com/strongloop/loopback.io) repository on GitHub.
+
+LoopBack 4 documentation is hosted inside this monorepo in the
+[/docs](https://github.com/strongloop/loopback-next/tree/master/docs) directory.
+This allows us to change both implementation and the documentation in a single
+pull request.
+
+### Publishing changes
+
+To prevent documentation changes going live before the changes in the
+implementation have been published, we have set up the following build pipeline:
+
+1. As part of the LoopBack 4 release process, the content of `docs` directory is
+   bundled and published to npmjs.org as `@loopback/docs` package.
+
+2. We have a CI/CD pipeline to pick a new `@loopback/docs` version and commit
+   the updated content to `loopback.io` repository. The job is run every night.
+
+### Previewing loopback-next docs only
+
+> This workflow is not available on Windows (unless you use Windows Subsystem
+> for Linux).
+
+When making change to our documentation, it's useful to quickly check how is the
+updated markdown content going to be rendered on the website. To make this flow
+as fast as possible, we have a script to prepare a subset of our website with
+LoopBack 4 content only. This provides the fastest feedback loop possible, at
+the cost of occasional breakage when the script is not updated to accommodate
+changes made in the `loopback.io` repository.
+
+As the initial setup, run the following command once, before you start making
+documentation changes:
+
+```sh
+$ npm run docs:prepare
+```
+
+This command will create `docs/_preview` directory with a Jekyll project and
+configure symlinks to let Jekyll automatically pick any changes made in
+`docs/site` files.
+
+Whenever you want to (re)render documentation, just (re)start the following
+command:
+
+```sh
+$ npm run docs:start
+```
+
+The first run will be slightly longer because Jekyll has to render all doc
+pages. Subsequent runs should be very fast because only changed files are
+re-rendered thanks to Jekyll `incremental` mode.
+
+### Viewing the full website
+
+> This workflow is not available on Windows (unless you use Windows Subsystem
+> for Linux).
+
+It is also possible to verify the full build setup, including validation of
+Markdown & Jekyll (liquid) syntax.
+
+Run the following command to clone `loopback.io` repository to
+`sandbox/loopback.io` and get the current documentation from loopback-next
+copied in the right places in the Jekyll project:
+
+```sh
+npm run build:site
+```
+
+You can also run the documentation tests exactly as our CI pipeline does:
+
+```sh
+npm run verify:docs
 ```
 
 ## API Documentation

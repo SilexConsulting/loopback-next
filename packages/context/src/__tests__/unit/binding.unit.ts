@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -6,9 +6,12 @@
 import {expect, sinon, SinonSpy} from '@loopback/testlab';
 import {
   Binding,
+  BindingEvent,
+  BindingKey,
   BindingScope,
   BindingType,
   Context,
+  filterByTag,
   inject,
   Provider,
 } from '../..';
@@ -78,6 +81,12 @@ describe('Binding', () => {
         /Tag must be a string or an object \(but not array\):/,
       );
     });
+
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.tag('t1');
+      assertEvents(events, 'tag');
+    });
   });
 
   describe('inScope', () => {
@@ -98,6 +107,12 @@ describe('Binding', () => {
     it('sets the transient binding scope', () => {
       binding.inScope(BindingScope.TRANSIENT);
       expect(binding.scope).to.equal(BindingScope.TRANSIENT);
+    });
+
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.inScope(BindingScope.TRANSIENT);
+      assertEvents(events, 'scope');
     });
   });
 
@@ -125,6 +140,12 @@ describe('Binding', () => {
       expect(binding.type).to.equal(BindingType.CONSTANT);
     });
 
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.to('value');
+      assertEvents(events, 'value');
+    });
+
     it('rejects promise values', () => {
       expect(() => binding.to(Promise.resolve('value'))).to.throw(
         /Promise instances are not allowed.*toDynamicValue/,
@@ -150,6 +171,12 @@ describe('Binding', () => {
       expect(value).to.equal('hello');
       expect(b.type).to.equal(BindingType.DYNAMIC_VALUE);
     });
+
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.toDynamicValue(() => Promise.resolve('hello'));
+      assertEvents(events, 'value');
+    });
   });
 
   describe('toClass(cls)', () => {
@@ -159,6 +186,12 @@ describe('Binding', () => {
       expect(b.type).to.equal(BindingType.CLASS);
       const myService = await ctx.get<MyService>('myService');
       expect(myService.getMessage()).to.equal('hello world');
+    });
+
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.toClass(MyService);
+      assertEvents(events, 'value');
     });
   });
 
@@ -188,6 +221,18 @@ describe('Binding', () => {
       ctx.bind('msg').to('hello');
       const b = ctx.bind('provider_key').toProvider(MyProvider);
       expect(b.type).to.equal(BindingType.PROVIDER);
+    });
+
+    it('sets the providerConstructor', () => {
+      ctx.bind('msg').to('hello');
+      const b = ctx.bind('provider_key').toProvider(MyProvider);
+      expect(b.providerConstructor).to.equal(MyProvider);
+    });
+
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.toProvider(MyProvider);
+      assertEvents(events, 'value');
     });
   });
 
@@ -253,6 +298,12 @@ describe('Binding', () => {
         .bind('child.options')
         .toAlias('parent.options#child');
       expect(childBinding.type).to.equal(BindingType.ALIAS);
+    });
+
+    it('triggers changed event', () => {
+      const events = listenOnBinding();
+      binding.toAlias('parent.options#child');
+      assertEvents(events, 'value');
     });
   });
 
@@ -379,11 +430,172 @@ describe('Binding', () => {
         type: BindingType.CONSTANT,
       });
     });
+
+    it('converts a keyed binding with alias to plain JSON object', () => {
+      const myBinding = new Binding(key)
+        .inScope(BindingScope.TRANSIENT)
+        .toAlias(BindingKey.create('b', 'x'));
+      const json = myBinding.toJSON();
+      expect(json).to.eql({
+        key: key,
+        scope: BindingScope.TRANSIENT,
+        tags: {},
+        isLocked: false,
+        type: BindingType.ALIAS,
+        alias: 'b#x',
+      });
+    });
+  });
+
+  describe('inspect()', () => {
+    it('converts a keyed binding to plain JSON object', () => {
+      const json = binding.inspect();
+      expect(json).to.eql({
+        key: key,
+        scope: BindingScope.TRANSIENT,
+        tags: {},
+        isLocked: false,
+      });
+    });
+
+    it('converts a binding with more attributes to plain JSON object', () => {
+      const myBinding = new Binding(key, true)
+        .inScope(BindingScope.CONTEXT)
+        .tag('model', {name: 'my-model'})
+        .to('a');
+      const json = myBinding.inspect();
+      expect(json).to.eql({
+        key: key,
+        scope: BindingScope.CONTEXT,
+        tags: {model: 'model', name: 'my-model'},
+        isLocked: true,
+        type: BindingType.CONSTANT,
+      });
+    });
+
+    it('converts a binding with toDynamicValue to plain JSON object', () => {
+      const myBinding = new Binding(key)
+        .inScope(BindingScope.SINGLETON)
+        .tag('model', {name: 'my-model'})
+        .toDynamicValue(() => 'a');
+      const json = myBinding.inspect({includeInjections: true});
+      expect(json).to.eql({
+        key: key,
+        scope: BindingScope.SINGLETON,
+        tags: {model: 'model', name: 'my-model'},
+        isLocked: false,
+        type: BindingType.DYNAMIC_VALUE,
+      });
+    });
+
+    it('converts a binding with valueConstructor to plain JSON object', () => {
+      function myFilter(b: Readonly<Binding<unknown>>) {
+        return b.key.startsWith('timers.');
+      }
+
+      class MyController {
+        @inject('y', {optional: true})
+        private y: number | undefined;
+
+        @inject(filterByTag('task'))
+        private tasks: unknown[];
+
+        @inject(myFilter)
+        private timers: unknown[];
+
+        constructor(@inject('x') private x: string) {}
+      }
+      const myBinding = new Binding(key, true)
+        .tag('model', {name: 'my-model'})
+        .toClass(MyController);
+      const json = myBinding.inspect({includeInjections: true});
+      expect(json).to.eql({
+        key: key,
+        scope: BindingScope.TRANSIENT,
+        tags: {model: 'model', name: 'my-model'},
+        isLocked: true,
+        type: BindingType.CLASS,
+        valueConstructor: 'MyController',
+        injections: {
+          constructorArguments: [
+            {targetName: 'MyController.constructor[0]', bindingKey: 'x'},
+          ],
+          properties: {
+            y: {
+              targetName: 'MyController.prototype.y',
+              bindingKey: 'y',
+              optional: true,
+            },
+            tasks: {
+              targetName: 'MyController.prototype.tasks',
+              bindingTagPattern: 'task',
+            },
+            timers: {
+              targetName: 'MyController.prototype.timers',
+              bindingFilter: 'myFilter',
+            },
+          },
+        },
+      });
+    });
+
+    it('converts a binding with providerConstructor to plain JSON object', () => {
+      class MyProvider implements Provider<string> {
+        @inject('y')
+        private y: number;
+
+        @inject(filterByTag('task'))
+        private tasks: unknown[];
+
+        constructor(@inject('x') private x: string) {}
+
+        value() {
+          return `${this.x}: ${this.y}`;
+        }
+      }
+      const myBinding = new Binding(key, true)
+        .inScope(BindingScope.CONTEXT)
+        .tag('model', {name: 'my-model'})
+        .toProvider(MyProvider);
+      const json = myBinding.inspect({includeInjections: true});
+      expect(json).to.eql({
+        key: key,
+        scope: BindingScope.CONTEXT,
+        tags: {model: 'model', name: 'my-model'},
+        isLocked: true,
+        type: BindingType.PROVIDER,
+        providerConstructor: 'MyProvider',
+        injections: {
+          constructorArguments: [
+            {targetName: 'MyProvider.constructor[0]', bindingKey: 'x'},
+          ],
+          properties: {
+            y: {targetName: 'MyProvider.prototype.y', bindingKey: 'y'},
+            tasks: {
+              targetName: 'MyProvider.prototype.tasks',
+              bindingTagPattern: 'task',
+            },
+          },
+        },
+      });
+    });
   });
 
   function givenBinding() {
     ctx = new Context();
     binding = new Binding(key);
+  }
+
+  function listenOnBinding() {
+    const events: BindingEvent[] = [];
+    binding.on('changed', (event: BindingEvent) => {
+      events.push(event);
+    });
+    return events;
+  }
+
+  function assertEvents(events: BindingEvent[], operation: string) {
+    expect(events).to.eql([{binding, operation, type: 'changed'}]);
   }
 
   class MyProvider implements Provider<string> {

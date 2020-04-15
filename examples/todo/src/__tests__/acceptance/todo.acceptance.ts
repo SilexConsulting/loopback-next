@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/example-todo
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -14,12 +14,14 @@ import {
 import {TodoListApplication} from '../../application';
 import {Todo} from '../../models/';
 import {TodoRepository} from '../../repositories/';
+import {Geocoder} from '../../services';
 import {
   aLocation,
   getProxiedGeoCoderConfig,
   givenCachingProxy,
   givenTodo,
   HttpCachingProxy,
+  isGeoCoderServiceAvailable,
 } from '../helpers';
 
 describe('TodoApplication', () => {
@@ -34,6 +36,14 @@ describe('TodoApplication', () => {
   before(givenRunningApplicationWithCustomConfiguration);
   after(() => app.stop());
 
+  let available = true;
+  before(async function () {
+    // eslint-disable-next-line no-invalid-this
+    this.timeout(30 * 1000);
+    const service = await app.get<Geocoder>('services.Geocoder');
+    available = await isGeoCoderServiceAvailable(service);
+  });
+
   before(givenTodoRepository);
   before(() => {
     client = createRestAppClient(app);
@@ -43,16 +53,21 @@ describe('TodoApplication', () => {
     await todoRepo.deleteAll();
   });
 
-  it('creates a todo', async function() {
+  it('creates a todo', async function () {
     // Set timeout to 30 seconds as `post /todos` triggers geocode look up
     // over the internet and it takes more than 2 seconds
     // eslint-disable-next-line no-invalid-this
     this.timeout(30000);
     const todo = givenTodo();
-    const response = await client
-      .post('/todos')
-      .send(todo)
-      .expect(200);
+    const response = await client.post('/todos').send(todo).expect(200);
+    expect(response.body).to.containDeep(todo);
+    const result = await todoRepo.findById(response.body.id);
+    expect(result).to.containDeep(todo);
+  });
+
+  it('creates a todo with arbitrary property', async function () {
+    const todo = givenTodo({tag: {random: 'random'}});
+    const response = await client.post('/todos').send(todo).expect(200);
     expect(response.body).to.containDeep(todo);
     const result = await todoRepo.findById(response.body.id);
     expect(result).to.containDeep(todo);
@@ -61,37 +76,45 @@ describe('TodoApplication', () => {
   it('rejects requests to create a todo with no title', async () => {
     const todo = givenTodo();
     delete todo.title;
-    await client
-      .post('/todos')
-      .send(todo)
-      .expect(422);
+    await client.post('/todos').send(todo).expect(422);
   });
 
   it('rejects requests with input that contains excluded properties', async () => {
     const todo = givenTodo();
     todo.id = 1;
-    await client
-      .post('/todos')
-      .send(todo)
-      .expect(422);
+    await client.post('/todos').send(todo).expect(422);
   });
 
-  it('creates an address-based reminder', async function() {
+  it('creates an address-based reminder', async function () {
+    // eslint-disable-next-line no-invalid-this
+    if (!available) return this.skip();
     // Increase the timeout to accommodate slow network connections
     // eslint-disable-next-line no-invalid-this
     this.timeout(30000);
 
     const todo = givenTodo({remindAtAddress: aLocation.address});
-    const response = await client
-      .post('/todos')
-      .send(todo)
-      .expect(200);
+    const response = await client.post('/todos').send(todo).expect(200);
     todo.remindAtGeo = aLocation.geostring;
 
     expect(response.body).to.containEql(todo);
 
     const result = await todoRepo.findById(response.body.id);
     expect(result).to.containEql(todo);
+  });
+
+  it('returns 400 if it cannot find an address', async function () {
+    // eslint-disable-next-line no-invalid-this
+    if (!available) return this.skip();
+    // Increase the timeout to accommodate slow network connections
+    // eslint-disable-next-line no-invalid-this
+    this.timeout(30000);
+
+    const todo = givenTodo({remindAtAddress: 'this address does not exist'});
+    const response = await client.post('/todos').send(todo).expect(400);
+
+    expect(response.body.error.message).to.eql(
+      'Address not found: this address does not exist',
+    );
   });
 
   context('when dealing with a single persisted todo', () => {
@@ -127,10 +150,7 @@ describe('TodoApplication', () => {
     });
 
     it('returns 404 when replacing a todo that does not exist', () => {
-      return client
-        .put('/todos/99999')
-        .send(givenTodo())
-        .expect(404);
+      return client.put('/todos/99999').send(givenTodo()).expect(404);
     });
 
     it('updates the todo by ID ', async () => {
@@ -153,10 +173,7 @@ describe('TodoApplication', () => {
     });
 
     it('deletes the todo', async () => {
-      await client
-        .del(`/todos/${persistedTodo.id}`)
-        .send()
-        .expect(204);
+      await client.del(`/todos/${persistedTodo.id}`).send().expect(204);
       await expect(todoRepo.findById(persistedTodo.id)).to.be.rejectedWith(
         EntityNotFoundError,
       );
@@ -179,6 +196,17 @@ describe('TodoApplication', () => {
       .get('/todos')
       .query({filter: {where: {isComplete: false}}})
       .expect(200, [toJSON(todoInProgress)]);
+  });
+
+  it('exploded filter conditions work', async () => {
+    await givenTodoInstance({title: 'wake up', isComplete: true});
+    await givenTodoInstance({
+      title: 'go to sleep',
+      isComplete: false,
+    });
+
+    const response = await client.get('/todos').query('filter[limit]=2');
+    expect(response.body).to.have.length(2);
   });
 
   /*

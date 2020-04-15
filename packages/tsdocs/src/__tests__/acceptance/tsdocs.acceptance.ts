@@ -1,12 +1,12 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/tsdocs
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {expect} from '@loopback/testlab';
-import * as fs from 'fs-extra';
+import fs from 'fs-extra';
 import pEvent from 'p-event';
-import * as path from 'path';
+import path from 'path';
 import {runExtractorForMonorepo, updateApiDocs} from '../..';
 import {runExtractorForPackage} from '../../monorepo-api-extractor';
 
@@ -16,7 +16,7 @@ const MONOREPO_ROOT = path.join(__dirname, '../../../fixtures/monorepo');
 const APIDOCS_ROOT = path.join(MONOREPO_ROOT, 'docs/apidocs');
 const SITE_APIDOCS_ROOT = path.join(MONOREPO_ROOT, 'docs/site/apidocs');
 
-describe('tsdocs', function() {
+describe('tsdocs', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(10000);
 
@@ -123,6 +123,7 @@ lang: en
 title: 'API docs: index'
 keywords: LoopBack 4.0, LoopBack 4
 sidebar: lb4_sidebar
+editurl: https://github.com/strongloop/loopback-next
 permalink: /doc/en/lb4/apidocs.index.html
 ---`);
 
@@ -141,6 +142,9 @@ permalink: /doc/en/lb4/apidocs.index.html
       'utf-8',
     );
     expect(constructorDoc).to.not.match(/\.\(constructor\)\.md/);
+    expect(constructorDoc).to.match(
+      /editurl\: https\:\/\/github\.com\/strongloop\/loopback\-next\/tree\/master\/packages\/pkg1/,
+    );
 
     const pkgDoc = await fs.readFile(
       path.join(SITE_APIDOCS_ROOT, 'pkg1.md'),
@@ -148,6 +152,9 @@ permalink: /doc/en/lb4/apidocs.index.html
     );
     expect(pkgDoc).to.match(
       /\[pkg1\]\(https\:\/\/github\.com\/strongloop\/loopback\-next\/tree\/master\/packages\/pkg1\)/,
+    );
+    expect(pkgDoc).to.match(
+      /editurl\: https\:\/\/github\.com\/strongloop\/loopback\-next\/tree\/master\/packages\/pkg1/,
     );
   });
 });

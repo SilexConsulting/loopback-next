@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2018. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -18,11 +18,13 @@ import {
   BindingSelector,
   filterByTag,
   isBindingAddress,
+  isBindingTagFilter,
 } from './binding-filter';
 import {BindingAddress} from './binding-key';
 import {BindingComparator} from './binding-sorter';
 import {BindingCreationPolicy, Context} from './context';
 import {ContextView, createViewGetter} from './context-view';
+import {JSONObject} from './json-types';
 import {ResolutionOptions, ResolutionSession} from './resolution-session';
 import {BoundValue, ValueOrPromise} from './value-promise';
 
@@ -311,11 +313,11 @@ export namespace inject {
    * @param metadata - Metadata for the injection
    */
   export const binding = function injectBinding(
-    bindingKey: BindingAddress,
+    bindingKey?: BindingAddress,
     metadata?: InjectBindingMetadata,
   ) {
     metadata = Object.assign({decorator: '@inject.binding'}, metadata);
-    return inject(bindingKey, metadata, resolveAsBinding);
+    return inject(bindingKey ?? '', metadata, resolveAsBinding);
   };
 
   /**
@@ -395,7 +397,7 @@ export function assertTargetType(
   const targetName = ResolutionSession.describeInjection(injection).targetName;
   const targetType = inspectTargetType(injection);
   if (targetType && targetType !== expectedType) {
-    expectedTypeName = expectedTypeName || expectedType.name;
+    expectedTypeName = expectedTypeName ?? expectedType.name;
     throw new Error(
       `The type of ${targetName} (${targetType.name}) is not ${expectedTypeName}`,
     );
@@ -440,14 +442,21 @@ function resolveAsSetter(ctx: Context, injection: Injection) {
       `@inject.setter (${targetName}) does not allow BindingFilter.`,
     );
   }
+  if (bindingSelector === '') {
+    throw new Error('Binding key is not set for @inject.setter');
+  }
   // No resolution session should be propagated into the setter
   return function setter(value: unknown) {
     const binding = findOrCreateBindingForInjection(ctx, injection);
-    binding.to(value);
+    binding!.to(value);
   };
 }
 
-function resolveAsBinding(ctx: Context, injection: Injection) {
+function resolveAsBinding(
+  ctx: Context,
+  injection: Injection,
+  session: ResolutionSession,
+) {
   const targetName = assertTargetType(injection, Binding);
   const bindingSelector = injection.bindingSelector;
   if (!isBindingAddress(bindingSelector)) {
@@ -455,13 +464,15 @@ function resolveAsBinding(ctx: Context, injection: Injection) {
       `@inject.binding (${targetName}) does not allow BindingFilter.`,
     );
   }
-  return findOrCreateBindingForInjection(ctx, injection);
+  return findOrCreateBindingForInjection(ctx, injection, session);
 }
 
 function findOrCreateBindingForInjection(
   ctx: Context,
   injection: Injection<unknown>,
+  session?: ResolutionSession,
 ) {
+  if (injection.bindingSelector === '') return session?.currentBinding;
   const bindingCreation =
     injection.metadata &&
     (injection.metadata as InjectBindingMetadata).bindingCreation;
@@ -544,7 +555,7 @@ export function describeInjectedArguments(
   target: Object,
   method?: string,
 ): Readonly<Injection>[] {
-  method = method || '';
+  method = method ?? '';
 
   // Try to read from cache
   const cache =
@@ -554,7 +565,7 @@ export function describeInjectedArguments(
       {
         ownMetadataOnly: true,
       },
-    ) || {};
+    ) ?? {};
   let meta: Readonly<Injection>[] = cache[method];
   if (meta) return meta;
 
@@ -575,7 +586,7 @@ export function describeInjectedArguments(
       target,
       method,
       options,
-    ) || [];
+    ) ?? [];
 
   // Cache the result
   cache[method] = meta;
@@ -686,6 +697,69 @@ export function describeInjectedProperties(
     MetadataInspector.getAllPropertyMetadata<Readonly<Injection>>(
       PROPERTIES_KEY,
       target,
-    ) || {};
+    ) ?? {};
   return metadata;
+}
+
+/**
+ * Inspect injections for a binding created with `toClass` or `toProvider`
+ * @param binding - Binding object
+ */
+export function inspectInjections(binding: Readonly<Binding<unknown>>) {
+  const json: JSONObject = {};
+  const ctor = binding.valueConstructor ?? binding.providerConstructor;
+  if (ctor == null) return json;
+  const constructorInjections = describeInjectedArguments(ctor, '').map(
+    inspectInjection,
+  );
+  if (constructorInjections.length) {
+    json.constructorArguments = constructorInjections;
+  }
+  const propertyInjections = describeInjectedProperties(ctor.prototype);
+  const properties: JSONObject = {};
+  for (const p in propertyInjections) {
+    properties[p] = inspectInjection(propertyInjections[p]);
+  }
+  if (Object.keys(properties).length) {
+    json.properties = properties;
+  }
+  return json;
+}
+
+/**
+ * Inspect an injection
+ * @param injection - Injection information
+ */
+function inspectInjection(injection: Readonly<Injection<unknown>>) {
+  const injectionInfo = ResolutionSession.describeInjection(injection);
+  const descriptor: JSONObject = {};
+  if (injectionInfo.targetName) {
+    descriptor.targetName = injectionInfo.targetName;
+  }
+  if (isBindingAddress(injectionInfo.bindingSelector)) {
+    // Binding key
+    descriptor.bindingKey = injectionInfo.bindingSelector.toString();
+  } else if (isBindingTagFilter(injectionInfo.bindingSelector)) {
+    // Binding tag filter
+    descriptor.bindingTagPattern = JSON.parse(
+      JSON.stringify(injectionInfo.bindingSelector.bindingTagPattern),
+    );
+  } else {
+    // Binding filter function
+    descriptor.bindingFilter =
+      injectionInfo.bindingSelector?.name ?? '<function>';
+  }
+  // Inspect metadata
+  if (injectionInfo.metadata) {
+    if (
+      injectionInfo.metadata.decorator &&
+      injectionInfo.metadata.decorator !== '@inject'
+    ) {
+      descriptor.decorator = injectionInfo.metadata.decorator;
+    }
+    if (injectionInfo.metadata.optional) {
+      descriptor.optional = injectionInfo.metadata.optional;
+    }
+  }
+  return descriptor;
 }

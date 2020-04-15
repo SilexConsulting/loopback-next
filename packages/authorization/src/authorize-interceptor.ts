@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/authorization
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -10,15 +10,13 @@ import {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   config,
   Context,
-  filterByTag,
-  inject,
   Interceptor,
   InvocationContext,
   Next,
   Provider,
 } from '@loopback/context';
 import {SecurityBindings, UserProfile} from '@loopback/security';
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {getAuthorizationMetadata} from './decorators/authorize';
 import {AuthorizationBindings, AuthorizationTags} from './keys';
 import {
@@ -37,8 +35,6 @@ export class AuthorizationInterceptor implements Provider<Interceptor> {
   private options: AuthorizationOptions;
 
   constructor(
-    @inject(filterByTag(AuthorizationTags.AUTHORIZER))
-    private authorizers: Authorizer[],
     @config({fromBinding: AuthorizationBindings.COMPONENT})
     options: AuthorizationOptions = {},
   ) {
@@ -63,8 +59,8 @@ export class AuthorizationInterceptor implements Provider<Interceptor> {
     if (!metadata) {
       debug('No authorization metadata is found for %s', description);
     }
-    metadata = metadata || this.options.defaultMetadata;
-    if (!metadata || (metadata && metadata.skip)) {
+    metadata = metadata ?? this.options.defaultMetadata;
+    if (!metadata || metadata?.skip) {
       debug('Authorization is skipped for %s', description);
       const result = await next();
       return result;
@@ -87,13 +83,12 @@ export class AuthorizationInterceptor implements Provider<Interceptor> {
     };
 
     debug('Security context for %s', description, authorizationCtx);
-    let authorizers = await loadAuthorizers(
+    const authorizers = await loadAuthorizers(
       invocationCtx,
-      metadata.voters || [],
+      metadata.voters ?? [],
     );
 
     let finalDecision = this.options.defaultDecision;
-    authorizers = authorizers.concat(this.authorizers);
     for (const fn of authorizers) {
       const decision = await fn(authorizationCtx, metadata);
       debug('Decision', decision);

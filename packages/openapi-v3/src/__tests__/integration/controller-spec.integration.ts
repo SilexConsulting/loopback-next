@@ -83,6 +83,8 @@ describe('controller spec', () => {
             title: 'Baz',
             type: 'object',
             properties: {name: {type: 'string'}},
+            properties: {name: {type: 'string'}},
+            additionalProperties: false,
           },
           Foo: {
             // guarantee `definition` is deleted
@@ -92,6 +94,7 @@ describe('controller spec', () => {
               bar: {$ref: '#/components/schemas/Bar'},
               baz: {$ref: '#/components/schemas/Baz'},
             },
+            additionalProperties: false,
           },
         },
       },
@@ -253,7 +256,7 @@ describe('controller spec', () => {
         $ref: '#/components/schemas/Todo',
       });
 
-      const globalSchemas = (spec.components || {}).schemas;
+      const globalSchemas = (spec.components ?? {}).schemas;
       expect(globalSchemas).to.deepEqual({
         Todo: {
           title: 'Todo',
@@ -302,7 +305,7 @@ describe('controller spec', () => {
         $ref: '#/definitions/Todo',
       });
 
-      const globalSchemas = (spec.components || {}).schemas;
+      const globalSchemas = (spec.components ?? {}).schemas;
       expect(globalSchemas).to.deepEqual({
         Todo: {
           title: 'Todo',
@@ -402,7 +405,7 @@ describe('controller spec', () => {
       }
 
       const spec = getControllerSpec(MyController);
-      const globalSchemas = (spec.components || {}).schemas;
+      const globalSchemas = (spec.components ?? {}).schemas;
       expect(globalSchemas).to.be.undefined();
     });
 
@@ -450,7 +453,7 @@ describe('controller spec', () => {
         $ref: '#/definitions/Todo',
       });
 
-      const globalSchemas = (spec.components || {}).schemas;
+      const globalSchemas = (spec.components ?? {}).schemas;
       expect(globalSchemas).to.deepEqual({
         Todo: {
           title: 'Todo',
@@ -512,7 +515,7 @@ describe('controller spec', () => {
         $ref: '#/components/schemas/Todo',
       });
 
-      const globalSchemas = (spec.components || {}).schemas;
+      const globalSchemas = (spec.components ?? {}).schemas;
       expect(globalSchemas).to.deepEqual({
         Todo: {
           title: 'Todo',
@@ -540,6 +543,7 @@ describe('controller spec', () => {
           type: 'string',
         },
       },
+      additionalProperties: false,
       title: 'MyModel',
       type: 'object',
     };
@@ -780,7 +784,7 @@ describe('controller spec', () => {
         $ref: '#/components/schemas/MyModel',
       });
 
-      const globalSchemas = (spec.components || {}).schemas;
+      const globalSchemas = (spec.components ?? {}).schemas;
       expect(globalSchemas).to.deepEqual({
         MyModel: {
           title: 'MyModel',
@@ -790,6 +794,7 @@ describe('controller spec', () => {
               type: 'string',
             },
           },
+          additionalProperties: false,
         },
       });
     });

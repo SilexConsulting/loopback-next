@@ -3,6 +3,152 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@2.0.3...@loopback/benchmark@2.0.4) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [2.0.3](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@2.0.2...@loopback/benchmark@2.0.3) (2020-04-08)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [2.0.2](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@2.0.1...@loopback/benchmark@2.0.2) (2020-03-24)
+
+
+### Bug Fixes
+
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+
+
+
+
+
+## [2.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@2.0.0...@loopback/benchmark@2.0.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.26...@loopback/benchmark@2.0.0) (2020-03-05)
+
+
+### Bug Fixes
+
+* **cli:** extract messages for generators ([2f572bd](https://github.com/strongloop/loopback-next/commit/2f572bd75883420e38bfaa780bc38445aec92e65))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [1.3.26](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.25...@loopback/benchmark@1.3.26) (2020-02-06)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.25](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.24...@loopback/benchmark@1.3.25) (2020-02-05)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.24](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.23...@loopback/benchmark@1.3.24) (2020-01-27)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.23](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.22...@loopback/benchmark@1.3.23) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.22](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.21...@loopback/benchmark@1.3.22) (2020-01-07)
+
+
+### Bug Fixes
+
+* **benchmark:** handle worker startup errors ([ff02524](https://github.com/strongloop/loopback-next/commit/ff02524f8ae9448017e9de4731ebb8d41c10e789))
+* **benchmark:** make "create todo" scenario pass ([ee32b7d](https://github.com/strongloop/loopback-next/commit/ee32b7db23b3c086ce8a35b60c79207f2058aff9))
+
+
+
+
+
+## [1.3.21](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.20...@loopback/benchmark@1.3.21) (2019-12-09)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.20](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.19...@loopback/benchmark@1.3.20) (2019-11-25)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.19](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.18...@loopback/benchmark@1.3.19) (2019-11-12)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.18](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.17...@loopback/benchmark@1.3.18) (2019-10-24)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
+## [1.3.17](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.16...@loopback/benchmark@1.3.17) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/benchmark
+
+
+
+
+
 ## [1.3.16](https://github.com/strongloop/loopback-next/compare/@loopback/benchmark@1.3.15...@loopback/benchmark@1.3.16) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/benchmark

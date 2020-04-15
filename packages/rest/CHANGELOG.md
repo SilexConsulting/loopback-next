@@ -3,6 +3,309 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.2.1](https://github.com/strongloop/loopback-next/compare/@loopback/rest@3.2.0...@loopback/rest@3.2.1) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/rest
+
+
+
+
+
+# [3.2.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@3.1.0...@loopback/rest@3.2.0) (2020-04-08)
+
+
+### Bug Fixes
+
+* passport strategy adapter must support oauth2 flows ([67c2f02](https://github.com/strongloop/loopback-next/commit/67c2f02f74c08ee037827c0045e1f225d6ca8ede))
+
+
+### Features
+
+* **rest:** improve Ajv validation to allow extensions of keywords and formats ([afdee34](https://github.com/strongloop/loopback-next/commit/afdee346f5b56932d59ff600478116b75eac797d))
+* **rest:** use the description field in Openapi ([4ca321c](https://github.com/strongloop/loopback-next/commit/4ca321c01a128b14dcbc5336901899ee61ff1460))
+* support any type ([03ce221](https://github.com/strongloop/loopback-next/commit/03ce221bb41a2ecd296ba235fe342d488fa2d639))
+
+
+
+
+
+# [3.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@3.0.1...@loopback/rest@3.1.0) (2020-03-24)
+
+
+### Bug Fixes
+
+* **rest:** allow async custom keyword by setting {$async: true} to referenced schemas ([ede4bbd](https://github.com/strongloop/loopback-next/commit/ede4bbdba4d0bca3a558309118bc97924f48fd6e))
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+
+
+### Features
+
+* **rest:** add info spec enhancer to build `info` for OpenAPI spec from application metadata ([a440ae2](https://github.com/strongloop/loopback-next/commit/a440ae248f8a51abb573ee3f1246be82e1d38817))
+
+
+
+
+
+## [3.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/rest@3.0.0...@loopback/rest@3.0.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/rest
+
+
+
+
+
+# [3.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@2.0.0...@loopback/rest@3.0.0) (2020-03-05)
+
+
+### Bug Fixes
+
+* **cli:** extract messages for generators ([2f572bd](https://github.com/strongloop/loopback-next/commit/2f572bd75883420e38bfaa780bc38445aec92e65))
+* **rest:** improves error handling for express middleware ([02d0c91](https://github.com/strongloop/loopback-next/commit/02d0c91abb97830fd8652dde69ac4153720f3e75))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Code Refactoring
+
+* **rest:** make getApiSpec() async ([fe3df1b](https://github.com/strongloop/loopback-next/commit/fe3df1b85904ee8b8a005fa6eddf150d28ad2a08))
+
+
+### Features
+
+* **rest:** add async validation support ([5b9a1ef](https://github.com/strongloop/loopback-next/commit/5b9a1efe03a9728dc707eb050c24b0ac7e23a1ec))
+* **rest:** add openapi enhancer service ([62d55eb](https://github.com/strongloop/loopback-next/commit/62d55ebd956910cbb487611673f21ec7088f3dcc)), closes [#4380](https://github.com/strongloop/loopback-next/issues/4380)
+* **rest:** add support for ajv-errors ([d151475](https://github.com/strongloop/loopback-next/commit/d151475d8fc91b4b02e0067c1db7069620143dd2))
+* **rest:** allow controllers/routes to be added/removed after server is started ([b604563](https://github.com/strongloop/loopback-next/commit/b6045636885268d9ea5d31287351ddbf0da53a7c))
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **rest:** bind controller routes to the context ([a645b17](https://github.com/strongloop/loopback-next/commit/a645b17d0338e56f8182437d6ade20f27577203d))
+* **rest:** fixed AjvErrorOptions type & added test for ajvErrors: Object ([aa711d0](https://github.com/strongloop/loopback-next/commit/aa711d068b476292cdf27f673228746d21999c52))
+
+
+### BREAKING CHANGES
+
+* **rest:** Api specifications are now emitted as a Promise instead
+of a value object.  Calls to getApiSpec function must switch from
+the old style to new style as follows:
+
+1. Old style
+
+```ts
+function() {
+  // ...
+  const spec = restApp.restServer.getApiSpec();
+  // ...
+}
+```
+
+2. New style
+
+```ts
+async function() {
+  // ...
+  const spec = await restApp.restServer.getApiSpec();
+  // ...
+}
+```
+* **rest:** `validateRequestBody` is now an async function to allow asynchronous validations by custom Ajv keywords and formats. See https://ajv.js.org/#asynchronous-validation
+for more details.
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.26.1...@loopback/rest@2.0.0) (2020-02-06)
+
+
+### Bug Fixes
+
+* suport complex objects for query params in api explorer ([a4ef640](https://github.com/strongloop/loopback-next/commit/a4ef64037a80d1ff7df37ba7912909a1bfcdbf51))
+
+
+### BREAKING CHANGES
+
+* This fix has modified the api definitions described by the decorator
+'param.query.object', to support Open-API's `url-encoded` definition for json query
+parameters.
+
+Previously, such parameters were described with `exploded: true` and
+`style: deepObject`, i.e exploded encoding, which turned out to be problematic as explained and discussed in,
+https://github.com/swagger-api/swagger-js/issues/1385 and
+https://github.com/OAI/OpenAPI-Specification/issues/1706
+
+```json
+  {
+    "in": "query",
+    "style": "deepObject"
+    "explode": "true",
+    "schema": {}
+  }
+```
+
+Exploded encoding worked for simple json objects as below but not for complex objects.
+
+```
+   http://localhost:3000/todos?filter[limit]=2
+```
+
+To address these issues with exploded queries, this fix switches definition of json
+query params from the `exploded`, `deep-object` style to the `url-encoded` style
+definition in Open-API spec.
+
+LoopBack already supports receiving url-encoded payload for json query parameters.
+
+For instance, to filter api results from the GET '/todo-list' endpoint in the
+todo-list example with a specific relation, { "include": [ { "relation": "todo" } ] },
+the following url-encoded query parameter can be used,
+
+```
+   http://localhost:3000/todos?filter=%7B%22include%22%3A%5B%7B%22relation%22%3A%22todoList%22%7D%5D%7D
+```
+
+The above was possible because the coercion behavior in LoopBack performed json
+parsing for `deep object` style json query params before this fix. This fix has
+modified that behavior by removing json parsing. Since the `exploded` `deep-object`
+definition has been removed from the `param.query.object` decorator, this new
+behaviour remains just an internal source code aspect as of now.
+
+In effect, this fix only modifies the open api definitions generated from LoopBack
+APIs. The 'style' and 'explode' fields are removed and the 'schema' field is moved
+under 'content[application/json]'. This is the definition that supports url-encoding
+as per Open-API spec.
+
+```json
+  {
+    "in": "query"
+    "content": {
+      "application/json": {
+        "schema": {}
+      }
+    }
+  }
+```
+
+Certain client libraries (like swagger-ui or LoopBack's api explorer) necessiate
+using Open-API's `url-encoded` style definition for json query params to support
+"sending" url-encoded payload.
+
+All consumers of LoopBack APIs may need to regenerate api definitions, if their
+client libraries require them to do so for url-encoding.
+
+Otherwise there wouldn't be any significant impact on API consumers.
+
+To preserve compatibility with existing REST API clients, this change is backward
+compatible. All exploded queries like `?filter[limit]=1` will continue to work for
+json query params, despite the fact that they are described differently in the
+OpenAPI spec.
+
+Existing api clients will continue to work after an upgrade.
+
+The signature of the 'param.query.object' decorator has not changed.
+
+There is no code changes required in the LoopBack APIs after upgrading to this
+fix. No method signatures or data structures are impacted.
+
+
+
+
+
+## [1.26.1](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.26.0...@loopback/rest@1.26.1) (2020-02-05)
+
+**Note:** Version bump only for package @loopback/rest
+
+
+
+
+
+# [1.26.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.25.1...@loopback/rest@1.26.0) (2020-01-27)
+
+
+### Features
+
+* **context:** index bindings by tag to speed up matching by tag ([566b9d9](https://github.com/strongloop/loopback-next/commit/566b9d9a35ce52d9aeefe17e36f91c9714616b21))
+
+
+
+
+
+## [1.25.1](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.25.0...@loopback/rest@1.25.1) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/rest
+
+
+
+
+
+# [1.25.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.24.0...@loopback/rest@1.25.0) (2019-12-09)
+
+
+### Features
+
+* **context:** make it possible to set source information for interceptions ([2a1ccb4](https://github.com/strongloop/loopback-next/commit/2a1ccb409a889d8b30b03ddf3284c9e9d5554e27))
+
+
+
+
+
+# [1.24.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.23.0...@loopback/rest@1.24.0) (2019-11-25)
+
+
+### Features
+
+* **rest:** upgrade to path-to-regexp 6.x and improve error messages ([ad44209](https://github.com/strongloop/loopback-next/commit/ad4420954e3d3c18d4a52ca7511985d026efcdc6))
+
+
+
+
+
+# [1.23.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.22.0...@loopback/rest@1.23.0) (2019-11-12)
+
+
+### Bug Fixes
+
+* **rest:** improve null check to avoid compilation errors with TypeScript 3.7 ([ab47ef6](https://github.com/strongloop/loopback-next/commit/ab47ef63adc01b170ddc537ca973da631c5a8d8f))
+
+
+### Features
+
+* **rest:** bind operation spec to the request context ([55311df](https://github.com/strongloop/loopback-next/commit/55311df23e8b4a22968b5c0edd826323538ba163))
+
+
+
+
+
+# [1.22.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.21.0...@loopback/rest@1.22.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **openapi-v3:** preserve `additionalProperties: false` ([bc7691b](https://github.com/strongloop/loopback-next/commit/bc7691b0963ee297922bd4d9652a0eccf763f085))
+
+
+### Features
+
+* improve debug logs for schema generators ([da88cdf](https://github.com/strongloop/loopback-next/commit/da88cdf9c75b0ca498b86f7cd5729f78a4b160f7))
+* simplify model schema with excluded properties ([b554ac8](https://github.com/strongloop/loopback-next/commit/b554ac8a08a518f112d111ebabcac48279ada7f8))
+
+
+
+
+
+# [1.21.0](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.20.1...@loopback/rest@1.21.0) (2019-10-07)
+
+
+### Features
+
+* **rest:** add listenOnStart flag to control http listening for a rest server ([2c5a131](https://github.com/strongloop/loopback-next/commit/2c5a131))
+
+
+
+
+
 ## [1.20.1](https://github.com/strongloop/loopback-next/compare/@loopback/rest@1.20.0...@loopback/rest@1.20.1) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/rest

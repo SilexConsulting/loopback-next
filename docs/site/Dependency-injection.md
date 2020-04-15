@@ -33,7 +33,7 @@ export class AuthenticateActionProvider implements Provider<AuthenticateFn> {
     // is executed.
     @inject.getter(AuthenticationBindings.STRATEGY)
     readonly getStrategy: Getter<AuthenticationStrategy>,
-    @inject.setter(AuthenticationBindings.CURRENT_USER)
+    @inject.setter(SecurityBindings.USER)
     readonly setCurrentUser: Setter<UserProfile>,
   ) {}
 
@@ -206,7 +206,7 @@ dependencies as method arguments.
 
 ```ts
 class InfoController {
-  greet(@inject(AuthenticationBindings.CURRENT_USER) user: UserProfile) {
+  greet(@inject(SecurityBindings.USER) user: UserProfile) {
     return `Hello, ${user.name}`;
   }
 }
@@ -269,18 +269,24 @@ export class MyController {
 }
 ```
 
-## Additional `inject.*` decorators
+## Additional `inject.*` or sugar decorators
 
 There are a few special decorators from the `inject` namespace.
 
-- [`@inject.getter`](Decorators_inject.md#@inject.getter)
-- [`@inject.setter`](Decorators_inject.md#@inject.setter)
-- [`@inject.binding`](Decorators_inject.md#@inject.binding)
-- [`@inject.context`](Decorators_inject.md#@inject.context)
-- [`@inject.tag`](Decorators_inject.md#@inject.tag)
-- [`@inject.view`](Decorators_inject.md#@inject.view)
+- [`@inject.getter`](decorators/Decorators_inject.md#@inject.getter)
+- [`@inject.setter`](decorators/Decorators_inject.md#@inject.setter)
+- [`@inject.binding`](decorators/Decorators_inject.md#@inject.binding)
+- [`@inject.context`](decorators/Decorators_inject.md#@inject.context)
+- [`@inject.tag`](decorators/Decorators_inject.md#@inject.tag)
+- [`@inject.view`](decorators/Decorators_inject.md#@inject.view)
 
-See [Inject decorators](Decorators_inject.md) for more details.
+There are also other sugar decorators for injection.
+
+- [`@config` and `@config.*`](Context.md#configuration-by-convention)
+- [@service](decorators/Decorators_service.md)
+- [@repository](decorators/Decorators_repository.md)
+
+See [Inject decorators](decorators/Decorators_inject.md) for more details.
 
 ## Circular dependencies
 

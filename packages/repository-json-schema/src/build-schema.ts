@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/repository-json-schema
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -12,10 +12,10 @@ import {
   RelationMetadata,
   resolveType,
 } from '@loopback/repository';
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {JSONSchema6 as JSONSchema} from 'json-schema';
 import {inspect} from 'util';
-import {JSON_SCHEMA_KEY, MODEL_TYPE_KEYS} from './keys';
+import {JSON_SCHEMA_KEY} from './keys';
 const debug = debugFactory('loopback:repository-json-schema:build-schema');
 
 export interface JsonSchemaOptions<T extends object> {
@@ -38,8 +38,40 @@ export interface JsonSchemaOptions<T extends object> {
    * Set this flag to mark all model properties as optional. This is typically
    * used to describe request body of PATCH endpoints. This option will be
    * overridden by the "optional" option if it is set and non-empty.
+   *
+   * The flag also applies to nested model instances if its value is set to
+   * 'deep', such as:
+   *
+   * @example
+   * ```ts
+   * @model()
+   * class Address {
+   *  @property()
+   *  street: string;
+   *  @property()
+   *  city: string;
+   *  @property()
+   *  state: string;
+   *  @property()
+   *  zipCode: string;
+   * }
+   *
+   * @model()
+   * class Customer {
+   *   @property()
+   *   address: Address;
+   * }
+   *
+   * // The following schema allows properties of `customer` optional, but not
+   * // `customer.address`
+   * const schemaRef1 = getModelSchemaRef(Customer, {partial: true});
+   *
+   * // The following schema allows properties of `customer` and
+   * // `customer.address` optional
+   * const schemaRef2 = getModelSchemaRef(Customer, {partial: 'deep'});
+   * ```
    */
-  partial?: boolean;
+  partial?: boolean | 'deep';
 
   /**
    * List of model properties to exclude from the schema.
@@ -66,19 +98,19 @@ export function buildModelCacheKey<T extends object>(
 ): string {
   // Backwards compatibility: preserve cache key "modelOnly"
   if (Object.keys(options).length === 0) {
-    return MODEL_TYPE_KEYS.ModelOnly;
+    return 'modelOnly';
   }
 
   // New key schema: use the same suffix as we use for schema title
   // For example: "modelPartialWithRelations"
   // Note this new key schema preserves the old key "modelWithRelations"
-  return 'model' + (options.title || '') + getTitleSuffix(options);
+  return 'model' + (options.title ?? '') + getTitleSuffix(options);
 }
 
 /**
  * Gets the JSON Schema of a TypeScript model/class by seeing if one exists
  * in a cache. If not, one is generated and then cached.
- * @param ctor - Contructor of class to get JSON Schema from
+ * @param ctor - Constructor of class to get JSON Schema from
  */
 export function getJsonSchema<T extends object>(
   ctor: Function & {prototype: T},
@@ -88,7 +120,7 @@ export function getJsonSchema<T extends object>(
   // different titles as keys
   const cached = MetadataInspector.getClassMetadata(JSON_SCHEMA_KEY, ctor);
   const key = buildModelCacheKey(options);
-  let schema = cached && cached[key];
+  let schema = cached?.[key];
 
   if (!schema) {
     // Create new json schema from model
@@ -181,7 +213,8 @@ export function stringTypeToWrapper(type: string | Function): Function {
       wrapper = Array;
       break;
     }
-    case 'object': {
+    case 'object':
+    case 'any': {
       wrapper = Object;
       break;
     }
@@ -235,6 +268,8 @@ export function metaToJsonProperty(meta: PropertyDefinition): JSONSchema {
       type: 'string',
       format: 'date-time',
     });
+  } else if (propertyType === 'any') {
+    // no-op, the json schema for any type is {}
   } else if (isBuiltinType(resolvedType)) {
     Object.assign(propDef, {
       type: resolvedType.name.toLowerCase(),
@@ -357,8 +392,8 @@ export function modelToJsonSchema<T extends object>(
   jsonSchemaOptions: JsonSchemaOptions<T> = {},
 ): JSONSchema {
   const options = {...jsonSchemaOptions};
-  options.visited = options.visited || {};
-  options.optional = options.optional || [];
+  options.visited = options.visited ?? {};
+  options.optional = options.optional ?? [];
   const partial = options.partial && !options.optional.length;
 
   if (options.partial && !partial) {
@@ -366,6 +401,7 @@ export function modelToJsonSchema<T extends object>(
     delete options.partial;
   }
 
+  debug('Creating schema for model %s', ctor.name);
   debug('JSON schema options: %o', options);
 
   const meta: ModelDefinition | {} = ModelMetadataHelper.getModelMetadata(ctor);
@@ -374,6 +410,8 @@ export function modelToJsonSchema<T extends object>(
   if (!(meta instanceof ModelDefinition)) {
     return {};
   }
+
+  debug('Model settings', meta.settings);
 
   const title = buildSchemaTitle(ctor, meta, options);
 
@@ -395,9 +433,6 @@ export function modelToJsonSchema<T extends object>(
 
   for (const p in meta.properties) {
     if (options.exclude && options.exclude.includes(p as keyof T)) {
-      result.not = (result.not as JSONSchema) || {};
-      result.not.anyOf = result.not.anyOf || [];
-      result.not.anyOf.push({required: [p]});
       continue;
     }
 
@@ -405,7 +440,7 @@ export function modelToJsonSchema<T extends object>(
       continue;
     }
 
-    result.properties = result.properties || {};
+    result.properties = result.properties ?? {};
     result.properties[p] = result.properties[p] || {};
 
     const metaProperty = Object.assign({}, meta.properties[p]);
@@ -417,7 +452,7 @@ export function modelToJsonSchema<T extends object>(
     const optional = options.optional.includes(p as keyof T);
 
     if (metaProperty.required && !(partial || optional)) {
-      result.required = result.required || [];
+      result.required = result.required ?? [];
       result.required.push(p);
     }
 
@@ -435,14 +470,36 @@ export function modelToJsonSchema<T extends object>(
       continue;
     }
 
-    const propSchema = getJsonSchema(referenceType, options);
+    const propOptions = {...options};
+    if (propOptions.partial !== 'deep') {
+      // Do not cascade `partial` to nested properties
+      delete propOptions.partial;
+    }
 
-    includeReferencedSchema(referenceType.name, propSchema);
+    const propSchema = getJsonSchema(referenceType, propOptions);
+
+    // JSONSchema6Definition allows both boolean and JSONSchema6 types
+    if (typeof result.properties[p] !== 'boolean') {
+      const prop = result.properties[p] as JSONSchema;
+      const propTitle = propSchema.title ?? referenceType.name;
+      const targetRef = {$ref: `#/definitions/${propTitle}`};
+
+      if (prop.type === 'array' && prop.items) {
+        // Update $ref for array type
+        prop.items = targetRef;
+      } else {
+        result.properties[p] = targetRef;
+      }
+      includeReferencedSchema(propTitle, propSchema);
+    }
   }
+
+  result.additionalProperties = meta.settings.strict === false;
+  debug('  additionalProperties?', result.additionalProperties);
 
   if (options.includeRelations) {
     for (const r in meta.relations) {
-      result.properties = result.properties || {};
+      result.properties = result.properties ?? {};
       const relMeta = meta.relations[r];
       const targetType = resolveType(relMeta.target);
       const targetSchema = getJsonSchema(targetType, options);
@@ -457,18 +514,21 @@ export function modelToJsonSchema<T extends object>(
 
   function includeReferencedSchema(name: string, schema: JSONSchema) {
     if (!schema || !Object.keys(schema).length) return;
-    result.definitions = result.definitions || {};
 
     // promote nested definition to the top level
     if (result !== schema && schema.definitions) {
       for (const key in schema.definitions) {
         if (key === title) continue;
+        result.definitions = result.definitions ?? {};
         result.definitions[key] = schema.definitions[key];
       }
       delete schema.definitions;
     }
 
-    result.definitions[name] = schema;
+    if (result !== schema) {
+      result.definitions = result.definitions ?? {};
+      result.definitions[name] = schema;
+    }
   }
   return result;
 }

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -10,7 +10,7 @@ import {
   ShotRequestOptions,
   stubExpressContext,
 } from '@loopback/testlab';
-import * as HttpErrors from 'http-errors';
+import HttpErrors from 'http-errors';
 import {
   ControllerRoute,
   RegExpRouter,
@@ -19,25 +19,6 @@ import {
   RoutingTable,
   TrieRouter,
 } from '../../..';
-
-describe('RoutingTable', () => {
-  it('joins basePath and path', () => {
-    expect(RoutingTable.joinPath('', 'a')).to.equal('/a');
-    expect(RoutingTable.joinPath('/', '')).to.equal('/');
-    expect(RoutingTable.joinPath('/', 'a')).to.equal('/a');
-    expect(RoutingTable.joinPath('/root', 'a')).to.equal('/root/a');
-    expect(RoutingTable.joinPath('root', 'a')).to.equal('/root/a');
-    expect(RoutingTable.joinPath('root/', '/a')).to.equal('/root/a');
-    expect(RoutingTable.joinPath('root/', '/a/')).to.equal('/root/a');
-    expect(RoutingTable.joinPath('/root/', '/a/')).to.equal('/root/a');
-    expect(RoutingTable.joinPath('/root//x', '/a')).to.equal('/root/x/a');
-    expect(RoutingTable.joinPath('/root/', '/')).to.equal('/root');
-    expect(RoutingTable.joinPath('/root/x', '/a/b')).to.equal('/root/x/a/b');
-    expect(RoutingTable.joinPath('//root//x', '//a///b////c')).to.equal(
-      '/root/x/a/b/c',
-    );
-  });
-});
 
 describe('RoutingTable with RegExpRouter', () => {
   runTestsWithRouter(new RegExpRouter());
@@ -86,9 +67,7 @@ function runTestsWithRouter(router: RestRouter) {
     const route = table.find(request);
 
     expect(route).to.be.instanceOf(ControllerRoute);
-    expect(route)
-      .to.have.property('spec')
-      .containEql(spec.paths['/hello'].get);
+    expect(route).to.have.property('spec').containEql(spec.paths['/hello'].get);
     expect(route).to.have.property('pathParams');
     expect(route.describe()).to.equal('TestController.greet');
   });
@@ -117,9 +96,7 @@ function runTestsWithRouter(router: RestRouter) {
     const route = table.find(request);
 
     expect(route).to.be.instanceOf(ControllerRoute);
-    expect(route)
-      .to.have.property('spec')
-      .containEql(spec.paths['/hello'].get);
+    expect(route).to.have.property('spec').containEql(spec.paths['/hello'].get);
     expect(route).to.have.property('pathParams');
     expect(route.describe()).to.equal('TestController.greet');
   });

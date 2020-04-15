@@ -3,6 +3,296 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.3.0...@loopback/cli@2.3.1) (2020-04-11)
+
+
+### Bug Fixes
+
+* **cli:** make the StatusConflicter compatible with the base Conflicter ([b6a1af9](https://github.com/strongloop/loopback-next/commit/b6a1af98ccb0705ee3a802df68bb590ec74473f5))
+* **cli:** remove unused imports from the crud controller template ([848272d](https://github.com/strongloop/loopback-next/commit/848272d980e94bc9f0878e678de12a336c0d8b8a))
+
+
+
+
+
+# [2.3.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.2.1...@loopback/cli@2.3.0) (2020-04-08)
+
+
+### Bug Fixes
+
+* **cli:** allow `-h` for help ([f74092e](https://github.com/strongloop/loopback-next/commit/f74092eb20acd9e9ab1875c56ccbcb2e55f4c1da))
+* **cli:** make sure generated package.json is well formatted ([38be23f](https://github.com/strongloop/loopback-next/commit/38be23f46f02ea380f1290f12704078925d264cd))
+* **cli:** remove `All rights reserved.` from the header for LICENSE ([ce78b2a](https://github.com/strongloop/loopback-next/commit/ce78b2a81314aacb46b525121ecdfdbd97d0d94e))
+
+
+### Features
+
+* **cli:** add `lb4 copyright` to generate/update file headers ([abc6111](https://github.com/strongloop/loopback-next/commit/abc6111148a831f47308f4284215ac9564f3c12b))
+* **cli:** add `updateLicense` to `lb4 copyright` command ([535df04](https://github.com/strongloop/loopback-next/commit/535df04df75d39f2a5e36740ae1e0de27359af78))
+* **cli:** allow --exclude <glob-pattern> to not update headers for excluded files ([a81ce7e](https://github.com/strongloop/loopback-next/commit/a81ce7e1193f7408d30d984d0c3ddcec74f7c316))
+* **cli:** implement dark mode in the app template ([6939546](https://github.com/strongloop/loopback-next/commit/6939546d2b0cba59d8a70ce500dbf1b6e42d682b))
+* **cli:** print options for `lb4 copyright --help` and update docs ([f23ecb7](https://github.com/strongloop/loopback-next/commit/f23ecb741bcd589767d94acf2a394efddfe37ff6))
+* **cli:** wrap license text with a max line length of 80 chars ([a9046ed](https://github.com/strongloop/loopback-next/commit/a9046ed639076bf8e06a0952c0ae2a298f92c330))
+
+
+
+
+
+## [2.2.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.2.0...@loopback/cli@2.2.1) (2020-03-24)
+
+**Note:** Version bump only for package @loopback/cli
+
+
+
+
+
+# [2.2.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.1.1...@loopback/cli@2.2.0) (2020-03-24)
+
+
+### Bug Fixes
+
+* **cli:** add validation-app to example cli ([36a70b3](https://github.com/strongloop/loopback-next/commit/36a70b39062e3e8d467a3a820a51a58ffaefb613))
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+
+
+### Features
+
+* **cli:** add `lb4 rest-crud` command to generate model endpoints from model/datasource ([38fd41e](https://github.com/strongloop/loopback-next/commit/38fd41e26cd5abf52e69d0b275a730b195be813a))
+
+
+
+
+
+## [2.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.1.0...@loopback/cli@2.1.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/cli
+
+
+
+
+
+# [2.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.0.1...@loopback/cli@2.1.0) (2020-03-17)
+
+
+### Bug Fixes
+
+* **cli:** add ibmi, relocate db2z for affinity to other db2s ([76bb470](https://github.com/strongloop/loopback-next/commit/76bb470e8feba478796741d09b35fdb7549b79ab))
+* **cli:** add missing examples to CLI ([221d8d0](https://github.com/strongloop/loopback-next/commit/221d8d00973e28475aee7771c521fd06b2723ef4))
+
+
+### Features
+
+* **cli:** add translations for 14 languages ([31bc951](https://github.com/strongloop/loopback-next/commit/31bc951c405e3bf21bc10875bc1c8cc6a1bab794))
+* **example-file-upload-download:** add file download support ([12afd6b](https://github.com/strongloop/loopback-next/commit/12afd6b47ee1d371c68d03bd86c03d49b5f43b8d))
+* **example-rest-crud:** add example showing CrudRestApiBuilder ([ea37afb](https://github.com/strongloop/loopback-next/commit/ea37afb8d9e4ca9aef032b84e349e918d945e8ee))
+
+
+
+
+
+## [2.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@2.0.0...@loopback/cli@2.0.1) (2020-03-05)
+
+
+### Bug Fixes
+
+* **cli:** include intl in package.json ([097724b](https://github.com/strongloop/loopback-next/commit/097724bc0d38ce6a499d2a26092a570451b5e026))
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.30.1...@loopback/cli@2.0.0) (2020-03-05)
+
+
+### Bug Fixes
+
+* remove ref for v4.loopback.io ([78f20c0](https://github.com/strongloop/loopback-next/commit/78f20c0ed4db5f3ce0d7b676449ba3b22526319e))
+* **cli:** correct root directory in test ([f951052](https://github.com/strongloop/loopback-next/commit/f951052a12b82923b18f781c3b0292de0a2c8634)), closes [#4425](https://github.com/strongloop/loopback-next/issues/4425)
+* **cli:** extract messages for generators ([2f572bd](https://github.com/strongloop/loopback-next/commit/2f572bd75883420e38bfaa780bc38445aec92e65))
+* **cli:** extract messages for generators ([b264d60](https://github.com/strongloop/loopback-next/commit/b264d60752e8487c0649b1f47419dbc06a111384))
+* **cli:** ignore stdin when config is provided via CLI args ([3d64cfe](https://github.com/strongloop/loopback-next/commit/3d64cfebe19ae26b66ae7639a8ddffbf3dd54061))
+* **cli:** move `loopback` to devDependencies ([7701cab](https://github.com/strongloop/loopback-next/commit/7701cab4a18f37be62269d075045a0d0b8eb7d57))
+* **cli:** update tsconfig template excludes ([1fcc463](https://github.com/strongloop/loopback-next/commit/1fcc4633af333b56d0ba978e58fbc29778861215)), closes [/github.com/strongloop/loopback-next/pull/4707#issuecomment-590255940](https://github.com//github.com/strongloop/loopback-next/pull/4707/issues/issuecomment-590255940)
+* cleanup tilde-path-app post test ([4562a50](https://github.com/strongloop/loopback-next/commit/4562a5055c40ea91d33c4e1f29c08edcefa7fdef)), closes [#4652](https://github.com/strongloop/loopback-next/issues/4652)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* use [@param](https://github.com/param).filter and [@param](https://github.com/param).where decorators ([896ef74](https://github.com/strongloop/loopback-next/commit/896ef7485376b3aedcca01a40f828bf1ed9470ae))
+* **cli:** add `tslib` as a template dependency ([267b074](https://github.com/strongloop/loopback-next/commit/267b074a93dc7483333486e2b381b3d7168ebc79)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **cli:** add build:globalize option ([3c42077](https://github.com/strongloop/loopback-next/commit/3c4207730cd87e9399b18969c71515d44991e547))
+* **cli:** allow different naming convention for discover ([298e66e](https://github.com/strongloop/loopback-next/commit/298e66e7430406d2615f7826c770ee126ae56d18))
+* **cli:** automatically include base models when importing LB3 models ([9d5f8a7](https://github.com/strongloop/loopback-next/commit/9d5f8a771f475c1597bc5e1d22efc06e4940cbb7))
+* **cli:** import LB3 models with a custom base class ([aa3dc12](https://github.com/strongloop/loopback-next/commit/aa3dc12e32bd9c297742c9b54224644ea81f7526))
+* **cli:** improve logging from processing of config & options ([41a39c1](https://github.com/strongloop/loopback-next/commit/41a39c17a595bb92ea928d93318cc353e3e19218))
+* **cli:** skip inherited props & settings when importing a LB3 model ([97c8b05](https://github.com/strongloop/loopback-next/commit/97c8b0535f32dc5271d84fa8b66009126ddae8e1))
+* .vscode add typescript lint rules ([e8eb371](https://github.com/strongloop/loopback-next/commit/e8eb371af12ced96d0c87c88eae2be40b76c7911)), closes [#4584](https://github.com/strongloop/loopback-next/issues/4584)
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* lb3 migration tests for models customized with db metadata ([c58cc11](https://github.com/strongloop/loopback-next/commit/c58cc117b6e7a75e1920ce873a9cb4b98ff1058b))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [1.30.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.30.0...@loopback/cli@1.30.1) (2020-02-06)
+
+**Note:** Version bump only for package @loopback/cli
+
+
+
+
+
+# [1.30.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.29.0...@loopback/cli@1.30.0) (2020-02-05)
+
+
+### Features
+
+* leverage isactive for transaction ([fc94437](https://github.com/strongloop/loopback-next/commit/fc9443787039d4a1db3008a0141f5693f95bfbd4))
+* **cli:** add hasOne relation type to `lb4 relation` ([3046f3e](https://github.com/strongloop/loopback-next/commit/3046f3e9ca29225c2ca64567af0be337a6fa5b00))
+
+
+
+
+
+# [1.29.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.28.1...@loopback/cli@1.29.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* **cli:** disgard any changes if lb4 `relation` fails ([08dc87c](https://github.com/strongloop/loopback-next/commit/08dc87ca3f654f3669c5ffb130e1e4cbf0dcebef))
+* **cli:** fix has many relation controller attribute ([5aa83df](https://github.com/strongloop/loopback-next/commit/5aa83df2fe3c38165174328d26726690f6cbafb5))
+* **cli:** index file should be updated. Add relation interface to model template ([7fd9b88](https://github.com/strongloop/loopback-next/commit/7fd9b88626a7d1b4a227077a4334fdbd00edea0d))
+* **cli:** reject datasources with no name property for service generator ([cc871e5](https://github.com/strongloop/loopback-next/commit/cc871e509b5c3a0de2ac0dc1108332285aa808a4))
+
+
+### Features
+
+* **cli:** add static BINDING_KEY prop to non-global interceptors ([5fbd95f](https://github.com/strongloop/loopback-next/commit/5fbd95f47f67207d7e0430d8c08e2a9738e685ae))
+
+
+
+
+
+## [1.28.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.28.0...@loopback/cli@1.28.1) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/cli
+
+
+
+
+
+# [1.28.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.27.0...@loopback/cli@1.28.0) (2020-01-07)
+
+
+### Features
+
+* add title property to ping response schema definition ([b8b7490](https://github.com/strongloop/loopback-next/commit/b8b7490ce29d0973208ba38c3365de9091b7a795))
+
+
+
+
+
+# [1.27.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.26.0...@loopback/cli@1.27.0) (2019-12-09)
+
+
+### Features
+
+* **cli:** add default option for gracePeriodForClose to configure http/https close ([5a243e2](https://github.com/strongloop/loopback-next/commit/5a243e280868c4b83d7b5685f326a44baf5cbd9a))
+* **cli:** update templates to enable esModuleInterop and default imports from non-ES modules ([83e628b](https://github.com/strongloop/loopback-next/commit/83e628bdf5834102aa9042e52a3d7e608d2d1754))
+
+
+
+
+
+# [1.26.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.25.1...@loopback/cli@1.26.0) (2019-11-25)
+
+
+### Bug Fixes
+
+* **cli:** disconnect the datasource after the model was discovered ([ad30c61](https://github.com/strongloop/loopback-next/commit/ad30c61e8f35795bef6c2aef893884e520561832))
+* **cli:** emit correct property definitions for built-in types ([6a972db](https://github.com/strongloop/loopback-next/commit/6a972db819aab9f831a26da4f2f81abe3c26efe7))
+* **cli:** emit correct property definitions for built-in types ([9d34f23](https://github.com/strongloop/loopback-next/commit/9d34f23bd8eadaed9a38ca95339384bddce041b2))
+* **cli:** handle missing target artifact dir ([ba34838](https://github.com/strongloop/loopback-next/commit/ba348384b045d6976e257f09cdc610766568abfa))
+* **cli:** updated OAS 'Date' JS Type Mapping to 'string' ([839caa9](https://github.com/strongloop/loopback-next/commit/839caa92038d5ba8548106cd4136ee40d9abf679))
+
+
+### Features
+
+* **cli:** add `connectors.json` ([802529e](https://github.com/strongloop/loopback-next/commit/802529ed0ba1e3a9f9ef417b4b8b4a7459589682))
+* use stringifyObject instead of JSON.stringify for connector metadata ([da60ee7](https://github.com/strongloop/loopback-next/commit/da60ee79d48a7ec11f510ccdbecc878e28651237))
+* **cli:** add lb4 update command to check/update project dependencies ([54d1896](https://github.com/strongloop/loopback-next/commit/54d1896f63705b6938fe74ba2c21ad0b4d9bea23))
+* **cli:** add the ability to check latest cli version ([869d1e4](https://github.com/strongloop/loopback-next/commit/869d1e4b19ba5483521a632a9c8af4b39ca7254f))
+* **cli:** update controller template to enable filter for findById endpoint ([b0ce84b](https://github.com/strongloop/loopback-next/commit/b0ce84b79158cadf2f53bbe627da4d8196f0543f))
+
+
+
+
+
+## [1.25.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.25.0...@loopback/cli@1.25.1) (2019-11-13)
+
+**Note:** Version bump only for package @loopback/cli
+
+
+
+
+
+# [1.25.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.24.0...@loopback/cli@1.25.0) (2019-11-12)
+
+
+### Bug Fixes
+
+* **cli:** improve message for model discovery code generation ([15c11d4](https://github.com/strongloop/loopback-next/commit/15c11d4b6644182b4bd5fc6be34fe805104fc3ca))
+* update error message when failing to read datasource, to include filename ([6663733](https://github.com/strongloop/loopback-next/commit/6663733586ec3a98816f63a887c28b3debf51e4c)), closes [#3965](https://github.com/strongloop/loopback-next/issues/3965)
+
+
+### Features
+
+* **cli:** generate datasource json with '.config.json` extension ([51d8f7b](https://github.com/strongloop/loopback-next/commit/51d8f7b20ec59f888fd6d0634efb47d111f00ef7))
+* **cli:** improve UX of multi-item selection ([077f38c](https://github.com/strongloop/loopback-next/commit/077f38ceccb2e1568aed69dbe00e298b30106c30))
+* **cli:** recognize PK properties defined as `{id: 1}` ([1094509](https://github.com/strongloop/loopback-next/commit/10945093e17b260686e532804f71965d7b156606))
+
+
+
+
+
+# [1.24.0](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.23.2...@loopback/cli@1.24.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **cli:** append "Service" in service generator ([c8fb805](https://github.com/strongloop/loopback-next/commit/c8fb8058c375fe22b0c64988c7ff91c1024084ed))
+
+
+### Features
+
+* **cli:** add inclusion resolver to lb4 relation ([199e1bc](https://github.com/strongloop/loopback-next/commit/199e1bc84a6c57fe650db9588bdb121d27eca7a3))
+
+
+
+
+
+## [1.23.2](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.23.1...@loopback/cli@1.23.2) (2019-10-07)
+
+
+### Bug Fixes
+
+* **cli:** fix typo in cli relation tests ([466f79b](https://github.com/strongloop/loopback-next/commit/466f79b))
+
+
+
+
+
 ## [1.23.1](https://github.com/strongloop/loopback-next/compare/@loopback/cli@1.23.0...@loopback/cli@1.23.1) (2019-09-28)
 
 

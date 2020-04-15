@@ -100,6 +100,7 @@ import {
   Count,
   CountSchema,
   Filter,
+  FilterExcludingWhere,
   repository,
   Where
 } from '@loopback/repository';
@@ -107,9 +108,7 @@ import {
   post,
   param,
   get,
-  getFilterSchemaFor,
   getModelSchemaRef,
-  getWhereSchemaFor,
   patch,
   del,
   requestBody,
@@ -152,7 +151,7 @@ export class TodoController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(Todo)) where?: Where<Todo>,
+    @param.where(Todo) where?: Where<Todo>,
   ): Promise<Count> {
     return this.todoRepository.count(where);
   }
@@ -170,7 +169,7 @@ export class TodoController {
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(Todo))
+    @param.filter(Todo)
     filter?: Filter<Todo>,
   ): Promise<Todo[]> {
     return this.todoRepository.find(filter);
@@ -193,7 +192,7 @@ export class TodoController {
       },
     })
     todo: Partial<Todo>
-    @param.query.object('where', getWhereSchemaFor(Todo)) where?: Where<Todo>,
+    @param.where(Todo) where?: Where<Todo>,
   ): Promise<Count> {
     return this.todoRepository.updateAll(todo, where);
   }
@@ -202,12 +201,19 @@ export class TodoController {
     responses: {
       '200': {
         description: 'Todo model instance',
-        content: {'application/json': {schema: getModelSchemaRef(Todo)}},
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(Todo, {includeRelations: true}),
+          },
+        },
       },
     },
   })
-  async findById(@param.path.number('id') id: number): Promise<Todo> {
-    return this.todoRepository.findById(id);
+  async findById(
+    @param.path.number('id') id: number,
+    @param.filter(Todo, {exclude: 'where'}) filter?: FilterExcludingWhere<Todo>
+  ): Promise<Todo> {
+    return this.todoRepository.findById(id, filter);
   }
 
   @patch('/todos/{id}', {

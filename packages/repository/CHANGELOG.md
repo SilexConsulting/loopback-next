@@ -3,6 +3,234 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository@2.1.0...@loopback/repository@2.1.1) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/repository
+
+
+
+
+
+# [2.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository@2.0.2...@loopback/repository@2.1.0) (2020-04-08)
+
+
+### Bug Fixes
+
+* remove restriction to Entities from DefaultKeyValueRepository ([c30dce3](https://github.com/strongloop/loopback-next/commit/c30dce330fd6585ce8b0d33d3d6a5d2fd5fac906))
+
+
+### Features
+
+* remove Node.js 8.x polyfill for Symbol.asyncIterator ([eeb8772](https://github.com/strongloop/loopback-next/commit/eeb877276cf62d32856eb7227d78618ab4c93c2e))
+
+
+
+
+
+## [2.0.2](https://github.com/strongloop/loopback-next/compare/@loopback/repository@2.0.1...@loopback/repository@2.0.2) (2020-03-24)
+
+
+### Bug Fixes
+
+* **repository-json-schema:** fix schema generation for model inheritance ([5417ed5](https://github.com/strongloop/loopback-next/commit/5417ed5fdbf0508f1882186d9cbff64ecfb10699))
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+
+
+
+
+
+## [2.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository@2.0.0...@loopback/repository@2.0.1) (2020-03-17)
+
+
+### Bug Fixes
+
+* filter null keys when including belongs-to relations in queries ([cccb37f](https://github.com/strongloop/loopback-next/commit/cccb37f43f3ccaf950c23759315b4dde41da4e8b))
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.19.1...@loopback/repository@2.0.0) (2020-03-05)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* constrain filter to exclude where for findById ([360d563](https://github.com/strongloop/loopback-next/commit/360d563361358dead0ac18198b2878aedb5f48c7))
+* support operation hooks ([8701cce](https://github.com/strongloop/loopback-next/commit/8701cce8b208c952e4d41f0570124e389506d808))
+* **repository:** make `targetsMany` property required ([cd4d43a](https://github.com/strongloop/loopback-next/commit/cd4d43abb0ebe56aa31939c14ae9d25021ad1e65))
+* **repository:** remove generic parameters from `Inclusion` type ([ed949e4](https://github.com/strongloop/loopback-next/commit/ed949e415ff0be1467b3029fb2e49c64a22c1b2e))
+* **repository:** skip undefined property values for toJSON ([70fc005](https://github.com/strongloop/loopback-next/commit/70fc005823ab4e5cf4b641d2d80668911a26012a))
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* preserve custom type of auto-generated id property ([dc7ff7f](https://github.com/strongloop/loopback-next/commit/dc7ff7f7829434de3436e9352b1d9cc43392db0e))
+
+
+### BREAKING CHANGES
+
+* **repository:** If you are building a custom relation type with its
+own definition interface, make sure the interface includes `targetsMany`
+property. Typically, the type of this property is hard-coded as `true`
+or `false`, depending on the relation type.
+
+```ts
+interface HasManyDefinition extends RelationDefinitionBase {
+  type: RelationType.hasMany;
+  targetsMany: true;
+  // etc.
+}
+
+export interface BelongsToDefinition extends RelationDefinitionBase {
+  type: RelationType.belongsTo;
+  targetsMany: false;
+  // etc.
+}
+```
+
+When creating an instance of a relation definition, make sure to include
+a value for `targetsMany` property.
+
+```ts
+new ModelDefinition('Order')
+  .addRelation({
+    name: 'customer',
+    type: RelationType.belongsTo,
+    targetsMany: false,
+    source: Order,
+    target: () => Customer,
+    keyFrom: 'customerId',
+    keyTo: 'id',
+  });
+```
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* **repository:** The type `Inclusion` is no longer generic. Please
+update your code and remove any generic arguments provided for the type.
+
+```diff
+- Inclusion<MyModel>
++ Inclusion
+```
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [1.19.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.19.0...@loopback/repository@1.19.1) (2020-02-06)
+
+**Note:** Version bump only for package @loopback/repository
+
+
+
+
+
+# [1.19.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.18.0...@loopback/repository@1.19.0) (2020-02-05)
+
+
+### Features
+
+* leverage isactive for transaction ([fc94437](https://github.com/strongloop/loopback-next/commit/fc9443787039d4a1db3008a0141f5693f95bfbd4))
+
+
+
+
+
+# [1.18.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.17.0...@loopback/repository@1.18.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* **repository:** make the navigational property err msg more clear ([2d493bc](https://github.com/strongloop/loopback-next/commit/2d493bc0387b9f595b82ee149fb83405f4073424))
+
+
+### Features
+
+* **repository:** add interface for hasManyThrough repository ([a242785](https://github.com/strongloop/loopback-next/commit/a24278522c46337887592e864031de891d08f30d)), closes [/github.com/strongloop/loopback-next/pull/2359#issuecomment-559719080](https://github.com//github.com/strongloop/loopback-next/pull/2359/issues/issuecomment-559719080)
+
+
+
+
+
+# [1.17.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.16.0...@loopback/repository@1.17.0) (2020-01-07)
+
+
+### Bug Fixes
+
+* **repository:** belongsto accessor should return undefined if foreign key is not included ([cbdba15](https://github.com/strongloop/loopback-next/commit/cbdba1554fe103109a21e20c48cd3a0edcf8fffb))
+
+
+### Features
+
+* **repository:** add interface for hasManyThrough ([ced2643](https://github.com/strongloop/loopback-next/commit/ced26437c6fa8bd34fa897325730610ec017bc16))
+* **repository:** allow custom keyFrom for hasmany/hasone ([58efff9](https://github.com/strongloop/loopback-next/commit/58efff9e166fbe1fc820fe6168e18b5c7d9630ce))
+
+
+
+
+
+# [1.16.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.15.5...@loopback/repository@1.16.0) (2019-12-09)
+
+
+### Bug Fixes
+
+* **repository:** fix DeepPartial<AnyObject> ([0f97811](https://github.com/strongloop/loopback-next/commit/0f97811256304ab048a93858f7a86229bc662e7a))
+
+
+### Features
+
+* **repository:** add `defineModelClass` helper ([4d844d1](https://github.com/strongloop/loopback-next/commit/4d844d1a6812ebbe18e30d646e7bc854974a1f76))
+* **repository:** add title property to Count schema definition ([a91c989](https://github.com/strongloop/loopback-next/commit/a91c9897f48365b9c888fd08075c82de44774331))
+* **repository:** enable inclusion with custom scope ([4a0d595](https://github.com/strongloop/loopback-next/commit/4a0d595f65a2c80c89e2ca1263d235e4d23cd730))
+* **repository:** rejects create/update operations for navigational properties ([01de327](https://github.com/strongloop/loopback-next/commit/01de3275be7c6dd8e9c50ffeb64c23d6d7ec9e51))
+
+
+
+
+
+## [1.15.5](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.15.4...@loopback/repository@1.15.5) (2019-11-25)
+
+**Note:** Version bump only for package @loopback/repository
+
+
+
+
+
+## [1.15.4](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.15.3...@loopback/repository@1.15.4) (2019-11-12)
+
+
+### Bug Fixes
+
+* **repository:** fix compilation errors with TypeScript 3.7.2 ([d62612d](https://github.com/strongloop/loopback-next/commit/d62612d08e34f4d32b5a3d1645aa0420fecea3b3))
+* **repository:** improve stub typing to avoid compilation errors with TypeScript 3.7 ([29cf103](https://github.com/strongloop/loopback-next/commit/29cf103c780312cf15bf8e1dd189394ae7540fe4))
+* **repository:** improve typings for model inclusion ([eb1a0ae](https://github.com/strongloop/loopback-next/commit/eb1a0ae7a433e566f413a7e3c518b3aeff5374c4))
+
+
+
+
+
+## [1.15.3](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.15.2...@loopback/repository@1.15.3) (2019-10-24)
+
+**Note:** Version bump only for package @loopback/repository
+
+
+
+
+
+## [1.15.2](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.15.1...@loopback/repository@1.15.2) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/repository
+
+
+
+
+
 ## [1.15.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository@1.15.0...@loopback/repository@1.15.1) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/repository

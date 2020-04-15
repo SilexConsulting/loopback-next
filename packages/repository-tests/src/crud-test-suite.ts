@@ -1,12 +1,12 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository-tests
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {juggler} from '@loopback/repository';
-import * as debugFactory from 'debug';
-import * as fs from 'fs';
-import * as path from 'path';
+import debugFactory from 'debug';
+import fs from 'fs';
+import path from 'path';
 import {withCrudCtx} from './helpers.repository-tests';
 import {
   CrudFeatures,
@@ -34,6 +34,7 @@ export function crudRepositoryTestSuite(
     emptyValue: undefined,
     supportsTransactions: true,
     supportsInclusionResolvers: true,
+    hasRevisionToken: false,
     ...partialFeatures,
   };
 
@@ -55,7 +56,7 @@ export function crudRepositoryTestSuite(
 
     const testRoot = path.resolve(__dirname, 'crud');
     testFiles = fs.readdirSync(testRoot);
-    testFiles = testFiles.filter(function(it) {
+    testFiles = testFiles.filter(function (it) {
       return (
         !!require.extensions[path.extname(it).toLowerCase()] &&
         /\.suite\.[^.]+$/.test(it)
@@ -71,7 +72,7 @@ export function crudRepositoryTestSuite(
         `crud/relations/${folder}`,
       );
       let folderTestFiles = fs.readdirSync(relationsTestRoot);
-      folderTestFiles = folderTestFiles.filter(function(it) {
+      folderTestFiles = folderTestFiles.filter(function (it) {
         return (
           !!require.extensions[path.extname(it).toLowerCase()] &&
           /\.acceptance\.[^.]+$/.test(it)

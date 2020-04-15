@@ -1,10 +1,10 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {DecoratorFactory} from '@loopback/metadata';
-import * as debugModule from 'debug';
+import debugModule from 'debug';
 import {Binding} from './binding';
 import {Injection} from './inject';
 import {BoundValue, tryWithFinally, ValueOrPromise} from './value-promise';
@@ -93,7 +93,7 @@ export class ResolutionSession {
     binding: Readonly<Binding>,
     session?: ResolutionSession,
   ): ResolutionSession {
-    session = session || new ResolutionSession();
+    session = session ?? new ResolutionSession();
     session.pushBinding(binding);
     return session;
   }
@@ -125,7 +125,7 @@ export class ResolutionSession {
     injection: Readonly<Injection>,
     session?: ResolutionSession,
   ): ResolutionSession {
-    session = session || new ResolutionSession();
+    session = session ?? new ResolutionSession();
     session.pushInjection(injection);
     return session;
   }
@@ -155,9 +155,7 @@ export class ResolutionSession {
    * Describe the injection for debugging purpose
    * @param injection - Injection object
    */
-  static describeInjection(injection?: Readonly<Injection>) {
-    /* istanbul ignore if */
-    if (injection == null) return {};
+  static describeInjection(injection: Readonly<Injection>) {
     const name = getTargetName(
       injection.target,
       injection.member,
@@ -166,8 +164,7 @@ export class ResolutionSession {
     return {
       targetName: name,
       bindingSelector: injection.bindingSelector,
-      // Cast to Object so that we don't have to expose InjectionMetadata
-      metadata: injection.metadata as object,
+      metadata: injection.metadata,
     };
   }
 
@@ -268,7 +265,7 @@ export class ResolutionSession {
     const binding = top.value;
     /* istanbul ignore if */
     if (debugSession.enabled) {
-      debugSession('Exit binding:', binding && binding.toJSON());
+      debugSession('Exit binding:', binding?.toJSON());
       debugSession('Resolution path:', this.getResolutionPath() || '<empty>');
     }
     return binding;
@@ -300,14 +297,14 @@ export class ResolutionSession {
    */
   getInjectionPath() {
     return this.injectionStack
-      .map(i => ResolutionSession.describeInjection(i)!.targetName)
+      .map(i => ResolutionSession.describeInjection(i).targetName)
       .join(' --> ');
   }
 
   private static describe(e: ResolutionElement) {
     switch (e.type) {
       case 'injection':
-        return '@' + ResolutionSession.describeInjection(e.value)!.targetName;
+        return '@' + ResolutionSession.describeInjection(e.value).targetName;
       case 'binding':
         return e.value.key;
     }
@@ -320,6 +317,10 @@ export class ResolutionSession {
    */
   getResolutionPath() {
     return this.stack.map(i => ResolutionSession.describe(i)).join(' --> ');
+  }
+
+  toString() {
+    return this.getResolutionPath();
   }
 }
 
@@ -363,5 +364,5 @@ export function asResolutionOptions(
   if (optionsOrSession instanceof ResolutionSession) {
     return {session: optionsOrSession};
   }
-  return optionsOrSession || {};
+  return optionsOrSession ?? {};
 }

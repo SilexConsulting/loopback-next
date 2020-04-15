@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -39,6 +39,13 @@ export namespace ContextTags {
    * Binding tag for global interceptors
    */
   export const GLOBAL_INTERCEPTOR = 'globalInterceptor';
+
+  /**
+   * Binding tag for global interceptors to specify sources of invocations that
+   * the interceptor should apply. The tag value can be a string or string[], such
+   * as `'route'` or `['route', 'proxy']`.
+   */
+  export const GLOBAL_INTERCEPTOR_SOURCE = 'globalInterceptorSource';
 
   /**
    * Binding tag for group name of global interceptors

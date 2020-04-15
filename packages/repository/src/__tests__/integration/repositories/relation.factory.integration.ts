@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -217,6 +217,7 @@ class Order extends Entity {
     .addRelation({
       name: 'customer',
       type: RelationType.belongsTo,
+      targetsMany: false,
       source: Order,
       target: () => Customer,
       keyFrom: 'customerId',

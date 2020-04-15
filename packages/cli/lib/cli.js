@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -10,6 +10,7 @@ const debug = require('./debug')();
 const path = require('path');
 const yeoman = require('yeoman-environment');
 const PREFIX = 'loopback4:';
+const {printVersions} = require('./version-helper');
 
 /**
  * Parse arguments and run corresponding command
@@ -99,23 +100,20 @@ function setupGenerators() {
     path.join(__dirname, '../generators/relation'),
     PREFIX + 'relation',
   );
+  env.register(path.join(__dirname, '../generators/update'), PREFIX + 'update');
+  env.register(
+    path.join(__dirname, '../generators/relation'),
+    PREFIX + 'relation',
+  );
+  env.register(
+    path.join(__dirname, '../generators/rest-crud'),
+    PREFIX + 'rest-crud',
+  );
+  env.register(
+    path.join(__dirname, '../generators/copyright'),
+    PREFIX + 'copyright',
+  );
   return env;
-}
-
-/**
- * Print @loopback/* versions
- */
-function printVersions(log) {
-  const pkg = require('../package.json');
-  const ver = pkg.version;
-  log('@loopback/cli version: %s', ver);
-  const deps = pkg.config.templateDependencies;
-  log('\n@loopback/* dependencies:');
-  for (const d in deps) {
-    if (d.startsWith('@loopback/') && d !== '@loopback/cli') {
-      log('  - %s: %s', d, deps[d]);
-    }
-  }
 }
 
 /**

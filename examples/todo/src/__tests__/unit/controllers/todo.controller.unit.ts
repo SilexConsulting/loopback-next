@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/example-todo
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -13,12 +13,12 @@ import {
 import {TodoController} from '../../../controllers';
 import {Todo} from '../../../models/index';
 import {TodoRepository} from '../../../repositories';
-import {GeocoderService} from '../../../services';
+import {Geocoder} from '../../../services';
 import {aLocation, givenTodo} from '../../helpers';
 
 describe('TodoController', () => {
   let todoRepo: StubbedInstanceWithSinonAccessor<TodoRepository>;
-  let geoService: GeocoderService;
+  let geoService: Geocoder;
 
   let geocode: sinon.SinonStub;
 

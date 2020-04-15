@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository-json-schema
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -50,6 +50,10 @@ describe('build-schema', () => {
 
       it('returns Object for "object"', () => {
         expect(stringTypeToWrapper('object')).to.eql(Object);
+      });
+
+      it('returns AnyType for "any"', () => {
+        expect(stringTypeToWrapper('any')).to.eql(Object);
       });
     });
 
@@ -176,6 +180,10 @@ describe('build-schema', () => {
       });
     });
 
+    it('converts type any', () => {
+      expect(metaToJsonProperty({type: 'any'})).to.eql({});
+    });
+
     it('keeps description on property', () => {
       expect(metaToJsonProperty({type: String, description: 'test'})).to.eql({
         type: 'string',
@@ -233,6 +241,50 @@ describe('build-schema', () => {
         },
         benchmarkId: {type: 'string'},
         color: {type: 'string'},
+      });
+      // No circular references in definitions
+      expect(schema.definitions).to.be.undefined();
+    });
+
+    it('allows model inheritance', () => {
+      @model()
+      class User {
+        @property({id: true})
+        id: string;
+
+        @property({
+          type: 'string',
+          required: true,
+        })
+        name: string;
+      }
+
+      @model()
+      class NewUser extends User {
+        @property({
+          type: 'string',
+          required: true,
+        })
+        password: string;
+      }
+
+      const userSchema = modelToJsonSchema(User, {});
+      expect(userSchema).to.eql({
+        title: 'User',
+        properties: {id: {type: 'string'}, name: {type: 'string'}},
+        required: ['name'],
+        additionalProperties: false,
+      });
+      const newUserSchema = modelToJsonSchema(NewUser, {});
+      expect(newUserSchema).to.eql({
+        title: 'NewUser',
+        properties: {
+          id: {type: 'string'},
+          name: {type: 'string'},
+          password: {type: 'string'},
+        },
+        required: ['name', 'password'],
+        additionalProperties: false,
       });
     });
   });

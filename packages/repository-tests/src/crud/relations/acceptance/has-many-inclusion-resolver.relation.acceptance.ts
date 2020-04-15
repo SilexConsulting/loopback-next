@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository-tests
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -20,6 +20,7 @@ import {
   CustomerRepository,
   Order,
   OrderRepository,
+  ShipmentRepository,
 } from '../fixtures/models';
 import {givenBoundCrudRepositories} from '../helpers';
 
@@ -38,12 +39,13 @@ export function hasManyInclusionResolverAcceptance(
     before(deleteAllModelsInDefaultDataSource);
     let customerRepo: CustomerRepository;
     let orderRepo: OrderRepository;
+    let shipmentRepo: ShipmentRepository;
 
     before(
       withCrudCtx(async function setupRepository(ctx: CrudTestContext) {
         // this helper should create the inclusion resolvers and also
         // register inclusion resolvers for us
-        ({customerRepo, orderRepo} = givenBoundCrudRepositories(
+        ({customerRepo, orderRepo, shipmentRepo} = givenBoundCrudRepositories(
           ctx.dataSource,
           repositoryClass,
           features,
@@ -57,6 +59,7 @@ export function hasManyInclusionResolverAcceptance(
     beforeEach(async () => {
       await customerRepo.deleteAll();
       await orderRepo.deleteAll();
+      await shipmentRepo.deleteAll();
     });
 
     it('throws an error if tries to query nonexists relation names', async () => {
@@ -90,8 +93,7 @@ export function hasManyInclusionResolverAcceptance(
             {
               ...thorOrder,
               isShipped: features.emptyValue,
-              // eslint-disable-next-line @typescript-eslint/camelcase
-              shipment_id: features.emptyValue,
+              shipmentInfo: features.emptyValue,
             },
           ],
         }),
@@ -125,14 +127,12 @@ export function hasManyInclusionResolverAcceptance(
             {
               ...thorOrderMjolnir,
               isShipped: features.emptyValue,
-              // eslint-disable-next-line @typescript-eslint/camelcase
-              shipment_id: features.emptyValue,
+              shipmentInfo: features.emptyValue,
             },
             {
               ...thorOrderPizza,
               isShipped: features.emptyValue,
-              // eslint-disable-next-line @typescript-eslint/camelcase
-              shipment_id: features.emptyValue,
+              shipmentInfo: features.emptyValue,
             },
           ],
           parentId: features.emptyValue,
@@ -144,8 +144,7 @@ export function hasManyInclusionResolverAcceptance(
             {
               ...odinOrderCoffee,
               isShipped: features.emptyValue,
-              // eslint-disable-next-line @typescript-eslint/camelcase
-              shipment_id: features.emptyValue,
+              shipmentInfo: features.emptyValue,
             },
           ],
         },
@@ -179,17 +178,178 @@ export function hasManyInclusionResolverAcceptance(
           {
             ...odinOrder,
             isShipped: features.emptyValue,
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            shipment_id: features.emptyValue,
+            shipmentInfo: features.emptyValue,
           },
         ],
       };
       expect(toJSON(result)).to.deepEqual(toJSON(expected));
     });
 
-    it('throws when navigational properties are present when updating model instance', async () => {
-      const created = await customerRepo.create({name: 'customer'});
-      const customerId = created.id;
+    it('returns related models with non-id property as a source key(keyFrom)', async () => {
+      const shipment = await shipmentRepo.create({
+        name: 'non-id prop as keyFrom relation',
+        // eslint-disable-next-line @typescript-eslint/camelcase
+        shipment_id: 999,
+      });
+      const order = await orderRepo.create({
+        // foreign key is a non-id property
+        shipmentInfo: shipment.shipment_id,
+        description: 'foreign key not id property',
+      });
+
+      const found = await shipmentRepo.find({
+        include: [{relation: 'shipmentOrders'}],
+      });
+
+      expect(toJSON(found)).containDeep(
+        toJSON([
+          {
+            ...shipment,
+            shipmentOrders: [
+              {
+                ...order,
+                isShipped: features.emptyValue,
+                customerId: features.emptyValue,
+              },
+            ],
+          },
+        ]),
+      );
+    });
+
+    skipIf(
+      features.hasRevisionToken,
+      it,
+      'returns inclusions after running save() operation',
+      async () => {
+        // this shows save() works well with func ensurePersistable and ObjectId
+        // the test skips for Cloudant as it needs the _rev property for replacement.
+        // see replace-by-id.suite.ts
+        const thor = await customerRepo.create({name: 'Thor'});
+        const odin = await customerRepo.create({name: 'Odin'});
+
+        const thorOrder = await orderRepo.create({
+          customerId: thor.id,
+          description: 'Pizza',
+        });
+
+        const pizza = await orderRepo.findById(thorOrder.id);
+        pizza.customerId = odin.id;
+
+        await orderRepo.save(pizza);
+        const odinPizza = await orderRepo.findById(thorOrder.id);
+
+        const result = await customerRepo.findById(odin.id, {
+          include: [{relation: 'orders'}],
+        });
+        const expected = {
+          ...odin,
+          parentId: features.emptyValue,
+          orders: [
+            {
+              ...odinPizza,
+              isShipped: features.emptyValue,
+              shipmentInfo: features.emptyValue,
+            },
+          ],
+        };
+        expect(toJSON(result)).to.containEql(toJSON(expected));
+      },
+    );
+
+    skipIf(
+      features.hasRevisionToken,
+      it,
+      'returns inclusions after running replaceById() operation',
+      async () => {
+        // this shows replaceById() works well with func ensurePersistable and ObjectId
+        // the test skips for Cloudant as it needs the _rev property for replacement.
+        // see replace-by-id.suite.ts
+        const thor = await customerRepo.create({name: 'Thor'});
+        const odin = await customerRepo.create({name: 'Odin'});
+
+        const thorOrder = await orderRepo.create({
+          customerId: thor.id,
+          description: 'Pizza',
+        });
+
+        const pizza = await orderRepo.findById(thorOrder.id.toString());
+        pizza.customerId = odin.id;
+        // FIXME: [mongo] if pizza obj is converted to JSON obj, it would get an error
+        // because it tries to convert ObjectId to string type.
+        // should test with JSON obj once it's fixed.
+
+        await orderRepo.replaceById(pizza.id, pizza);
+        const odinPizza = await orderRepo.findById(thorOrder.id);
+
+        const result = await customerRepo.find({
+          include: [{relation: 'orders'}],
+        });
+        const expected = [
+          {
+            ...thor,
+            parentId: features.emptyValue,
+          },
+          {
+            ...odin,
+            parentId: features.emptyValue,
+            orders: [
+              {
+                ...odinPizza,
+                isShipped: features.emptyValue,
+                shipmentInfo: features.emptyValue,
+              },
+            ],
+          },
+        ];
+        expect(toJSON(result)).to.deepEqual(toJSON(expected));
+      },
+    );
+
+    it('returns inclusions after running updateById() operation', async () => {
+      const thor = await customerRepo.create({name: 'Thor'});
+      const odin = await customerRepo.create({name: 'Odin'});
+
+      const thorOrder = await orderRepo.create({
+        customerId: thor.id,
+        description: 'Pizza',
+      });
+
+      const pizza = await orderRepo.findById(thorOrder.id.toString());
+      pizza.customerId = odin.id;
+      const reheatedPizza = toJSON(pizza);
+
+      await orderRepo.updateById(pizza.id, reheatedPizza);
+      const odinPizza = await orderRepo.findById(thorOrder.id);
+
+      const result = await customerRepo.find({
+        include: [{relation: 'orders'}],
+      });
+      const expected = [
+        {
+          ...thor,
+          parentId: features.emptyValue,
+        },
+        {
+          ...odin,
+          parentId: features.emptyValue,
+          orders: [
+            {
+              ...odinPizza,
+              isShipped: features.emptyValue,
+              shipmentInfo: features.emptyValue,
+            },
+          ],
+        },
+      ];
+      expect(toJSON(result)).to.deepEqual(toJSON(expected));
+    });
+
+    it('throws when navigational properties are present when updating model instance with save()', async () => {
+      // save() calls replaceById so the result will be the same for replaceById
+      const customer = await customerRepo.create({name: 'customer'});
+      const anotherCus = await customerRepo.create({name: 'another customer'});
+      const customerId = customer.id;
 
       await orderRepo.create({
         description: 'pizza',
@@ -201,23 +361,17 @@ export function hasManyInclusionResolverAcceptance(
       });
       expect(found.orders).to.have.lengthOf(1);
 
-      found.name = 'updated name';
-      await expect(customerRepo.save(found)).to.be.rejectedWith(
-        'The `Customer` instance is not valid. Details: `orders` is not defined in the model (value: undefined).',
-      );
-    });
-    // scope for inclusion is not supported yet
-    it('throws error if the inclusion query contains a non-empty scope', async () => {
-      const customer = await customerRepo.create({name: 'customer'});
-      await orderRepo.create({
-        description: 'an order',
-        customerId: customer.id,
+      const wrongOrder = await orderRepo.create({
+        description: 'wrong order',
+        customerId: anotherCus.id,
       });
-      await expect(
-        customerRepo.find({
-          include: [{relation: 'orders', scope: {limit: 1}}],
-        }),
-      ).to.be.rejectedWith(`scope is not supported`);
+
+      found.name = 'updated name';
+      found.orders.push(wrongOrder);
+
+      await expect(customerRepo.save(found)).to.be.rejectedWith(
+        /Navigational properties are not allowed.*"orders"/,
+      );
     });
 
     it('throws error if the target repository does not have the registered resolver', async () => {

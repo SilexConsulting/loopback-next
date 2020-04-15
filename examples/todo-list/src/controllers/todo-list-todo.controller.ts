@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/example-todo-list
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -14,7 +14,6 @@ import {
   del,
   get,
   getModelSchemaRef,
-  getWhereSchemaFor,
   param,
   patch,
   post,
@@ -91,7 +90,7 @@ export class TodoListTodoController {
       },
     })
     todo: Partial<Todo>,
-    @param.query.object('where', getWhereSchemaFor(Todo)) where?: Where<Todo>,
+    @param.where(Todo) where?: Where<Todo>,
   ): Promise<Count> {
     return this.todoListRepo.todos(id).patch(todo, where);
   }
@@ -106,7 +105,7 @@ export class TodoListTodoController {
   })
   async delete(
     @param.path.number('id') id: number,
-    @param.query.object('where', getWhereSchemaFor(Todo)) where?: Where<Todo>,
+    @param.where(Todo) where?: Where<Todo>,
   ): Promise<Count> {
     return this.todoListRepo.todos(id).delete(where);
   }

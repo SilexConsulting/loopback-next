@@ -1,12 +1,15 @@
-// Copyright IBM Corp. 2017,2019. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
+import {EventEmitter} from 'events';
 import {BindingAddress, BindingKey} from './binding-key';
 import {Context} from './context';
+import {inspectInjections} from './inject';
 import {createProxyWithInterceptors} from './interception-proxy';
+import {JSONObject} from './json-types';
 import {ContextTags} from './keys';
 import {Provider} from './provider';
 import {
@@ -139,6 +142,34 @@ export type BindingTag = TagMap | string;
  */
 export type BindingTemplate<T = unknown> = (binding: Binding<T>) => void;
 
+/**
+ * Information for a binding event
+ */
+export type BindingEvent = {
+  /**
+   * Event type
+   */
+  type: string;
+  /**
+   * Source binding that emits the event
+   */
+  binding: Readonly<Binding<unknown>>;
+  /**
+   * Operation that triggers the event
+   */
+  operation: string;
+};
+
+/**
+ * Event listeners for binding events
+ */
+export type BindingEventListener = (
+  /**
+   * Binding event
+   */
+  event: BindingEvent,
+) => void;
+
 type ValueGetter<T> = (
   ctx: Context,
   options: ResolutionOptions,
@@ -148,7 +179,7 @@ type ValueGetter<T> = (
  * Binding represents an entry in the `Context`. Each binding has a key and a
  * corresponding value getter.
  */
-export class Binding<T = BoundValue> {
+export class Binding<T = BoundValue> extends EventEmitter {
   /**
    * Key of the binding
    */
@@ -165,7 +196,7 @@ export class Binding<T = BoundValue> {
    */
   public get scope(): BindingScope {
     // Default to TRANSIENT if not set
-    return this._scope || BindingScope.TRANSIENT;
+    return this._scope ?? BindingScope.TRANSIENT;
   }
 
   private _type?: BindingType;
@@ -180,15 +211,27 @@ export class Binding<T = BoundValue> {
   private _getValue: ValueGetter<T>;
 
   private _valueConstructor?: Constructor<T>;
+  private _providerConstructor?: Constructor<Provider<T>>;
+  private _alias?: BindingAddress<T>;
+
   /**
-   * For bindings bound via toClass, this property contains the constructor
-   * function
+   * For bindings bound via `toClass()`, this property contains the constructor
+   * function of the class
    */
   public get valueConstructor(): Constructor<T> | undefined {
     return this._valueConstructor;
   }
 
+  /**
+   * For bindings bound via `toProvider()`, this property contains the
+   * constructor function of the provider class
+   */
+  public get providerConstructor(): Constructor<Provider<T>> | undefined {
+    return this._providerConstructor;
+  }
+
   constructor(key: BindingAddress<T>, public isLocked: boolean = false) {
+    super();
     BindingKey.validate(key);
     this.key = key.toString();
   }
@@ -315,6 +358,15 @@ export class Binding<T = BoundValue> {
   }
 
   /**
+   * Emit a `changed` event
+   * @param operation - Operation that makes changes
+   */
+  private emitChangedEvent(operation: string) {
+    const event: BindingEvent = {binding: this, operation, type: 'changed'};
+    this.emit('changed', event);
+  }
+
+  /**
    * Tag the binding with names or name/value objects. A tag has a name and
    * an optional value. If not supplied, the tag name is used as the value.
    *
@@ -352,6 +404,7 @@ export class Binding<T = BoundValue> {
         Object.assign(this.tagMap, t);
       }
     }
+    this.emitChangedEvent('tag');
     return this;
   }
 
@@ -369,6 +422,7 @@ export class Binding<T = BoundValue> {
   inScope(scope: BindingScope): this {
     if (this._scope !== scope) this._clearCache();
     this._scope = scope;
+    this.emitChangedEvent('scope');
     return this;
   }
 
@@ -399,6 +453,7 @@ export class Binding<T = BoundValue> {
       }
       return getValue(ctx, options);
     };
+    this.emitChangedEvent('value');
   }
 
   /**
@@ -494,6 +549,7 @@ export class Binding<T = BoundValue> {
       debug('Bind %s to provider %s', this.key, providerClass.name);
     }
     this._type = BindingType.PROVIDER;
+    this._providerConstructor = providerClass;
     this._setValueGetter((ctx, options) => {
       const providerOrPromise = instantiateClass<Provider<T>>(
         providerClass,
@@ -521,7 +577,11 @@ export class Binding<T = BoundValue> {
     this._setValueGetter((ctx, options) => {
       const instOrPromise = instantiateClass(ctor, ctx, options.session);
       if (!options.asProxyWithInterceptors) return instOrPromise;
-      return createInterceptionProxyFromInstance(instOrPromise, ctx);
+      return createInterceptionProxyFromInstance(
+        instOrPromise,
+        ctx,
+        options.session,
+      );
     });
     this._valueConstructor = ctor;
     return this;
@@ -538,6 +598,7 @@ export class Binding<T = BoundValue> {
       debug('Bind %s to alias %s', this.key, keyWithPath);
     }
     this._type = BindingType.ALIAS;
+    this._alias = keyWithPath;
     this._setValueGetter((ctx, options) => {
       return ctx.getValueOrPromise(keyWithPath, options);
     });
@@ -576,9 +637,8 @@ export class Binding<T = BoundValue> {
   /**
    * Convert to a plain JSON object
    */
-  toJSON(): Object {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const json: {[name: string]: any} = {
+  toJSON(): JSONObject {
+    const json: JSONObject = {
       key: this.key,
       scope: this.scope,
       tags: this.tagMap,
@@ -586,6 +646,32 @@ export class Binding<T = BoundValue> {
     };
     if (this.type != null) {
       json.type = this.type;
+    }
+    if (this._valueConstructor != null) {
+      json.valueConstructor = this._valueConstructor.name;
+    }
+    if (this._providerConstructor != null) {
+      json.providerConstructor = this._providerConstructor.name;
+    }
+    if (this._alias != null) {
+      json.alias = this._alias.toString();
+    }
+    return json;
+  }
+
+  /**
+   * Inspect the binding to return a json representation of the binding information
+   * @param options - Options to control what information should be included
+   */
+  inspect(options: BindingInspectOptions = {}): JSONObject {
+    options = {
+      includeInjections: false,
+      ...options,
+    };
+    const json = this.toJSON();
+    if (options.includeInjections) {
+      const injections = inspectInjections(this);
+      if (Object.keys(injections).length) json.injections = injections;
     }
     return json;
   }
@@ -621,9 +707,20 @@ export class Binding<T = BoundValue> {
   }
 }
 
+/**
+ * Options for binding.inspect()
+ */
+export interface BindingInspectOptions {
+  /**
+   * The flag to control if injections should be inspected
+   */
+  includeInjections?: boolean;
+}
+
 function createInterceptionProxyFromInstance<T>(
   instOrPromise: ValueOrPromise<T>,
   context: Context,
+  session?: ResolutionSession,
 ) {
   return transformValueOrPromise(instOrPromise, inst => {
     if (typeof inst !== 'object') return inst;
@@ -631,6 +728,7 @@ function createInterceptionProxyFromInstance<T>(
       // Cast inst from `T` to `object`
       (inst as unknown) as object,
       context,
+      session,
     ) as unknown) as T;
   });
 }

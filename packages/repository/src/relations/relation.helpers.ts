@@ -1,16 +1,17 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as assert from 'assert';
-import * as debugFactory from 'debug';
-import * as _ from 'lodash';
+import assert from 'assert';
+import debugFactory from 'debug';
+import _ from 'lodash';
 import {
   AnyObject,
   Entity,
   EntityCrudRepository,
   Filter,
+  FilterBuilder,
   Inclusion,
   Options,
   Where,
@@ -20,7 +21,7 @@ const debug = debugFactory('loopback:repository:relation-helpers');
 /**
  * Finds model instances that contain any of the provided foreign key values.
  *
- * @param targetRepository - The target repository where the model instances are found
+ * @param targetRepository - The target repository where the related model instances are found
  * @param fkName - Name of the foreign key
  * @param fkValues - One value or array of values of the foreign key to be included
  * @param scope - Additional scope constraints (not currently supported)
@@ -37,12 +38,6 @@ export async function findByForeignKeys<
   scope?: Filter<Target>,
   options?: Options,
 ): Promise<(Target & TargetRelations)[]> {
-  // throw error if scope is defined and non-empty
-  // see https://github.com/strongloop/loopback-next/issues/3453
-  if (scope && !_.isEmpty(scope)) {
-    throw new Error('scope is not supported');
-  }
-
   let value;
 
   if (Array.isArray(fkValues)) {
@@ -60,9 +55,15 @@ export async function findByForeignKeys<
   }
 
   const where = ({[fkName]: value} as unknown) as Where<Target>;
-  const targetFilter = {where};
 
-  return targetRepository.find(targetFilter, options);
+  if (scope && !_.isEmpty(scope)) {
+    // combine where clause to scope filter
+    scope = new FilterBuilder(scope).impose({where}).filter;
+  } else {
+    scope = {where} as Filter<Target>;
+  }
+
+  return targetRepository.find(scope, options);
 }
 
 export type StringKeyOf<T> = Extract<keyof T, string>;
@@ -83,7 +84,7 @@ export async function includeRelatedModels<
 >(
   targetRepository: EntityCrudRepository<T, unknown, Relations>,
   entities: T[],
-  include?: Inclusion<T>[],
+  include?: Inclusion[],
   options?: Options,
 ): Promise<(T & Relations)[]> {
   const result = entities as (T & Relations)[];
@@ -149,7 +150,6 @@ function isInclusionAllowed<T extends Entity, Relations extends object = {}>(
  * @param targetEntities - target entities that satisfy targetKey's value (ids).
  * @param targetKey - name of the target key
  *
- * @return
  */
 export function flattenTargetsOfOneToOneRelation<
   SourceWithRelations extends Entity,
@@ -177,7 +177,6 @@ export function flattenTargetsOfOneToOneRelation<
  * @param targetEntities - target entities that satisfy targetKey's value (ids).
  * @param targetKey - name of the target key
  *
- * @return
  */
 export function flattenTargetsOfOneToManyRelation<Target extends Entity>(
   sourceIds: unknown[],
@@ -186,7 +185,10 @@ export function flattenTargetsOfOneToManyRelation<Target extends Entity>(
 ): (Target[] | undefined)[] {
   debug('flattenTargetsOfOneToManyRelation');
   debug('sourceIds', sourceIds);
-  debug('sourceId types', sourceIds.map(i => typeof i));
+  debug(
+    'sourceId types',
+    sourceIds.map(i => typeof i),
+  );
   debug('targetEntities', targetEntities);
   debug('targetKey', targetKey);
 

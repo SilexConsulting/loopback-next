@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/authorization
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -37,7 +37,7 @@ describe('Authorization', () => {
       },
     ]);
     expect(orderId).to.eql('order-1');
-    expect(events).to.containEql('OrderController.prototype.placeOrder');
+    expect(events).to.eql(['OrderController.prototype.placeOrder']);
   });
 
   it('denies cancelOrder for regular user', async () => {
@@ -45,7 +45,7 @@ describe('Authorization', () => {
       'order-01',
     ]);
     await expect(result).to.be.rejectedWith('Access denied');
-    expect(events).to.containEql('OrderController.prototype.cancelOrder');
+    expect(events).to.eql(['OrderController.prototype.cancelOrder']);
   });
 
   class Order {

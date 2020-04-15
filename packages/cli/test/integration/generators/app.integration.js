@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -125,7 +125,7 @@ describe('app-generator specific files', () => {
   it('creates npm script "clean"', () => {
     assert.fileContent(
       'package.json',
-      '"clean": "lb-clean dist *.tsbuildinfo"',
+      '"clean": "lb-clean dist *.tsbuildinfo .eslintcache"',
     );
   });
 
@@ -177,7 +177,7 @@ describe('app-generator with --applicationName', () => {
 
 // The test takes about 1 min to install dependencies
 function testFormat() {
-  before(function() {
+  before(function () {
     // eslint-disable-next-line no-invalid-this
     this.timeout(90 * 1000);
     return helpers
@@ -217,7 +217,7 @@ process.env.CI && !process.env.DEBUG
 
 /** For testing if the generator handles default values properly */
 describe('app-generator with default values', () => {
-  const rootDir = path.join(__dirname, '../../../..');
+  const rootDir = path.join(__dirname, '../../../../../');
   const defaultValProjPath = path.join(rootDir, 'sandbox/default-value-app');
   const sandbox = path.join(rootDir, 'sandbox');
   const pathToDefValApp = path.join(defaultValProjPath, 'default-value-app');
@@ -256,14 +256,18 @@ describe('app-generator with default values', () => {
  * Use differnt paths to test out the support of `~` when the test runs outside of home dir.
  */
 describe('app-generator with tilde project path', () => {
-  const rootDir = path.join(__dirname, '../../../..');
+  const rootDir = path.join(__dirname, '../../../../../');
   // tildify the path:
   let sandbox = path.join(rootDir, 'sandbox/tilde-path-app');
   let pathWithTilde = tildify(sandbox);
   const cwd = process.cwd();
 
   // If the test runs outside $home directory
-  if (process.env.CI && !process.env.DEBUG && tildify(sandbox) === sandbox) {
+  const runsOutsideRoot =
+    process.env.CI && !process.env.DEBUG && tildify(sandbox) === sandbox
+      ? true
+      : false;
+  if (runsOutsideRoot) {
     sandbox = path.join(os.homedir(), '.lb4sandbox/tilde-path-app');
     pathWithTilde = '~/.lb4sandbox/tilde-path-app';
   }
@@ -273,7 +277,7 @@ describe('app-generator with tilde project path', () => {
     outdir: pathWithTilde,
   };
 
-  before(async function() {
+  before(async function () {
     // Increase the timeout to accommodate slow CI build machines
     // eslint-disable-next-line no-invalid-this
     this.timeout(30 * 1000);
@@ -290,12 +294,17 @@ describe('app-generator with tilde project path', () => {
     // tilde-path-app should be created at this point
     assert.equal(fs.existsSync(sandbox), true);
   });
-  after(function() {
+  after(function () {
     // Increase the timeout to accommodate slow CI build machines
     // eslint-disable-next-line no-invalid-this
     this.timeout(30 * 1000);
 
-    process.chdir(sandbox);
+    // Handle special case - Skipping... not inside the project root directory.
+    if (runsOutsideRoot) {
+      process.chdir(sandbox);
+    } else {
+      process.chdir(rootDir);
+    }
     build.clean(['node', 'run-clean', sandbox]);
     process.chdir(cwd);
   });

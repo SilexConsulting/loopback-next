@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -52,12 +52,13 @@ export function createBelongsToInclusionResolver<
     const sourceKey = relationMeta.keyFrom;
     const sourceIds = entities.map(e => (e as AnyObject)[sourceKey]);
     const targetKey = relationMeta.keyTo as StringKeyOf<Target>;
+    const dedupedSourceIds = deduplicate(sourceIds);
 
     const targetRepo = await getTargetRepo();
     const targetsFound = await findByForeignKeys(
       targetRepo,
       targetKey,
-      deduplicate(sourceIds),
+      dedupedSourceIds.filter(e => e),
       inclusion.scope as Filter<Target>,
       options,
     );

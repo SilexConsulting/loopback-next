@@ -1,9 +1,10 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/http-caching-proxy
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as debugFactory from 'debug';
+import axios, {AxiosInstance, Method} from 'axios';
+import debugFactory from 'debug';
 import {
   createServer,
   IncomingMessage,
@@ -13,11 +14,10 @@ import {
 } from 'http';
 import {AddressInfo} from 'net';
 import pEvent from 'p-event';
-import * as makeRequest from 'request-promise-native';
 
 const cacache = require('cacache');
 
-const debug = debugFactory('loopback:caching-proxy');
+const debug = debugFactory('loopback:http-caching-proxy');
 
 export interface ProxyOptions {
   /**
@@ -38,11 +38,23 @@ export interface ProxyOptions {
    * Default: 0 (let the system pick a free port)
    */
   port?: number;
+
+  /**
+   * A flag if the error should be logged
+   */
+  logError?: boolean;
+
+  /**
+   * Timeout to connect to the target service
+   */
+  timeout?: number;
 }
 
 const DEFAULT_OPTIONS = {
   port: 0,
   ttl: 24 * 60 * 60 * 1000,
+  logError: true,
+  timeout: 0,
 };
 
 interface CachedMetadata {
@@ -55,6 +67,7 @@ interface CachedMetadata {
  * The HTTP proxy implementation.
  */
 export class HttpCachingProxy {
+  private _axios: AxiosInstance;
   private _options: Required<ProxyOptions>;
   private _server?: HttpServer;
 
@@ -71,6 +84,12 @@ export class HttpCachingProxy {
     }
     this.url = 'http://proxy-not-running';
     this._server = undefined;
+    this._axios = axios.create({
+      // Provide a custom function to control when Axios throws errors based on
+      // http status code. Please note that Axios creates a new error in such
+      // condition and the original low-level error is lost
+      validateStatus: () => true,
+    });
   }
 
   /**
@@ -84,6 +103,7 @@ export class HttpCachingProxy {
     );
 
     this._server.on('connect', (req, socket) => {
+      // Reject tunneling requests
       socket.write('HTTP/1.1 501 Not Implemented\r\n\r\n');
       socket.destroy();
     });
@@ -112,8 +132,9 @@ export class HttpCachingProxy {
   private _handle(request: IncomingMessage, response: ServerResponse) {
     const onerror = (error: Error) => {
       this.logError(request, error);
-      response.statusCode = error.name === 'RequestError' ? 502 : 500;
-      response.end();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      response.statusCode = (error as any).statusCode || 502;
+      response.end(`${error.name}: ${error.message}`);
     };
 
     try {
@@ -174,26 +195,32 @@ export class HttpCachingProxy {
     clientRequest: IncomingMessage,
     clientResponse: ServerResponse,
   ) {
-    const backendResponse = await makeRequest({
-      resolveWithFullResponse: true,
-      simple: false,
+    debug('Forward request to %s %s', clientRequest.method, clientRequest.url);
 
-      method: clientRequest.method,
-      uri: clientRequest.url!,
+    const backendResponse = await this._axios({
+      method: clientRequest.method as Method,
+      url: clientRequest.url!,
       headers: clientRequest.headers,
-      body: clientRequest,
+      data: clientRequest,
+      // Set the response type to `arraybuffer` to force the `data` to be a
+      // Buffer to allow ease of caching
+      // Since this proxy is for testing only, buffering the entire
+      // response body is acceptable.
+      responseType: 'arraybuffer',
+      timeout: this._options.timeout || undefined,
     });
 
     debug(
       'Got response for %s %s -> %s',
       clientRequest.method,
       clientRequest.url,
-      backendResponse.statusCode,
+      backendResponse.status,
       backendResponse.headers,
+      backendResponse.data,
     );
 
     const metadata: CachedMetadata = {
-      statusCode: backendResponse.statusCode,
+      statusCode: backendResponse.status,
       headers: backendResponse.headers,
       createdAt: Date.now(),
     };
@@ -208,29 +235,35 @@ export class HttpCachingProxy {
     // Without that synchronization, the client can start sending
     // follow-up requests that won't be served from the cache as
     // the cache has not been updated yet.
-    // Since this proxy is for testing only, buffering the entire
-    // response body is acceptable.
+
+    const data = backendResponse.data;
 
     await cacache.put(
       this._options.cachePath,
       this._getCacheKey(clientRequest),
-      backendResponse.body,
+      data,
       {metadata},
     );
 
-    clientResponse.writeHead(
-      backendResponse.statusCode,
-      backendResponse.headers,
-    );
-    clientResponse.end(backendResponse.body);
+    clientResponse.writeHead(backendResponse.status, backendResponse.headers);
+    clientResponse.end(data);
   }
 
   public logError(request: IncomingMessage, error: Error) {
-    console.log(
-      'Cannot proxy %s %s.',
-      request.method,
-      request.url,
-      error.stack || error,
-    );
+    if (this._options.logError) {
+      console.error(
+        'Cannot proxy %s %s.',
+        request.method,
+        request.url,
+        error.stack ?? error,
+      );
+    } else {
+      debug(
+        'Cannot proxy %s %s.',
+        request.method,
+        request.url,
+        error.stack ?? error,
+      );
+    }
   }
 }

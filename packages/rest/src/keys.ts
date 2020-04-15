@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2019. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -6,14 +6,16 @@
 import {BindingKey, Context} from '@loopback/context';
 import {CoreBindings} from '@loopback/core';
 import {HttpProtocol} from '@loopback/http-server';
-import {OpenApiSpec} from '@loopback/openapi-v3';
-import * as https from 'https';
+import {OpenApiSpec, OperationObject} from '@loopback/openapi-v3';
+import https from 'https';
 import {ErrorWriterOptions} from 'strong-error-handler';
 import {BodyParser, RequestBodyParser} from './body-parsers';
 import {HttpHandler} from './http-handler';
+import {RestServer} from './rest.server';
 import {RestRouter, RestRouterOptions} from './router';
 import {SequenceHandler} from './sequence';
 import {
+  AjvFactory,
   BindElement,
   FindRoute,
   GetFromContext,
@@ -26,7 +28,6 @@ import {
   Response,
   Send,
 } from './types';
-import {RestServer} from './rest.server';
 
 /**
  * RestServer-specific bindings
@@ -153,9 +154,24 @@ export namespace RestBindings {
   );
 
   /**
+   * Binding key for AJV
+   */
+  export const AJV_FACTORY = BindingKey.create<AjvFactory>(
+    bodyParserBindingKey('rest.ajvFactory'),
+  );
+
+  /**
    * Binding key for setting and injecting an OpenAPI spec
    */
   export const API_SPEC = BindingKey.create<OpenApiSpec>('rest.apiSpec');
+
+  /**
+   * Binding key for setting and injecting an OpenAPI operation spec
+   */
+  export const OPERATION_SPEC_CURRENT = BindingKey.create<OperationObject>(
+    'rest.operationSpec.current',
+  );
+
   /**
    * Binding key for setting and injecting a Sequence
    */
@@ -233,4 +249,43 @@ export namespace RestBindings {
       'rest.http.request.context',
     );
   }
+
+  /**
+   * Namespace for REST routes
+   */
+  export const ROUTES = 'routes';
+}
+
+/**
+ * Binding tags for RestServer
+ */
+export namespace RestTags {
+  /**
+   * Binding tag to identify REST routes
+   */
+  export const REST_ROUTE = 'restRoute';
+
+  /**
+   * Binding tag for the REST route verb
+   */
+  export const ROUTE_VERB = 'restRouteVerb';
+
+  /**
+   * Binding tag for the REST route path
+   */
+  export const ROUTE_PATH = 'restRoutePath';
+
+  /**
+   * Binding tag to identify controller based REST routes
+   */
+  export const CONTROLLER_ROUTE = 'controllerRoute';
+
+  /**
+   * Binding tag for controller route bindings to represent the controller
+   * binding key
+   */
+  export const CONTROLLER_BINDING = 'controllerBinding';
+
+  export const AJV_KEYWORD = 'ajvKeyword';
+  export const AJV_FORMAT = 'ajvFormat';
 }

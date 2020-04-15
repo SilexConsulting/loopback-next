@@ -1,9 +1,10 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/rest-explorer
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {inject} from '@loopback/context';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import {config, inject} from '@loopback/context';
 import {
   OpenApiSpecForm,
   RequestContext,
@@ -11,9 +12,9 @@ import {
   RestServer,
   RestServerConfig,
 } from '@loopback/rest';
-import * as ejs from 'ejs';
-import * as fs from 'fs';
-import * as path from 'path';
+import ejs from 'ejs';
+import fs from 'fs';
+import path from 'path';
 import {RestExplorerBindings} from './rest-explorer.keys';
 import {RestExplorerConfig} from './rest-explorer.types';
 
@@ -35,7 +36,7 @@ export class ExplorerController {
   constructor(
     @inject(RestBindings.CONFIG, {optional: true})
     restConfig: RestServerConfig = {},
-    @inject(RestExplorerBindings.CONFIG, {optional: true})
+    @config({fromBinding: RestExplorerBindings.COMPONENT})
     explorerConfig: RestExplorerConfig = {},
     @inject(RestBindings.BASE_PATH) private serverBasePath: string,
     @inject(RestBindings.SERVER) private restServer: RestServer,
@@ -97,12 +98,12 @@ export class ExplorerController {
     if (this.useSelfHostedSpec) {
       return './' + ExplorerController.OPENAPI_RELATIVE_URL;
     }
-    const openApiConfig = restConfig.openApiSpec || {};
-    const endpointMapping = openApiConfig.endpointMapping || {};
+    const openApiConfig = restConfig.openApiSpec ?? {};
+    const endpointMapping = openApiConfig.endpointMapping ?? {};
     const endpoint = Object.keys(endpointMapping).find(k =>
       isOpenApiV3Json(endpointMapping[k]),
     );
-    return endpoint || '/openapi.json';
+    return endpoint ?? '/openapi.json';
   }
 }
 

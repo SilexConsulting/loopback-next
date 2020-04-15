@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -39,6 +39,9 @@ describe('Validation at REST level', () => {
 
   @model()
   class Product {
+    @property()
+    id: number;
+
     @property({required: true})
     name: string;
 
@@ -47,7 +50,13 @@ describe('Validation at REST level', () => {
     @property({required: false, type: 'string', jsonSchema: {nullable: true}})
     description?: string | null;
 
-    @property({required: true, jsonSchema: {range: [0, 100]}})
+    @property({
+      required: true,
+      jsonSchema: {
+        range: [0, 100],
+        errorMessage: {range: 'price should be in range 0 to 100'},
+      },
+    })
     price: number;
 
     @property({required: true, type: Category})
@@ -71,6 +80,47 @@ describe('Validation at REST level', () => {
     'description',
   );
 
+  context('with properties excluded from schema', () => {
+    before(() => {
+      const schema: SchemaObject = jsonToSchemaObject(
+        getJsonSchema(Product, {exclude: ['id']}),
+      );
+
+      class ProductController {
+        @post('/products')
+        async create(
+          @requestBody(aBodySpec(schema))
+          data: object,
+        ): Promise<Product> {
+          return new Product(data);
+        }
+      }
+
+      return givenAnAppAndAClient(ProductController);
+    });
+    after(() => app.stop());
+
+    it('rejects request bodies containing excluded properties', async () => {
+      const {body} = await client
+        .post('/products')
+        .type('json')
+        .send({id: 1, name: 'a-product-name', price: 1})
+        .expect(422);
+
+      expect(body.error).to.containEql({
+        code: 'VALIDATION_FAILED',
+        details: [
+          {
+            path: '',
+            code: 'additionalProperties',
+            message: 'should NOT have additional properties',
+            info: {additionalProperty: 'id'},
+          },
+        ],
+      });
+    });
+  });
+
   // This is the standard use case that most LB4 applications should use.
   // The request body specification is inferred from a decorated model class.
   context('for request body specified via model definition', () => {
@@ -93,10 +143,7 @@ describe('Validation at REST level', () => {
 
     it('rejects requests with no body', async () => {
       // An empty body is now parsed as `undefined`
-      await client
-        .post('/products')
-        .type('json')
-        .expect(400);
+      await client.post('/products').type('json').expect(400);
     });
 
     it('rejects requests with empty required object', async () => {
@@ -115,19 +162,11 @@ describe('Validation at REST level', () => {
     });
 
     it('rejects requests with empty json body', async () => {
-      await client
-        .post('/products')
-        .type('json')
-        .send('{}')
-        .expect(422);
+      await client.post('/products').type('json').send('{}').expect(422);
     });
 
     it('rejects requests with null body', async () => {
-      await client
-        .post('/products')
-        .type('json')
-        .send('null')
-        .expect(400);
+      await client.post('/products').type('json').send('null').expect(400);
     });
   });
 
@@ -157,10 +196,7 @@ describe('Validation at REST level', () => {
         price: 10,
         category: {name: 'Phones'},
       };
-      const res = await client
-        .post('/products')
-        .send(DATA)
-        .expect(422);
+      const res = await client.post('/products').send(DATA).expect(422);
 
       expect(res.body).to.eql({
         error: {
@@ -172,7 +208,7 @@ describe('Validation at REST level', () => {
                 type: 'string',
               },
               message: 'should be string',
-              path: '.description',
+              path: '/description',
             },
           ],
           message:
@@ -190,10 +226,7 @@ describe('Validation at REST level', () => {
         price: 200,
         category: {name: 'Phones'},
       };
-      const res = await client
-        .post('/products')
-        .send(DATA)
-        .expect(422);
+      const res = await client.post('/products').send(DATA).expect(422);
 
       expect(res.body).to.eql({
         error: {
@@ -204,13 +237,13 @@ describe('Validation at REST level', () => {
           code: 'VALIDATION_FAILED',
           details: [
             {
-              path: '.price',
+              path: '/price',
               code: 'maximum',
               message: 'should be <= 100',
               info: {comparison: '<=', limit: 100, exclusive: false},
             },
             {
-              path: '.price',
+              path: '/price',
               code: 'range',
               message: 'should pass "range" keyword validation',
               info: {keyword: 'range'},
@@ -248,10 +281,7 @@ describe('Validation at REST level', () => {
         price: 200,
         category: {name: 'Phones'},
       };
-      const res = await client
-        .post('/products')
-        .send(DATA)
-        .expect(422);
+      const res = await client.post('/products').send(DATA).expect(422);
 
       expect(res.body).to.eql({
         error: {
@@ -262,13 +292,13 @@ describe('Validation at REST level', () => {
           code: 'VALIDATION_FAILED',
           details: [
             {
-              path: '.price',
+              path: '/price',
               code: 'maximum',
               message: 'should be <= 100',
               info: {comparison: '<=', limit: 100, exclusive: false},
             },
             {
-              path: '.price',
+              path: '/price',
               code: 'range',
               message: 'should pass "range" keyword validation',
               info: {keyword: 'range'},
@@ -312,10 +342,7 @@ describe('Validation at REST level', () => {
           description: 'iPhone',
           category: {name: 'Phones'},
         };
-        const res = await client
-          .post('/products')
-          .send(DATA)
-          .expect(422);
+        const res = await client.post('/products').send(DATA).expect(422);
 
         expect(res.body).to.eql({
           error: {
@@ -337,6 +364,266 @@ describe('Validation at REST level', () => {
       });
     },
   );
+
+  context('with request body validation options - {ajvErrors: true}', () => {
+    class ProductController {
+      @post('/products')
+      async create(
+        @requestBody({required: true}) data: Product,
+      ): Promise<Product> {
+        return new Product(data);
+      }
+    }
+
+    before(() =>
+      givenAnAppAndAClient(ProductController, {
+        nullable: false,
+        compiledSchemaCache: new WeakMap(),
+        $data: true,
+        ajvKeywords: true,
+        ajvErrors: true,
+      }),
+    );
+    after(() => app.stop());
+
+    it('adds custom error message provided with jsonSchema', async () => {
+      const DATA = {
+        name: 'iPhone',
+        description: 'iPhone',
+        price: 200,
+      };
+      const res = await client.post('/products').send(DATA).expect(422);
+
+      expect(res.body).to.eql({
+        error: {
+          statusCode: 422,
+          name: 'UnprocessableEntityError',
+          message:
+            'The request body is invalid. See error object `details` property for more info.',
+          code: 'VALIDATION_FAILED',
+          details: [
+            {
+              path: '/price',
+              code: 'maximum',
+              message: 'should be <= 100',
+              info: {comparison: '<=', limit: 100, exclusive: false},
+            },
+            {
+              path: '/price',
+              code: 'errorMessage',
+              message: 'price should be in range 0 to 100',
+              info: {
+                errors: [
+                  {
+                    keyword: 'range',
+                    dataPath: '/price',
+                    schemaPath:
+                      '#/components/schemas/Product/properties/price/range',
+                    params: {keyword: 'range'},
+                    message: 'should pass "range" keyword validation',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      });
+    });
+  });
+
+  context(
+    'with request body validation options - {ajvErrors: {keepErrors: true}}',
+    () => {
+      class ProductController {
+        @post('/products')
+        async create(
+          @requestBody({required: true}) data: Product,
+        ): Promise<Product> {
+          return new Product(data);
+        }
+      }
+
+      before(() =>
+        givenAnAppAndAClient(ProductController, {
+          nullable: false,
+          compiledSchemaCache: new WeakMap(),
+          $data: true,
+          ajvKeywords: true,
+          ajvErrors: {
+            singleError: true,
+          },
+        }),
+      );
+      after(() => app.stop());
+
+      it('adds custom error message provided with jsonSchema', async () => {
+        const DATA = {
+          name: 'iPhone',
+          description: 'iPhone',
+          price: 200,
+        };
+        const res = await client.post('/products').send(DATA).expect(422);
+
+        expect(res.body).to.eql({
+          error: {
+            statusCode: 422,
+            name: 'UnprocessableEntityError',
+            message:
+              'The request body is invalid. See error object `details` property for more info.',
+            code: 'VALIDATION_FAILED',
+            details: [
+              {
+                path: '/price',
+                code: 'maximum',
+                message: 'should be <= 100',
+                info: {comparison: '<=', limit: 100, exclusive: false},
+              },
+              {
+                path: '/price',
+                code: 'errorMessage',
+                message: 'price should be in range 0 to 100',
+                info: {
+                  errors: [
+                    {
+                      keyword: 'range',
+                      dataPath: '/price',
+                      schemaPath:
+                        '#/components/schemas/Product/properties/price/range',
+                      params: {keyword: 'range'},
+                      message: 'should pass "range" keyword validation',
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        });
+      });
+    },
+  );
+
+  context('with request body validation options - custom keywords', () => {
+    @model()
+    class ProductWithName {
+      @property()
+      id: number;
+
+      @property({required: true, jsonSchema: {validProductName: true}})
+      name: string;
+
+      constructor(data: Partial<ProductWithName>) {
+        Object.assign(this, data);
+      }
+    }
+
+    class ProductController {
+      @post('/products')
+      async create(
+        @requestBody({required: true}) data: ProductWithName,
+      ): Promise<ProductWithName> {
+        return new ProductWithName({id: 1, name: 'prod-1'});
+      }
+    }
+
+    before(() => givenAnAppAndAClient(ProductController));
+    after(() => app.stop());
+
+    it('allows async custom keyword', async () => {
+      app.bind(RestBindings.REQUEST_BODY_PARSER_OPTIONS).to({
+        validation: {
+          nullable: false,
+          logger: false, // Disable log warning - meta-schema not available
+          compiledSchemaCache: new WeakMap(),
+          $data: true,
+          ajvKeywords: true,
+          ajvErrors: {
+            singleError: true,
+          },
+          keywords: {
+            validProductName: {
+              async: true,
+              type: 'string',
+              validate: async (schema: unknown, data: string) => {
+                return data.startsWith('prod-');
+              },
+            },
+          },
+        },
+      });
+      const DATA = {
+        name: 'iPhone',
+      };
+      const res = await client.post('/products').send(DATA).expect(422);
+
+      expect(res.body).to.eql({
+        error: {
+          statusCode: 422,
+          name: 'UnprocessableEntityError',
+          message:
+            'The request body is invalid. See error object `details` property for more info.',
+          code: 'VALIDATION_FAILED',
+          details: [
+            {
+              code: 'validProductName',
+              info: {
+                keyword: 'validProductName',
+              },
+              message: 'should pass "validProductName" keyword validation',
+              path: '/name',
+            },
+          ],
+        },
+      });
+    });
+
+    it('allows sync custom keyword', async () => {
+      app.bind(RestBindings.REQUEST_BODY_PARSER_OPTIONS).to({
+        validation: {
+          nullable: false,
+          logger: false, // Disable log warning - meta-schema not available
+          compiledSchemaCache: new WeakMap(),
+          $data: true,
+          ajvKeywords: true,
+          ajvErrors: {
+            singleError: true,
+          },
+          keywords: {
+            validProductName: {
+              async: false,
+              type: 'string',
+              validate: (schema: unknown, data: string) => {
+                return data.startsWith('prod-');
+              },
+            },
+          },
+        },
+      });
+      const DATA = {
+        name: 'iPhone',
+      };
+      const res = await client.post('/products').send(DATA).expect(422);
+
+      expect(res.body).to.eql({
+        error: {
+          statusCode: 422,
+          name: 'UnprocessableEntityError',
+          message:
+            'The request body is invalid. See error object `details` property for more info.',
+          code: 'VALIDATION_FAILED',
+          details: [
+            {
+              code: 'validProductName',
+              info: {
+                keyword: 'validProductName',
+              },
+              message: 'should pass "validProductName" keyword validation',
+              path: '/name',
+            },
+          ],
+        },
+      });
+    });
+  });
 
   // A request body schema can be provided explicitly by the user
   // as an inlined content[type].schema property.
@@ -437,10 +724,7 @@ describe('Validation at REST level', () => {
       price: 10,
       category: {name: 'Stationary'},
     };
-    await client
-      .post('/products')
-      .send(DATA)
-      .expect(200, DATA);
+    await client.post('/products').send(DATA).expect(200, DATA);
   }
 
   async function serverAcceptsValidRequestBodyWithNull() {
@@ -450,10 +734,7 @@ describe('Validation at REST level', () => {
       price: 10,
       category: {name: 'Stationary'},
     };
-    await client
-      .post('/products')
-      .send(DATA)
-      .expect(200, DATA);
+    await client.post('/products').send(DATA).expect(200, DATA);
   }
 
   async function serverAcceptsValidRequestBodyForUrlencoded() {

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2019. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -49,11 +49,9 @@ export interface AnyObject {
  * An extension of the built-in Partial<T> type which allows partial values
  * in deeply nested properties too.
  */
-// FIXME(rfeng): https://github.com/microsoft/TypeScript/issues/21592#issuecomment-496723647
-// export type DeepPartial<T> = {[P in keyof T]?: DeepPartial<T[P]>};
-export type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends never ? DeepPartial<T[P]> : DeepPartial<T[P]>;
-};
+export type DeepPartial<T> =
+  | Partial<T> // handle free-form properties, e.g. DeepPartial<AnyObject>
+  | {[P in keyof T]?: DeepPartial<T[P]>};
 
 /**
  * Type alias for strongly or weakly typed objects of T
@@ -102,5 +100,17 @@ export interface Count {
  */
 export const CountSchema = {
   type: 'object',
+  title: 'loopback.Count',
   properties: {count: {type: 'number'}},
 };
+
+/**
+ * Type helper to infer prototype from a constructor function.
+ *
+ * Example: `PrototypeOf<typeof Entity>` is resolved to `Entity`.
+ */
+export type PrototypeOf<Ctor extends Function> = Ctor extends {
+  prototype: infer Proto;
+}
+  ? Proto
+  : never;

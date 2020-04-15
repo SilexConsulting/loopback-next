@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository-tests
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -14,7 +14,7 @@ import {
 } from '@loopback/repository';
 import {expect, skipIf, toJSON} from '@loopback/testlab';
 import {Suite} from 'mocha';
-import {withCrudCtx, MixedIdType} from '../helpers.repository-tests';
+import {MixedIdType, withCrudCtx} from '../helpers.repository-tests';
 import {
   CrudFeatures,
   CrudTestContext,
@@ -24,6 +24,7 @@ import {
 
 // Core scenarios for testing CRUD functionalities of Transactional connectors
 // Please keep this file short, put any advanced scenarios to other files
+/* istanbul ignore file */
 export function transactionSuite(
   dataSourceOptions: DataSourceOptions,
   repositoryClass: TransactionalRepositoryCtor,
@@ -58,21 +59,28 @@ export function transactionSuite(
           typeof Product.prototype.id
         >;
         let tx: Transaction | undefined;
+        let ds: juggler.DataSource;
         before(
           withCrudCtx(async function setupRepository(ctx: CrudTestContext) {
-            repo = new repositoryClass(Product, ctx.dataSource);
-            await ctx.dataSource.automigrate(Product.name);
+            ds = ctx.dataSource;
+            repo = new repositoryClass(Product, ds);
+            await ds.automigrate(Product.name);
           }),
         );
         beforeEach(() => {
           tx = undefined;
         });
         afterEach(async () => {
-          // FIXME: replace tx.connection with tx.isActive when it become
-          // available
-          // see https://github.com/strongloop/loopback-next/issues/3471
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          if (tx !== undefined && (tx as any).connection) {
+          // For postgresql connector, it doesn't wrap the connection with
+          // the Transaction that has juggler's Transaction mixin applied,
+          // therefore `commit` or `rollback` won't delete the connection's
+          // reference of a `tx`.
+          // Detailed explanation see:
+          // https://github.com/strongloop/loopback-next/pull/4474
+          if (ds.connector && ds.connector.name === 'postgresql') {
+            tx = undefined;
+          }
+          if (tx?.isActive()) {
             await tx.rollback();
           }
         });
@@ -140,7 +148,7 @@ export function transactionSuite(
         it('should not use transaction with another repository', async () => {
           const ds2Options = Object.assign({}, dataSourceOptions);
           ds2Options.name = 'anotherDataSource';
-          ds2Options.database = ds2Options.database + '-new';
+          ds2Options.database = ds2Options.database + '_new';
           const ds2 = new juggler.DataSource(ds2Options);
           const anotherRepo = new repositoryClass(Product, ds2);
           await ds2.automigrate(Product.name);

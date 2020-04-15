@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/core
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -8,6 +8,7 @@ import {
   Binding,
   BindingSpec,
   Constructor,
+  filterByTag,
   ValueOrPromise,
 } from '@loopback/context';
 import {CoreTags} from './keys';
@@ -61,9 +62,9 @@ export function asLifeCycleObserver<T = unknown>(binding: Binding<T>) {
  * Find all life cycle observer bindings. By default, a binding tagged with
  * `CoreTags.LIFE_CYCLE_OBSERVER`. It's used as `BindingFilter`.
  */
-export function lifeCycleObserverFilter(binding: Readonly<Binding>): boolean {
-  return binding.tagMap[CoreTags.LIFE_CYCLE_OBSERVER] != null;
-}
+export const lifeCycleObserverFilter = filterByTag(
+  CoreTags.LIFE_CYCLE_OBSERVER,
+);
 
 /**
  * Sugar decorator to mark a class as life cycle observer

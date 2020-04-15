@@ -6,6 +6,8 @@ sidebar: lb4_sidebar
 permalink: /doc/en/lb4/BelongsTo-relation.html
 ---
 
+{% include note.html content="There are some limitations to `Inclusion Resolver`. See [Limitations](Relations.md#limitations)." %}
+
 ## Overview
 
 {% include note.html content="
@@ -43,6 +45,56 @@ related routes, you need to perform the following steps:
 This section describes how to define a `belongsTo` relation at the model level
 using the `@belongsTo` decorator to define the constraining foreign key.
 
+LB4 also provides an CLI tool `lb4 relation` to generate `belongsTo` relation
+for you. Before you check out the
+[`Relation Generator`](https://loopback.io/doc/en/lb4/Relation-generator.html)
+page, read on to learn how you can define relations to meet your requirements.
+
+### Relation Metadata
+
+LB4 uses three `keyFrom`, `keyTo` and `name` fields in the `belongsTo` relation
+metadata to configure relations. The relation metadata has its own default
+values for these three fields:
+
+<table>
+  <thead>
+    <tr>
+      <th width="95">Field Name</th>
+      <th width="260">Description</th>
+      <th width="260">Default Value</th>
+      <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>keyFrom</code></td>
+      <td>the foreign key of the source model</td>
+      <td>the target model name appended with `Id` in camel case</td>
+      <td><code>Order.customerId</code></td>
+    </tr>
+    <tr>
+      <td><code>keyTo</code></td>
+      <td>the source key of the target model</td>
+      <td>the primary key in the target model</td>
+      <td><code>Customer.id</code></td>
+    </tr>
+    <tr>
+      <td><code>name</code></td>
+      <td>the name of the relation</td>
+      <td>@belongsTo decorated property name without <code>Id</code></td>
+      <td><code>customer</code></td>
+    </tr>
+
+  </tbody>
+</table>
+
+We recommend to use default values. If you'd like to customize the foreign key
+name or the relation name, you'll need to specify some fields through the
+relation decorator.
+
+The standard naming convention for the foreign key property in the source model
+is `relation name` + `Id` (for example, Order.customerId).
+
 {% include code-caption.html content="/src/models/order.model.ts" %}
 
 ```ts
@@ -58,7 +110,7 @@ export class Order extends Entity {
   id: number;
 
   @belongsTo(() => Customer)
-  customerId: number;
+  customerId: number; // relation name will default to `customer`
 
   @property({type: 'number'})
   quantity: number;
@@ -75,18 +127,79 @@ export interface OrderRelations {
 export type OrderWithRelations = Order & OrderRelations;
 ```
 
-The definition of the `belongsTo` relation is inferred by using the `@belongsTo`
-decorator. The decorator takes in a function resolving the target model class
-constructor and designates the relation type. It also calls `property()` to
-ensure that the decorated property is correctly defined.
+If the foreign key property name in the source model has to be customized
+(`customer_id` instead of `customerId` for example), the relation name has to be
+explicitly specified in the `name` attribute of the relation definition.
+Otherwise the _default relation name_ generates by LB4 (`customer_id` in this
+case) will be the same as the customized foreign key name, which is invalid.
 
-A usage of the decorator with a custom primary key of the target model for the
-above example is as follows:
+{% include warning.html content="Make sure that you have different names for the foreign key and the relation name in BelongsTo relations."%}
+
+```ts
+// import statements
+@model()
+export class Order extends Entity {
+  @property({
+    type: 'number',
+    id: true,
+  })
+  id: number;
+
+  @belongsTo(() => Customer, {name: 'customer'}) // specify the relation name if fk is customized
+  customer_id: number; // customized fk
+
+  // other properties, constructor, etc.
+}
+```
+
+In addition, if you have a corresponding `hasMany` or `hasOne` relation in the
+target model (for example, a Customer has many Orders), the `keyTo` attribute of
+that corresponding relation needs to be stated explicitly:
+
+```ts
+// import statements
+@model()
+export class Order extends Entity {
+  // constructor, properties, etc.
+
+  @belongsTo(() => Customer, {name: 'customer'})
+  customer_id: number; // customized foreign key name
+}
+```
+
+```ts
+@model()
+export class Customer extends Entity {
+  // constructor, properties, etc.
+  @hasMany(() => Order, {keyTo: 'customer_id'})
+  orders: Order[];
+}
+```
+
+Check the relation metadata in [hasMany](HasMany-relation.md#relation-metadata)
+and [hasOne](HasOne-relation.md#relation-metadata) for more details.
+
+If you need to use _different names for models and database columns_, to use
+`customer_id` as db column name other than `customerId` for example, passing the
+column name in the third argument to the `belongsTo` decorator would allow you
+to do so:
 
 ```ts
 class Order extends Entity {
   // constructor, properties, etc.
-  @belongsTo(() => Customer, {keyTo: 'pk'})
+  @belongsTo(() => Customer, {keyFrom: 'customerId'}, {name: 'customer_id'})
+  customerId: number;
+}
+```
+
+If you need to use another attribute other than the id property to be the source
+key of the target model (joining two tables on non-primary attribute), the
+`keyTo` attribute in the relation definition has to be stated explicitly.
+
+```ts
+class Order extends Entity {
+  // constructor, properties, etc.
+  @belongsTo(() => Customer, { keyTo: 'customized_target_property' }),
   customerId: number;
 }
 
@@ -94,6 +207,8 @@ export interface OrderRelations {
   customer?: CustomerWithRelations;
 }
 ```
+
+{% include important.html content="LB4 doesn't support composite keys for now. e.g joining two tables with more than one source key. Related GitHub issue: [Composite primary/foreign keys](https://github.com/strongloop/loopback-next/issues/1830)" %}
 
 ## Configuring a belongsTo relation
 
@@ -161,6 +276,13 @@ export class OrderRepository extends DefaultCrudRepository<
 model instance (e.g. `order.id`) and returning back the related target model
 instance (e.g. a `Customer` the order belongs to). See also
 [API Docs](https://loopback.io/doc/en/lb4/apidocs.repository.belongstoaccessor.html)
+
+{% include note.html content="Notice that `OrderRepository.create()` expects an `Order` model only, navigational properties are not expected to be included in the target data. For instance, the following request will be rejected:
+`orderRepository.create({`
+`  id: 1,`
+`  customerId: 1`
+`  customer:{id: 1, name: 'rejected'}`
+`})`" %}
 
 ## Using BelongsToAccessor in a controller
 
@@ -270,6 +392,14 @@ on constructor to avoid "Circular dependency" error (see
 
 ## Querying related models
 
+Different from LB3, LB4 creates a different inclusion resolver for each relation
+type to query related models. Each **relation** has its own inclusion resolver
+`inclusionResolver`. And each **repository** has a built-in property
+`inclusionResolvers` as a registry for its inclusionResolvers. Here is a diagram
+to show the idea:
+
+![inclusion](./imgs/relation-inclusion.png)
+
 A `belongsTo` relation has an `inclusionResolver` function as a property. It
 fetches target models for the given list of source model instances.
 
@@ -278,13 +408,19 @@ belongs to a `Customer`.
 
 After setting up the relation in the repository class, the inclusion resolver
 allows users to retrieve all orders along with their related customers through
-the following code:
+the following code at the repository level:
 
 ```ts
 orderRepo.find({include: [{relation: 'customer'}]});
 ```
 
-### Enable/disable the inclusion resolvers:
+or use APIs with controllers:
+
+```
+GET http://localhost:3000/orders?filter[include][][relation]=customer
+```
+
+### Enable/disable the inclusion resolvers
 
 - Base repository classes have a public property `inclusionResolvers`, which
   maintains a map containing inclusion resolvers for each relation.
@@ -322,10 +458,19 @@ export class OrderRepository extends DefaultCrudRepository {
 ```
 
 - We can simply include the relation in queries via `find()`, `findOne()`, and
-  `findById()` methods. Example:
+  `findById()` methods. For example, these queries return all orders with their
+  `Customer`:
+
+  if you process data at the repository level:
 
   ```ts
   orderRepository.find({include: [{relation: 'customer'}]});
+  ```
+
+  this is the same as the url:
+
+  ```
+  GET http://localhost:3000/orders?filter[include][][relation]=customer
   ```
 
   which returns:
@@ -361,13 +506,19 @@ export class OrderRepository extends DefaultCrudRepository {
   ];
   ```
 
+{% include note.html content="The query syntax is a slightly different from LB3. We are also thinking about simplifying the query syntax. Check our GitHub issue for more information: [Simpler Syntax for Inclusion](https://github.com/strongloop/loopback-next/issues/3205)" %}
+
+Here is a diagram to make this more intuitive:
+
+![Graph](./imgs/belongsTo-relation-graph.png)
+
 - You can delete a relation from `inclusionResolvers` to disable the inclusion
   for a certain relation. e.g
   `orderRepository.inclusionResolvers.delete('customer')`
 
-{% include note.html content="
-Inclusion with custom scope:
-Besides specifying the relation name to include, it's also possible to specify additional scope constraints.
-However, this feature is not supported yet. Check our GitHub issue for more information:
-[Include related models with a custom scope](https://github.com/strongloop/loopback-next/issues/3453).
-" %}
+### Query multiple relations
+
+It is possible to query several relations or nested include relations with
+custom scope once you have the inclusion resolver of each relation set up.
+Check[HasMany - Query multiple relations](HasMany-relation.md#query-multiple-relations)
+for the usage and examples.

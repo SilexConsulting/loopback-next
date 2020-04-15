@@ -1,17 +1,23 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/http-caching-proxy
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {expect} from '@loopback/testlab';
+import axios, {
+  AxiosProxyConfig,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 import delay from 'delay';
-import * as http from 'http';
+import http from 'http';
 import {AddressInfo} from 'net';
 import pEvent from 'p-event';
-import * as path from 'path';
-import * as makeRequest from 'request-promise-native';
-import * as rimrafCb from 'rimraf';
-import * as util from 'util';
+import path from 'path';
+import rimrafCb from 'rimraf';
+import tunnel, {ProxyOptions as TunnelProxyOptions} from 'tunnel';
+import {URL} from 'url';
+import util from 'util';
 import {HttpCachingProxy, ProxyOptions} from '../../http-caching-proxy';
 
 const CACHE_DIR = path.join(__dirname, '.cache');
@@ -38,33 +44,56 @@ describe('HttpCachingProxy', () => {
     expect(proxy.url).to.match(/not-running/);
   });
 
-  it('proxies HTTP requests', async function() {
-    // Increase the timeout to accomodate slow network connections
+  it('proxies HTTP requests', async function () {
+    // Increase the timeout to accommodate slow network connections
     // eslint-disable-next-line no-invalid-this
     this.timeout(30000);
 
     await givenRunningProxy();
     const result = await makeRequest({
-      uri: 'http://example.com',
-      proxy: proxy.url,
-      resolveWithFullResponse: true,
+      url: 'http://example.com',
     });
 
     expect(result.statusCode).to.equal(200);
     expect(result.body).to.containEql('example');
   });
 
-  it('proxies HTTPs requests (no tunneling)', async function() {
-    // Increase the timeout to accomodate slow network connections
+  it('reports error for HTTP requests', async function () {
+    // Increase the timeout to accommodate slow network connections
+    // eslint-disable-next-line no-invalid-this
+    this.timeout(30000);
+
+    await givenRunningProxy({logError: false});
+    await expect(
+      makeRequest({
+        url: 'http://does-not-exist.example.com',
+      }),
+    ).to.be.rejectedWith(
+      // The error can be
+      // '502 - "Error: getaddrinfo EAI_AGAIN does-not-exist.example.com:80"'
+      // '502 - "Error: getaddrinfo ENOTFOUND does-not-exist.example.com'
+      /502 - "Error: getaddrinfo/,
+    );
+  });
+
+  it('reports timeout error for HTTP requests', async function () {
+    await givenRunningProxy({logError: false, timeout: 1});
+    await expect(
+      makeRequest({
+        url:
+          'http://www.mocky.io/v2/5dade5e72d0000a542e4bd9c?mocky-delay=1000ms',
+      }),
+    ).to.be.rejectedWith(/502 - "Error: timeout of 1ms exceeded/);
+  });
+
+  it('proxies HTTPs requests (no tunneling)', async function () {
+    // Increase the timeout to accommodate slow network connections
     // eslint-disable-next-line no-invalid-this
     this.timeout(30000);
 
     await givenRunningProxy();
     const result = await makeRequest({
-      uri: 'https://example.com',
-      proxy: proxy.url,
-      tunnel: false,
-      resolveWithFullResponse: true,
+      url: 'https://example.com',
     });
 
     expect(result.statusCode).to.equal(200);
@@ -73,16 +102,17 @@ describe('HttpCachingProxy', () => {
 
   it('rejects CONNECT requests (HTTPS tunneling)', async () => {
     await givenRunningProxy();
+    const agent = tunnel.httpsOverHttp({
+      proxy: getTunnelProxyConfig(proxy.url),
+    });
     const resultPromise = makeRequest({
-      uri: 'https://example.com',
-      proxy: proxy.url,
-      tunnel: true,
-      simple: false,
-      resolveWithFullResponse: true,
+      url: 'https://example.com',
+      httpsAgent: agent,
+      proxy: false,
     });
 
     await expect(resultPromise).to.be.rejectedWith(
-      /tunneling socket.*statusCode=501/,
+      /tunneling socket could not be established, statusCode=501/,
     );
   });
 
@@ -91,11 +121,9 @@ describe('HttpCachingProxy', () => {
     givenServerDumpsRequests();
 
     const result = await makeRequest({
-      uri: stubServerUrl,
-      json: true,
+      url: stubServerUrl,
+      responseType: 'json',
       headers: {'x-client': 'test'},
-      proxy: proxy.url,
-      resolveWithFullResponse: true,
     });
 
     expect(result.headers).to.containEql({
@@ -112,27 +140,24 @@ describe('HttpCachingProxy', () => {
 
     const result = await makeRequest({
       method: 'POST',
-      uri: stubServerUrl,
-      body: 'a text body',
-      proxy: proxy.url,
+      url: stubServerUrl,
+      data: 'a text body',
     });
 
-    expect(result).to.equal('a text body');
+    expect(result.body).to.equal('a text body');
   });
 
   it('caches responses', async () => {
     await givenRunningProxy();
     let counter = 1;
-    stubServerHandler = function(req, res) {
+    stubServerHandler = function (req, res) {
       res.writeHead(201, {'x-counter': counter++});
       res.end(JSON.stringify({counter: counter++}));
     };
 
-    const opts = {
-      uri: stubServerUrl,
-      json: true,
-      proxy: proxy.url,
-      resolveWithFullResponse: true,
+    const opts: AxiosRequestConfig = {
+      url: stubServerUrl,
+      responseType: 'json',
     };
 
     const result1 = await makeRequest(opts);
@@ -152,25 +177,26 @@ describe('HttpCachingProxy', () => {
     stubServerHandler = (req, res) => res.end(String(counter++));
 
     const opts = {
-      uri: stubServerUrl,
-      proxy: proxy.url,
+      url: stubServerUrl,
     };
 
     const result1 = await makeRequest(opts);
     await delay(10);
     const result2 = await makeRequest(opts);
 
-    expect(result1).to.equal('1');
-    expect(result2).to.equal('2');
+    expect(result1.body).to.equal(1);
+    expect(result2.body).to.equal(2);
   });
 
-  it('handles the case where backend service is not running', async () => {
-    await givenRunningProxy();
-    proxy.logError = (request, error) => {}; // no-op
+  it('handles the case where backend service is not running', async function () {
+    // This test takes a bit longer to finish on windows.
+    // eslint-disable-next-line no-invalid-this
+    this.timeout(3000);
+    await givenRunningProxy({logError: false});
 
-    await expect(
-      makeRequest({uri: 'http://127.0.0.1:1/', proxy: proxy.url}),
-    ).to.be.rejectedWith({statusCode: 502});
+    await expect(makeRequest({url: 'http://127.0.0.1:1/'})).to.be.rejectedWith({
+      status: 502,
+    });
   });
 
   async function givenRunningProxy(options?: Partial<ProxyOptions>) {
@@ -183,6 +209,74 @@ describe('HttpCachingProxy', () => {
   async function stopProxy() {
     if (!proxy) return;
     await proxy.stop();
+  }
+
+  /**
+   * Parse a url to `tunnel` proxy options
+   * @param url - proxy url string
+   */
+  function getTunnelProxyConfig(url: string): TunnelProxyOptions {
+    const parsed = new URL(url);
+    const options: TunnelProxyOptions = {
+      host: parsed.hostname,
+      port: parseInt(parsed.port),
+    };
+    if (parsed.username) {
+      options.proxyAuth = `${parsed.username}:${parsed.password}`;
+    }
+    return options;
+  }
+
+  /**
+   * Parse a url to Axios proxy configuration object
+   * @param url - proxy url string
+   */
+  function getProxyConfig(url: string): AxiosProxyConfig {
+    const parsed = new URL(url);
+    return {
+      host: parsed.hostname,
+      port: parseInt(parsed.port),
+      protocol: parsed.protocol,
+      auth: {
+        username: parsed.username,
+        password: parsed.password,
+      },
+    };
+  }
+
+  const axiosInstance = axios.create({
+    // Provide a custom function to control when Axios throws errors based on
+    // http status code. Please note that Axios creates a new error in such
+    // condition and the original low-level error is lost
+    validateStatus: () => true,
+  });
+
+  /**
+   * Helper method to make an http request via the proxy
+   * @param config - Axios request
+   */
+  async function makeRequest(config: AxiosRequestConfig) {
+    config = {
+      proxy: getProxyConfig(proxy.url),
+      ...config,
+    };
+    const res = await axiosInstance(config);
+    // Throw an error with message from the original error
+    if (res.status >= 300) {
+      const errData = JSON.stringify(res.data);
+      const err = new Error(`${res.status} - ${errData}`);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (err as any).status = res.status;
+      throw err;
+    }
+    const patchedRes = Object.create(res) as AxiosResponse & {
+      statusCode: number;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      body: any;
+    };
+    patchedRes.statusCode = res.status;
+    patchedRes.body = res.data;
+    return patchedRes;
   }
 
   let stubServer: http.Server | undefined,
@@ -216,7 +310,6 @@ describe('HttpCachingProxy', () => {
     if (!stubServer) return;
     stubServer.close();
     await pEvent(stubServer, 'close');
-    // eslint-disable-next-line require-atomic-updates
     stubServer = undefined;
   }
 

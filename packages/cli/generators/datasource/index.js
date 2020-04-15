@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -10,7 +10,8 @@ const debug = require('../../lib/debug')('datasource-generator');
 const chalk = require('chalk');
 const path = require('path');
 const utils = require('../../lib/utils');
-const connectors = require('./connectors.json');
+const connectors = require('../../lib/connectors.json');
+const g = require('../../lib/globalize');
 
 /**
  * DataSource Generator -- CLI
@@ -83,7 +84,7 @@ module.exports = class DataSourceGenerator extends ArtifactGenerator {
         type: 'input',
         name: 'name',
         // capitalization
-        message: utils.toClassName(this.artifactInfo.type) + ' name:',
+        message: g.f('%s name:', utils.toClassName(this.artifactInfo.type)),
         when: this.artifactInfo.name === undefined,
         validate: utils.validateClassName,
       },
@@ -134,7 +135,7 @@ module.exports = class DataSourceGenerator extends ArtifactGenerator {
       const prompts = [
         {
           name: 'customConnector',
-          message: "Enter the connector's package name:",
+          message: g.f("Enter the connector's package name:"),
           validate: utils.validate,
         },
       ];
@@ -190,8 +191,9 @@ module.exports = class DataSourceGenerator extends ArtifactGenerator {
           break;
         default:
           console.warn(
-            `Using default input of type input for setting ${key} as ${setting.type ||
-              undefined} is not supported`,
+            `Using default input of type input for setting ${key} as ${
+              setting.type || undefined
+            } is not supported`,
           );
           // Default to input type
           question.type = 'input';
@@ -240,7 +242,7 @@ module.exports = class DataSourceGenerator extends ArtifactGenerator {
     this.artifactInfo.className = utils.toClassName(this.artifactInfo.name);
     this.artifactInfo.fileName = utils.toFileName(this.artifactInfo.name);
     // prettier-ignore
-    this.artifactInfo.jsonFileName = `${this.artifactInfo.fileName}.datasource.json`;
+    this.artifactInfo.jsonFileName = `${this.artifactInfo.fileName}.datasource.config.json`;
     // prettier-ignore
     this.artifactInfo.outFile = `${this.artifactInfo.fileName}.datasource.ts`;
 

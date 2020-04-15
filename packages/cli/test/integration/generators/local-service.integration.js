@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -17,8 +17,7 @@ const SANDBOX_FILES = require('../../fixtures/service').SANDBOX_FILES;
 const testUtils = require('../../test-utils');
 
 // Test Sandbox
-const SANDBOX_PATH = path.resolve(__dirname, '..', '.sandbox');
-const sandbox = new TestSandbox(SANDBOX_PATH);
+const sandbox = new TestSandbox(path.resolve(__dirname, '../.sandbox'));
 
 describe('lb4 service (local)', () => {
   beforeEach('reset sandbox', async () => {
@@ -31,7 +30,7 @@ describe('lb4 service (local)', () => {
         testUtils
           .executeGenerator(generator)
           .withArguments('myService --type xyz')
-          .inDir(SANDBOX_PATH, () => testUtils.givenLBProject(SANDBOX_PATH)),
+          .inDir(sandbox.path, () => testUtils.givenLBProject(sandbox.path)),
       ).to.be.rejectedWith(/Invalid service type\: xyz/);
     });
   });
@@ -40,59 +39,59 @@ describe('lb4 service (local)', () => {
     it('generates a basic local service class from command line arguments', async () => {
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
-        .withArguments('myService --type class');
+        .withArguments('myTest --type class');
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
-        'my-service.service.ts',
+        'my-test.service.ts',
       );
       assert.file(expectedFile);
-      assert.fileContent(expectedFile, /export class MyService {/);
+      assert.fileContent(expectedFile, /export class MyTestService {/);
       assert.file(INDEX_FILE);
-      assert.fileContent(INDEX_FILE, /export \* from '.\/my-service.service';/);
+      assert.fileContent(INDEX_FILE, /export \* from '.\/my-test.service';/);
     });
 
     it('generates a basic local service class from the prompts', async () => {
       const multiItemPrompt = {
-        name: 'myService',
+        name: 'myTest',
         serviceType: 'class',
       };
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withPrompts(multiItemPrompt);
 
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
-        'my-service.service.ts',
+        'my-test.service.ts',
       );
       assert.file(expectedFile);
-      assert.fileContent(expectedFile, /export class MyService {/);
+      assert.fileContent(expectedFile, /export class MyTestService {/);
       assert.file(INDEX_FILE);
-      assert.fileContent(INDEX_FILE, /export \* from '.\/my-service.service';/);
+      assert.fileContent(INDEX_FILE, /export \* from '.\/my-test.service';/);
     });
 
     it('generates a basic local service provider from command line arguments', async () => {
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withArguments('myService --type provider');
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'my-service.service.ts',
       );
@@ -113,15 +112,15 @@ describe('lb4 service (local)', () => {
       };
       await testUtils
         .executeGenerator(generator)
-        .inDir(SANDBOX_PATH, () =>
-          testUtils.givenLBProject(SANDBOX_PATH, {
+        .inDir(sandbox.path, () =>
+          testUtils.givenLBProject(sandbox.path, {
             additionalFiles: SANDBOX_FILES,
           }),
         )
         .withPrompts(multiItemPrompt);
 
       const expectedFile = path.join(
-        SANDBOX_PATH,
+        sandbox.path,
         SERVICE_APP_PATH,
         'my-service.service.ts',
       );
@@ -139,4 +138,4 @@ describe('lb4 service (local)', () => {
 
 // Sandbox constants
 const SERVICE_APP_PATH = 'src/services';
-const INDEX_FILE = path.join(SANDBOX_PATH, SERVICE_APP_PATH, 'index.ts');
+const INDEX_FILE = path.join(sandbox.path, SERVICE_APP_PATH, 'index.ts');

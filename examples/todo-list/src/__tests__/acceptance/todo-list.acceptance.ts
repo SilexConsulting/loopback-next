@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/example-todo-list
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -58,10 +58,7 @@ describe('TodoListApplication', () => {
     });
 
     it('counts todoLists', async () => {
-      const response = await client
-        .get('/todo-lists/count')
-        .send()
-        .expect(200);
+      const response = await client.get('/todo-lists/count').send().expect(200);
       expect(response.body.count).to.eql(persistedTodoLists.length);
     });
 
@@ -74,10 +71,7 @@ describe('TodoListApplication', () => {
     });
 
     it('finds all todoLists', async () => {
-      const response = await client
-        .get('/todo-lists')
-        .send()
-        .expect(200);
+      const response = await client.get('/todo-lists').send().expect(200);
       expect(response.body).to.containDeep(persistedTodoLists);
     });
 
@@ -202,6 +196,16 @@ describe('TodoListApplication', () => {
       ...toJSON(list),
       todos: [toJSON(todo)],
     });
+  });
+
+  it('exploded filter conditions work', async () => {
+    const list = await givenTodoListInstance(todoListRepo);
+    await givenTodoInstance(todoRepo, {title: 'todo1', todoListId: list.id});
+    await givenTodoInstance(todoRepo, {title: 'todo2', todoListId: list.id});
+    await givenTodoInstance(todoRepo, {title: 'todo3', todoListId: list.id});
+
+    const response = await client.get('/todos').query('filter[limit]=2');
+    expect(response.body).to.have.length(2);
   });
 
   /*

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/example-context
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -35,7 +35,7 @@ class RequestContext extends Context {
    * Wait until the context event queue is empty or an error is thrown
    */
   waitUntilObserversNotified(): Promise<void> {
-    return this.waitUntilPendingNotificationsDone(100);
+    return this.subscriptionManager.waitUntilPendingNotificationsDone(100);
   }
 }
 
@@ -54,23 +54,20 @@ export async function main() {
   // Create a context view on `requestCtx`
   const greetersView = requestCtx.createView(filterByKey(/^greeters\./));
   greetersView.on('refresh', () => {
-    console.log('[view.refresh] %j', greetersView.bindings.map(b => b.key));
+    console.log(
+      '[view.refresh] %j',
+      greetersView.bindings.map(b => b.key),
+    );
   });
 
   // Add EnglishGreeter to `appCtx`
   console.log('Adding EnglishGreeter');
-  appCtx
-    .bind('greeters.EnglishGreeter')
-    .toClass(EnglishGreeter)
-    .tag('greeter');
+  appCtx.bind('greeters.EnglishGreeter').toClass(EnglishGreeter).tag('greeter');
 
   // Add ChineseGreeter to `appCtx`
   await setImmediateAsync();
   console.log('Adding ChineseGreeter');
-  appCtx
-    .bind('greeters.ChineseGreeter')
-    .toClass(ChineseGreeter)
-    .tag('greeter');
+  appCtx.bind('greeters.ChineseGreeter').toClass(ChineseGreeter).tag('greeter');
 
   // Remove ChineseGreeter from `appCtx`
   await setImmediateAsync();

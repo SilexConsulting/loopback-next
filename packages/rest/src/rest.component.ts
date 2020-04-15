@@ -1,9 +1,14 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Binding, Constructor, inject} from '@loopback/context';
+import {
+  Binding,
+  Constructor,
+  createBindingFromClass,
+  inject,
+} from '@loopback/context';
 import {
   Application,
   Component,
@@ -37,6 +42,8 @@ import {
   RestServerConfig,
 } from './rest.server';
 import {DefaultSequence} from './sequence';
+import {InfoSpecEnhancer} from './spec-enhancers/info.spec-enhancer';
+import {AjvFactoryProvider} from './validation/ajv-factory.provider';
 
 export class RestComponent implements Component {
   providers: ProviderMap = {
@@ -48,6 +55,7 @@ export class RestComponent implements Component {
     [RestBindings.GET_FROM_CONTEXT.key]: GetFromContextProvider,
     [RestBindings.SequenceActions.PARSE_PARAMS.key]: ParseParamsProvider,
     [RestBindings.SequenceActions.SEND.key]: SendProvider,
+    [RestBindings.AJV_FACTORY.key]: AjvFactoryProvider,
   };
   /**
    * Add built-in body parsers
@@ -76,6 +84,7 @@ export class RestComponent implements Component {
       StreamBodyParser,
       RestBindings.REQUEST_BODY_PARSER_STREAM,
     ),
+    createBindingFromClass(InfoSpecEnhancer),
   ];
   servers: {
     [name: string]: Constructor<Server>;
@@ -90,7 +99,7 @@ export class RestComponent implements Component {
     app.bind(RestBindings.SEQUENCE).toClass(DefaultSequence);
     const apiSpec = createEmptyApiSpec();
     // Merge the OpenAPI `servers` spec from the config into the empty one
-    if (config && config.openApiSpec && config.openApiSpec.servers) {
+    if (config?.openApiSpec?.servers) {
       Object.assign(apiSpec, {servers: config.openApiSpec.servers});
     }
     app.bind(RestBindings.API_SPEC).to(apiSpec);

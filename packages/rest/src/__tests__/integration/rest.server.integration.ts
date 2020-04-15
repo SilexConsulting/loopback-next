@@ -1,9 +1,10 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {Application} from '@loopback/core';
+import {anOpenApiSpec, anOperationSpec} from '@loopback/openapi-spec-builder';
 import {
   createClientForHandler,
   createRestAppClient,
@@ -13,15 +14,17 @@ import {
   skipOnTravis,
   supertest,
 } from '@loopback/testlab';
-import * as fs from 'fs';
+import fs from 'fs';
 import {IncomingMessage, ServerResponse} from 'http';
-import * as yaml from 'js-yaml';
-import * as path from 'path';
+import yaml from 'js-yaml';
+import path from 'path';
 import {is} from 'type-is';
-import * as util from 'util';
+import util from 'util';
 import {
   BodyParser,
+  ControllerRoute,
   get,
+  HttpErrors,
   post,
   Request,
   requestBody,
@@ -32,6 +35,7 @@ import {
   RestServer,
   RestServerConfig,
 } from '../..';
+import {RestTags} from '../../keys';
 const readFileAsync = util.promisify(fs.readFile);
 
 const FIXTURES = path.resolve(__dirname, '../../../fixtures');
@@ -58,9 +62,7 @@ describe('RestServer (integration)', () => {
           .to.have.property('url')
           .which.is.a.String()
           .match(/http|https\:\/\//);
-        await supertest(server.url)
-          .get('/')
-          .expect(200, 'Hello');
+        await supertest(server.url).get('/').expect(200, 'Hello');
       });
 
       it('includes basePath in the url property', async () => {
@@ -73,9 +75,7 @@ describe('RestServer (integration)', () => {
           .which.is.a.String()
           .match(/http|https\:\/\//);
         expect(server.url).to.match(/api$/);
-        await supertest(server.url)
-          .get('/')
-          .expect(200, 'Hello');
+        await supertest(server.url).get('/').expect(200, 'Hello');
       });
     });
 
@@ -89,9 +89,7 @@ describe('RestServer (integration)', () => {
           .to.have.property('rootUrl')
           .which.is.a.String()
           .match(/http|https\:\/\//);
-        await supertest(server.rootUrl)
-          .get('/api')
-          .expect(200, 'Hello');
+        await supertest(server.rootUrl).get('/api').expect(200, 'Hello');
       });
 
       it('does not include basePath in rootUrl', async () => {
@@ -103,9 +101,7 @@ describe('RestServer (integration)', () => {
           .to.have.property('rootUrl')
           .which.is.a.String()
           .match(/http|https\:\/\//);
-        await supertest(server.rootUrl)
-          .get('/api')
-          .expect(200, 'Hello');
+        await supertest(server.rootUrl).get('/api').expect(200, 'Hello');
       });
     });
   });
@@ -143,30 +139,63 @@ describe('RestServer (integration)', () => {
     await server.stop();
   });
 
+  it('disables listening if noListen is set to true', async () => {
+    const server = await givenAServer({rest: {listenOnStart: false, port: 0}});
+    await server.start();
+    // No port is assigned
+    expect(server.getSync(RestBindings.PORT)).to.eql(0);
+    // No server url is set
+    expect(server.url).to.be.undefined();
+    expect(server.listening).to.be.false();
+    await server.stop();
+  });
+
   it('does not throw an error when stopping an app that has not been started', async () => {
     const server = await givenAServer();
     await expect(server.stop()).to.fulfilled();
   });
 
-  it('responds with 500 when Sequence fails with unhandled error', async () => {
-    const server = await givenAServer();
-    server.handler((context, sequence) => {
-      return Promise.reject(new Error('unhandled test error'));
+  describe('unhandled error', () => {
+    let server: RestServer;
+    const consoleError = console.error;
+    let errorMsg = '';
+
+    // Patch `console.error`
+    before(async () => {
+      console.error = (format: unknown, ...args: unknown[]) => {
+        errorMsg = util.format(format, ...args);
+      };
+      server = await givenAServer();
     });
 
-    // Temporarily disable Mocha's handling of uncaught exceptions
-    const mochaListeners = process.listeners('uncaughtException');
-    process.removeAllListeners('uncaughtException');
-    process.once('uncaughtException', err => {
-      expect(err).to.have.property('message', 'unhandled test error');
-      for (const l of mochaListeners) {
-        process.on('uncaughtException', l);
-      }
+    // Restore `console.error`
+    after(() => {
+      console.error = consoleError;
     });
 
-    return createClientForHandler(server.requestHandler)
-      .get('/')
-      .expect(500);
+    it('responds with 500 when Sequence fails with unhandled error', async () => {
+      server.handler((context, sequence) => {
+        return Promise.reject(new Error('unhandled test error'));
+      });
+      await createClientForHandler(server.requestHandler).get('/').expect(500);
+      expect(errorMsg).to.match(
+        /Unhandled error in GET \/\: 500 Error\: unhandled test error/,
+      );
+    });
+
+    it('hangs up socket when Sequence fails with unhandled error and headers sent', async () => {
+      server.handler((context, sequence) => {
+        context.response.writeHead(200);
+        return Promise.reject(new Error('unhandled test error after sent'));
+      });
+
+      await expect(
+        createClientForHandler(server.requestHandler).get('/'),
+      ).to.be.rejectedWith(/socket hang up/);
+      expect(errorMsg).to.match(
+        /Unhandled error in GET \/\: 500 Error\: unhandled test error after sent/,
+      );
+    });
   });
 
   it('allows static assets to be mounted at /', async () => {
@@ -356,6 +385,33 @@ describe('RestServer (integration)', () => {
       .options('/')
       .expect(200)
       .expect('Access-Control-Max-Age', '1');
+  });
+
+  it('allows CORS configuration with origin function to reject', async () => {
+    const server = await givenAServer({
+      rest: {
+        port: 0,
+        cors: {
+          origin: (origin, callback) => {
+            process.nextTick(() => {
+              callback(new HttpErrors.Forbidden('Not allowed by CORS'));
+            });
+          },
+        },
+      },
+    });
+
+    server.handler(dummyRequestHandler);
+
+    await createClientForHandler(server.requestHandler)
+      .options('/')
+      .expect(403, {
+        error: {
+          statusCode: 403,
+          name: 'ForbiddenError',
+          message: 'Not allowed by CORS',
+        },
+      });
   });
 
   it('exposes "GET /openapi.json" endpoint', async () => {
@@ -819,28 +875,164 @@ paths:
     await server.stop();
   });
 
+  it('registers controller routes under routes.*', async () => {
+    const server = await givenAServer();
+    server.controller(DummyController);
+    await server.start();
+    const keys = server.findByTag(RestTags.CONTROLLER_ROUTE).map(b => b.key);
+    expect(keys).to.eql(['routes.get %2Fhtml', 'routes.get %2Fendpoint']);
+    for (const key of keys) {
+      const controllerRoute = await server.get(key);
+      expect(controllerRoute).to.be.instanceOf(ControllerRoute);
+    }
+    await server.stop();
+  });
+
+  it('registers controller routes after start', async () => {
+    const server = await givenAServer();
+    await server.start();
+    const client = createClientForHandler(server.requestHandler);
+    // No DummyController is present
+    await client.get('/html').expect(404);
+
+    // Add DummyController after server.start
+    server.controller(DummyController);
+
+    // Now /html is available
+    await client.get('/html').expect(200);
+
+    // The controller contributes to `routes.*`
+    const keys = server.findByTag(RestTags.CONTROLLER_ROUTE).map(b => b.key);
+    expect(keys).to.eql(['routes.get %2Fhtml', 'routes.get %2Fendpoint']);
+    await server.stop();
+  });
+
+  it('removes controller routes after start', async () => {
+    const server = await givenAServer();
+    const binding = server.controller(DummyController);
+    await server.start();
+    const client = createClientForHandler(server.requestHandler);
+    // Now /html is available
+    await client.get('/html').expect(200);
+
+    // Remove DummyController
+    server.unbind(binding.key);
+
+    // Now /html is not available
+    await client.get('/html').expect(404);
+
+    // `routes.*` for controllers should have been removed
+    const keys = server.findByTag(RestTags.CONTROLLER_ROUTE).map(b => b.key);
+    expect(keys).to.eql([]);
+    await server.stop();
+  });
+
+  it('registers handler routes after start', async () => {
+    const server = await givenAServer();
+    await server.start();
+    const client = createClientForHandler(server.requestHandler);
+    // No `/greet` is present
+    await client.get('/greet').expect(404);
+
+    // Add DummyController after server.start
+    const greetSpec = {
+      responses: {
+        200: {
+          content: {'text/plain': {schema: {type: 'string'}}},
+          description: 'greeting of the day',
+        },
+      },
+    };
+    server.route('get', '/greet', greetSpec, function greet() {
+      return 'Hello';
+    });
+
+    // Now `/greet` is available
+    await client.get('/greet').expect(200, 'Hello');
+
+    // The route contributes to `routes.*`
+    const keys = server.find('routes.*').map(b => b.key);
+    expect(keys).to.eql(['routes.get %2Fgreet']);
+    await server.stop();
+  });
+
+  it('removes handler routes after start', async () => {
+    const server = await givenAServer();
+    // Add DummyController after server.start
+    const greetSpec = {
+      responses: {
+        200: {
+          content: {'text/plain': {schema: {type: 'string'}}},
+          description: 'greeting of the day',
+        },
+      },
+    };
+    const binding = server.route('get', '/greet', greetSpec, function greet() {
+      return 'Hello';
+    });
+
+    await server.start();
+    const client = createClientForHandler(server.requestHandler);
+    // Now `/greet` is available
+    await client.get('/greet').expect(200, 'Hello');
+
+    server.unbind(binding.key);
+    // Now `/greet` is not available
+    await client.get('/greet').expect(404);
+
+    await server.stop();
+  });
+
+  it('updates api spec after start', async () => {
+    class MyController {
+      greet(name: string) {
+        return `hello ${name}`;
+      }
+    }
+
+    const spec = anOpenApiSpec()
+      .withOperation(
+        'get',
+        '/greet',
+        anOperationSpec()
+          .withParameter({name: 'name', in: 'query', type: 'string'})
+          .withExtension('x-operation-name', 'greet')
+          .withExtension('x-controller-name', 'MyController'),
+      )
+      .build();
+
+    const server = await givenAServer();
+    await server.start();
+    const client = createClientForHandler(server.requestHandler);
+
+    // `/greet` is not available
+    await client.get('/greet?name=world').expect(404);
+
+    // Set api spec that adds routes
+    server.api(spec);
+    server.controller(MyController);
+
+    // `/greet` is now available
+    await client.get('/greet?name=world').expect(200, 'hello world');
+    await server.stop();
+  });
+
   it('creates a redirect route with the default status code', async () => {
     const server = await givenAServer();
     server.controller(DummyController);
     server.redirect('/page/html', '/html');
-    const response = await createClientForHandler(server.requestHandler)
-      .get('/page/html')
-      .expect(303);
-    await createClientForHandler(server.requestHandler)
-      .get(response.header.location)
-      .expect(200, 'Hi');
+    const client = createClientForHandler(server.requestHandler);
+    const response = await client.get('/page/html').expect(303);
+    await client.get(response.header.location).expect(200, 'Hi');
   });
 
   it('creates a redirect route with a custom status code', async () => {
     const server = await givenAServer();
     server.controller(DummyController);
-    server.redirect('/page/html', '/html', 304);
-    const response = await createClientForHandler(server.requestHandler)
-      .get('/page/html')
-      .expect(304);
-    await createClientForHandler(server.requestHandler)
-      .get(response.header.location)
-      .expect(200, 'Hi');
+    server.redirect('/page/html', '/html', 307);
+    const client = createClientForHandler(server.requestHandler);
+    const response = await client.get('/page/html').expect(307);
+    await client.get(response.header.location).expect(200, 'Hi');
   });
 
   describe('basePath', () => {

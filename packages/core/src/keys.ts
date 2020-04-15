@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2018. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/core
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -120,6 +120,10 @@ export namespace CoreTags {
    * Binding tag for services
    */
   export const SERVICE = 'service';
+  /**
+   * Binding tag for the service interface
+   */
+  export const SERVICE_INTERFACE = 'serviceInterface';
 
   /**
    * Binding tag for life cycle observers

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/rest-explorer
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -24,7 +24,7 @@ export class RestExplorerComponent implements Component {
     @config()
     restExplorerConfig: RestExplorerConfig = {},
   ) {
-    const explorerPath = restExplorerConfig.path || '/explorer';
+    const explorerPath = restExplorerConfig.path ?? '/explorer';
 
     this.registerControllerRoute('get', explorerPath, 'indexRedirect');
     this.registerControllerRoute('get', explorerPath + '/', 'index');

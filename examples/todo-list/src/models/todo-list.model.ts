@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/example-todo-list
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -15,6 +15,7 @@ export class TodoList extends Entity {
   @property({
     type: 'number',
     id: true,
+    generated: false,
   })
   id: number;
 
@@ -30,10 +31,10 @@ export class TodoList extends Entity {
   color?: string;
 
   @hasMany(() => Todo)
-  todos?: Todo[];
+  todos: Todo[];
 
   @hasOne(() => TodoListImage)
-  image?: TodoListImage;
+  image: TodoListImage;
 
   constructor(data?: Partial<TodoList>) {
     super(data);

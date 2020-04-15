@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -107,7 +107,16 @@ function matchSnapshot(snapshotDir, currentTest, actualValue) {
     );
   }
 
-  assert.deepStrictEqual(actualValue, snapshotData[key]);
+  // When running on Windows, `actualValue` may be using `\r\n` as EOL.
+  // We are normalizing snapshot data to use `\n` as EOL, but depending on
+  // git settings, the content can be converted during git checkout to
+  // use `\r\n` instead.
+  // For maximum safety, we normalize line endings in both actual and expected
+  // values.
+  assert.deepStrictEqual(
+    normalizeNewlines(actualValue),
+    normalizeNewlines(snapshotData[key]),
+  );
 }
 
 function recordSnapshot(snapshots, currentTest, actualValue) {

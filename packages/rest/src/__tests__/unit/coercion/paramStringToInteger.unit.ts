@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -37,7 +37,7 @@ describe('coerce param from string to integer', () => {
   test(INT64_PARAM, '9223372036854775807', 9223372036854775807);
 });
 
-describe('coerce param from string to integer - required', function() {
+describe('coerce param from string to integer - required', function () {
   context('valid values', () => {
     test(REQUIRED_INTEGER_PARAM, '0', 0);
     test(REQUIRED_INTEGER_PARAM, '1', 1);
@@ -54,7 +54,7 @@ describe('coerce param from string to integer - required', function() {
   });
 });
 
-describe('coerce param from string to integer - optional', function() {
+describe('coerce param from string to integer - optional', function () {
   context('valid values', () => {
     test(INTEGER_PARAM, '0', 0);
     test(INTEGER_PARAM, '1', 1);

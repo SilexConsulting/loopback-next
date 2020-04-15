@@ -1,9 +1,9 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as HttpErrors from 'http-errors';
+import HttpErrors from 'http-errors';
 
 export namespace RestHttpErrors {
   export function invalidData<T, Props extends object = {}>(
@@ -26,10 +26,9 @@ export namespace RestHttpErrors {
     contentType: string,
     allowedTypes: string[] = [],
   ) {
-    const msg =
-      allowedTypes && allowedTypes.length
-        ? `Content-type ${contentType} does not match [${allowedTypes}].`
-        : `Content-type ${contentType} is not supported.`;
+    const msg = allowedTypes?.length
+      ? `Content-type ${contentType} does not match [${allowedTypes}].`
+      : `Content-type ${contentType} is not supported.`;
     return Object.assign(new HttpErrors.UnsupportedMediaType(msg), {
       code: 'UNSUPPORTED_MEDIA_TYPE',
       contentType: contentType,

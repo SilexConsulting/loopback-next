@@ -23,6 +23,9 @@ Available commands:
   lb4 interceptor
   lb4 discover
   lb4 relation
+  lb4 update
+  lb4 rest-crud
+  lb4 copyright
 `;
 
 
@@ -42,4 +45,7 @@ Available commands:
   lb4 interceptor
   lb4 discover
   lb4 relation
+  lb4 update
+  lb4 rest-crud
+  lb4 copyright
 `;

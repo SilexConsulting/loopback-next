@@ -3,6 +3,135 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.4](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.6.3...@loopback/test-repository-mysql@0.6.4) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.6.3](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.6.2...@loopback/test-repository-mysql@0.6.3) (2020-04-08)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.6.2](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.6.1...@loopback/test-repository-mysql@0.6.2) (2020-03-24)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.6.1](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.6.0...@loopback/test-repository-mysql@0.6.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+# [0.6.0](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.7...@loopback/test-repository-mysql@0.6.0) (2020-03-05)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [0.5.7](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.6...@loopback/test-repository-mysql@0.5.7) (2020-02-06)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.5.6](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.5...@loopback/test-repository-mysql@0.5.6) (2020-02-05)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.5.5](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.4...@loopback/test-repository-mysql@0.5.5) (2020-01-27)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.5.4](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.3...@loopback/test-repository-mysql@0.5.4) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.5.3](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.2...@loopback/test-repository-mysql@0.5.3) (2019-12-09)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.5.2](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.1...@loopback/test-repository-mysql@0.5.2) (2019-11-25)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+## [0.5.1](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.5.0...@loopback/test-repository-mysql@0.5.1) (2019-11-12)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
+# [0.5.0](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.4.8...@loopback/test-repository-mysql@0.5.0) (2019-10-24)
+
+
+### Features
+
+* **test-repository-postgresql:** run repository tests for postgresql ([8d029c4](https://github.com/strongloop/loopback-next/commit/8d029c46d97f5486f0a04e7f8c58e2d573b74900))
+
+
+
+
+
+## [0.4.8](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.4.7...@loopback/test-repository-mysql@0.4.8) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/test-repository-mysql
+
+
+
+
+
 ## [0.4.7](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-mysql@0.4.6...@loopback/test-repository-mysql@0.4.7) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/test-repository-mysql

@@ -1,9 +1,9 @@
 {
   "name": "@loopback/security",
-  "version": "0.1.4",
+  "version": "0.2.4",
   "description": "A LoopBack component for security support.",
   "engines": {
-    "node": ">=8.9"
+    "node": ">=10"
   },
   "publishConfig": {
     "access": "public"
@@ -22,15 +22,16 @@
   "copyright.owner": "IBM Corp.",
   "license": "MIT",
   "dependencies": {
-    "@loopback/context": "^1.23.2",
-    "@loopback/core": "^1.10.4",
-    "debug": "^4.1.1"
+    "@loopback/context": "^3.4.0",
+    "@loopback/core": "^2.3.0",
+    "debug": "^4.1.1",
+    "tslib": "^1.11.1"
   },
   "devDependencies": {
-    "@loopback/build": "^2.0.13",
-    "@loopback/testlab": "^1.9.1",
-    "@types/debug": "^4.1.4",
-    "@types/node": "^10.14.19"
+    "@loopback/build": "^5.0.1",
+    "@loopback/testlab": "^3.0.1",
+    "@types/debug": "^4.1.5",
+    "@types/node": "^10.17.19"
   },
   "keywords": [
     "LoopBack",

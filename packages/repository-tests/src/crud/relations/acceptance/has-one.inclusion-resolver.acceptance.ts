@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository-tests
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -160,23 +160,6 @@ export function hasOneInclusionResolverAcceptance(
         address: odinAddress,
       };
       expect(toJSON(result)).to.deepEqual(toJSON(expected));
-    });
-
-    // scope field for inclusion is not supported yet
-    it('throws error if the inclusion query contains a non-empty scope', async () => {
-      const customer = await customerRepo.create({name: 'customer'});
-      await addressRepo.create({
-        street: 'home of Thor Rd.',
-        city: 'Thrudheim',
-        province: 'Asgard',
-        zipcode: '8200',
-        customerId: customer.id,
-      });
-      await expect(
-        customerRepo.find({
-          include: [{relation: 'address', scope: {limit: 1}}],
-        }),
-      ).to.be.rejectedWith(`scope is not supported`);
     });
 
     it('throws error if the target repository does not have the registered resolver', async () => {

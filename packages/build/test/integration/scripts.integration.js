@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/build
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -8,8 +8,9 @@
 const assert = require('assert');
 const path = require('path');
 const fs = require('fs-extra');
+const utils = require('../../bin/utils');
 
-describe('build', function() {
+describe('build', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(30000);
   const cwd = process.cwd();
@@ -140,7 +141,7 @@ describe('build', function() {
   it('runs prettier against ts files', done => {
     const run = require('../../bin/run-prettier');
     const childProcess = run(
-      ['node', 'bin/run-prettier', '**/src/*.ts', '--', '-l'],
+      ['node', 'bin/run-prettier', '-l', '**/src/*.ts'],
       {
         stdio: [process.stdin, 'ignore', process.stderr],
       },
@@ -194,9 +195,27 @@ describe('build', function() {
 
     after(() => delete process.env.LERNA_ROOT_PATH);
   });
+
+  describe('resolveCLIFromProject()', () => {
+    it('returns undefined if the CLI is not found in project deps', () => {
+      assert.equal(
+        utils.resolveCLIFromProject('mocha/bin/mocha', projectDir),
+        undefined,
+      );
+    });
+
+    it('throws error if the CLI cannot be resolved', () => {
+      try {
+        utils.resolveCLIFromProject('typescript/bin/tsc', projectDir);
+        assert.fail('typescript/bin/tsc should not be resolved');
+      } catch (err) {
+        assert(err.message.match(/Cannot find module/));
+      }
+    });
+  });
 });
 
-describe('mocha', function() {
+describe('mocha', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(30000);
   const cwd = process.cwd();
@@ -245,6 +264,18 @@ describe('mocha', function() {
       command.indexOf('--config custom/.mocharc.json') !== -1,
       '--config custom/.mocharc.json should be honored',
     );
+  });
+
+  it('honors --lang option', () => {
+    const LANG = process.env.LANG;
+    const run = require('../../bin/run-mocha');
+    const command = run(
+      ['node', 'bin/run-mocha', '--lang', 'fr', '"dist/__tests__"'],
+      true,
+    );
+    assert.equal(process.env.LANG, 'fr');
+    assert(command.indexOf('--lang fr') === -1, '--lang fr should be removed');
+    process.env.LANG = LANG;
   });
 
   it('loads .mocharc.json specific project file', () => {

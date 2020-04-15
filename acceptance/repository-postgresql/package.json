@@ -1,0 +1,42 @@
+{
+  "name": "@loopback/test-repository-postgresql",
+  "version": "2.0.4",
+  "description": "",
+  "private": true,
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "lb-tsc",
+    "clean": "lb-clean loopback-test-repository-postgresql*.tgz dist tsconfig.build.tsbuildinfo package",
+    "pretest": "npm run build",
+    "test": "npm run mocha",
+    "mocha": "lb-mocha \"dist/__tests__/**/*.js\"",
+    "verify": "npm pack && tar xf loopback-test-repository-postgresql*.tgz && tree package && npm run clean"
+  },
+  "author": "IBM Corp.",
+  "copyright.owner": "IBM Corp.",
+  "license": "MIT",
+  "devDependencies": {
+    "@loopback/build": "^5.0.1",
+    "@loopback/eslint-config": "^6.0.3",
+    "@loopback/repository": "^2.1.1",
+    "@loopback/repository-tests": "^0.11.4",
+    "@types/node": "^10.17.19",
+    "loopback-connector-postgresql": "^3.9.1",
+    "tslib": "^1.11.1"
+  },
+  "files": [
+    "README.md",
+    "index.js",
+    "index.d.ts",
+    "dist",
+    "src",
+    "!*/__tests__"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/strongloop/loopback-next.git",
+    "directory": "acceptance/repository-postgresql"
+  }
+}

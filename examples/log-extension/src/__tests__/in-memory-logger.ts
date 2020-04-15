@@ -3,8 +3,8 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {LOG_LEVEL} from '../';
 import chalk from 'chalk';
+import {LOG_LEVEL} from '../';
 
 export class InMemoryLog {
   private entries: string[] = [];

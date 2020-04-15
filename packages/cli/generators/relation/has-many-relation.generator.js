@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -44,9 +44,8 @@ module.exports = class HasManyRelationGenerator extends BaseRelationGenerator {
     this.artifactInfo.targetModelRequestBody = utils.camelCase(
       this.artifactInfo.targetModelName,
     );
-    this.artifactInfo.relationPropertyName = utils.pluralize(
-      utils.camelCase(options.destinationModel),
-    );
+    this.artifactInfo.relationPropertyName = options.relationName;
+
     this.artifactInfo.sourceModelPrimaryKey = options.sourceModelPrimaryKey;
     this.artifactInfo.sourceModelPrimaryKeyType =
       options.sourceModelPrimaryKeyType;
@@ -74,6 +73,8 @@ module.exports = class HasManyRelationGenerator extends BaseRelationGenerator {
   }
 
   async generateModels(options) {
+    // for repo to generate relation name
+    this.artifactInfo.relationName = options.relationName;
     const modelDir = this.artifactInfo.modelDir;
     const sourceModel = options.sourceModel;
 
@@ -137,14 +138,12 @@ module.exports = class HasManyRelationGenerator extends BaseRelationGenerator {
     let relationDecorator = [
       {
         name: 'hasMany',
-        arguments: [
-          '() => ' + className + " ,{keyTo: '" + foreignKeyName + "'}",
-        ],
+        arguments: [`() => ${className}, {keyTo: '${foreignKeyName}'}`],
       },
     ];
     if (isDefaultForeignKey) {
       relationDecorator = [
-        {name: 'hasMany', arguments: ['() => ' + className]},
+        {name: 'hasMany', arguments: [`() => ${className}`]},
       ];
     }
 
@@ -168,32 +167,33 @@ module.exports = class HasManyRelationGenerator extends BaseRelationGenerator {
   }
 
   _getRepositoryRelationPropertyName() {
-    return utils.pluralize(utils.camelCase(this.artifactInfo.dstModelClass));
+    return this.artifactInfo.relationName;
   }
 
   _getRepositoryRelationPropertyType() {
-    return (
-      'HasManyRepositoryFactory<' +
-      utils.toClassName(this.artifactInfo.dstModelClass) +
-      ', typeof ' +
-      utils.toClassName(this.artifactInfo.srcModelClass) +
-      '.prototype.' +
-      this.artifactInfo.srcModelPrimaryKey +
-      '>'
-    );
+    return `HasManyRepositoryFactory<${utils.toClassName(
+      this.artifactInfo.dstModelClass,
+    )}, typeof ${utils.toClassName(
+      this.artifactInfo.srcModelClass,
+    )}.prototype.${this.artifactInfo.srcModelPrimaryKey}>`;
   }
 
   _addCreatorToRepositoryConstructor(classConstructor) {
     const relationPropertyName = this._getRepositoryRelationPropertyName();
     const statement =
-      'this.' +
-      relationPropertyName +
-      ' = ' +
-      "this.createHasManyRepositoryFactoryFor('" +
-      relationPropertyName +
-      "', " +
-      utils.camelCase(this.artifactInfo.dstRepositoryClassName) +
-      'Getter,);';
+      `this.${relationPropertyName} = ` +
+      `this.createHasManyRepositoryFactoryFor('${relationPropertyName}', ` +
+      `${utils.camelCase(this.artifactInfo.dstRepositoryClassName)}Getter,);`;
     classConstructor.insertStatements(1, statement);
+  }
+
+  _registerInclusionResolverForRelation(classConstructor, options) {
+    const relationPropertyName = this._getRepositoryRelationPropertyName();
+    if (options.registerInclusionResolver) {
+      const statement =
+        `this.registerInclusionResolver(` +
+        `'${relationPropertyName}', this.${relationPropertyName}.inclusionResolver);`;
+      classConstructor.insertStatements(2, statement);
+    }
   }
 };

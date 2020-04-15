@@ -1,9 +1,9 @@
-// Copyright IBM Corp. 2017,2019. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as assert from 'assert';
+import assert from 'assert';
 import {AnyObject} from './common-types';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -169,9 +169,17 @@ export type Fields<MT = AnyObject> = {[P in keyof MT]?: boolean};
  * Example:
  * `{relation: 'aRelationName', scope: {<AFilterObject>}}`
  */
-export interface Inclusion<MT extends object = AnyObject> {
+export interface Inclusion {
   relation: string;
-  scope?: Filter<MT>;
+
+  // Technically, we should restrict the filter to target model.
+  // That is unfortunately rather difficult to achieve, because
+  // an Entity does not provide type information about related models.
+  // We could use {ModelName}WithRelations interface for first-level inclusion,
+  // but that won't handle second-level (and deeper) inclusions.
+  // To keep things simple, we allow any filter here, effectively turning off
+  // compiler checks.
+  scope?: Filter<AnyObject>;
 }
 
 /**
@@ -210,8 +218,16 @@ export interface Filter<MT extends object = AnyObject> {
   /**
    * To include related objects
    */
-  include?: Inclusion<MT>[];
+  include?: Inclusion[];
 }
+
+/**
+ * Filter without `where` property
+ */
+export type FilterExcludingWhere<MT extends object = AnyObject> = Omit<
+  Filter<MT>,
+  'where'
+>;
 
 /**
  * TypeGuard for Filter
@@ -248,7 +264,7 @@ export class WhereBuilder<MT extends object = AnyObject> {
   where: Where<MT>;
 
   constructor(w?: Where<MT>) {
-    this.where = w || {};
+    this.where = w ?? {};
   }
 
   private add(w: Where<MT>): this {
@@ -454,7 +470,7 @@ export class FilterBuilder<MT extends object = AnyObject> {
   filter: Filter<MT>;
 
   constructor(f?: Filter<MT>) {
-    this.filter = f || {};
+    this.filter = f ?? {};
   }
 
   /**
@@ -551,7 +567,7 @@ export class FilterBuilder<MT extends object = AnyObject> {
    * @param i - A relation name, an array of relation names, or an `Inclusion`
    * object for the relation/scope definitions
    */
-  include(...i: (string | string[] | Inclusion<MT>)[]): this {
+  include(...i: (string | string[] | Inclusion)[]): this {
     if (this.filter.include == null) {
       this.filter.include = [];
     }

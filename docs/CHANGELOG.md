@@ -3,6 +3,349 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.3.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.3.0...@loopback/docs@3.3.1) (2020-04-11)
+
+
+### Bug Fixes
+
+* **cli:** remove unused imports from the crud controller template ([848272d](https://github.com/strongloop/loopback-next/commit/848272d980e94bc9f0878e678de12a336c0d8b8a))
+
+
+
+
+
+# [3.3.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.2.1...@loopback/docs@3.3.0) (2020-04-08)
+
+
+### Bug Fixes
+
+* **docs:** add OpenAPI DataSource instructions ([3d196c6](https://github.com/strongloop/loopback-next/commit/3d196c67fd8a53492be1dfb10861bf9abd65d5f3))
+* **docs:** correct code caption ([d469a2e](https://github.com/strongloop/loopback-next/commit/d469a2e6af6d662abfe330c015449ff684346248))
+* **docs:** replace lb3 page with understanding differences between lb3 and lb4 ([e79901b](https://github.com/strongloop/loopback-next/commit/e79901bb0e0f2161d93e92d949dc8635034b6801))
+* **docs:** update sidebar for OpenAPI connector ([ee35635](https://github.com/strongloop/loopback-next/commit/ee356356e488e7e3163ca17a8f942b5468fa1fbf))
+* **example-express-composition:** use an assinged port number for testing ([9a0997f](https://github.com/strongloop/loopback-next/commit/9a0997f61d1afb2376cbca29fa46ad855b5a0801))
+
+
+### Features
+
+* **cli:** print options for `lb4 copyright --help` and update docs ([f23ecb7](https://github.com/strongloop/loopback-next/commit/f23ecb741bcd589767d94acf2a394efddfe37ff6))
+* **docs:** add docs for `lb4 copyright` command ([2032d87](https://github.com/strongloop/loopback-next/commit/2032d87b7db144247f649d431fd19efac782f8b5))
+* **docs:** add docs for Ajv extensibility ([a24ea4f](https://github.com/strongloop/loopback-next/commit/a24ea4f7fb9a0333f16282a8586d3ab75a77bd6c))
+* **docs:** add more components to `Using components` ([c6fe710](https://github.com/strongloop/loopback-next/commit/c6fe7109fface3c8020f1c7e9c64637e7aa3097f))
+* **docs:** add validation docs ([3506e5d](https://github.com/strongloop/loopback-next/commit/3506e5dee5ec71baa6a7f6a925a89a9812182abd))
+* **example-validation-app:** customize error ([d2a49a0](https://github.com/strongloop/loopback-next/commit/d2a49a0bfcec8f1e90fc3bba620f5439d053f38b))
+
+
+
+
+
+## [3.2.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.2.0...@loopback/docs@3.2.1) (2020-03-24)
+
+**Note:** Version bump only for package @loopback/docs
+
+
+
+
+
+# [3.2.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.1.1...@loopback/docs@3.2.0) (2020-03-24)
+
+
+### Bug Fixes
+
+* **docs:** add validation-app to example list ([df0e186](https://github.com/strongloop/loopback-next/commit/df0e18637173f4be6ddbeedae3c6ef45e1a81b3e))
+* **docs:** update example list ([9cc7b18](https://github.com/strongloop/loopback-next/commit/9cc7b182add211d84a20db5f63fe0997ab010eda))
+
+
+### Features
+
+* **cli:** add `lb4 rest-crud` command to generate model endpoints from model/datasource ([38fd41e](https://github.com/strongloop/loopback-next/commit/38fd41e26cd5abf52e69d0b275a730b195be813a))
+* **context:** emit bind/unbind events on ContextView ([65e3d38](https://github.com/strongloop/loopback-next/commit/65e3d38a34b351929ba422de667bc236e9619ebe))
+* **core:** add more flavors of [@extensions](https://github.com/extensions) decorator ([192563a](https://github.com/strongloop/loopback-next/commit/192563a3f4cdb136b86d898760a33051436a56de))
+* **docs:** add readme reference for @loopback/rest-crud under `Using Components` ([029c5ba](https://github.com/strongloop/loopback-next/commit/029c5ba05cbf5f11bc3e5c533d86ea2b8a53af88))
+
+
+
+
+
+## [3.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.1.0...@loopback/docs@3.1.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/docs
+
+
+
+
+
+# [3.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.0.1...@loopback/docs@3.1.0) (2020-03-17)
+
+
+### Bug Fixes
+
+* **cli:** add ibmi, relocate db2z for affinity to other db2s ([76bb470](https://github.com/strongloop/loopback-next/commit/76bb470e8feba478796741d09b35fdb7549b79ab))
+* **docs:** add metrics-prometheus example to monorepo ([704bda9](https://github.com/strongloop/loopback-next/commit/704bda9bda1c264bf15d7ba60d96b22759b9eff5))
+* **docs:** fix typo for Binding.md ([1d79b49](https://github.com/strongloop/loopback-next/commit/1d79b490c53bc5939f9a507526b8a392397bef73))
+
+
+### Features
+
+* **docs:** add 20202Q2 roadmap ([1e768e1](https://github.com/strongloop/loopback-next/commit/1e768e18a133d59035f903fad706c76759988eb6))
+* **docs:** add docs for [@request](https://github.com/request)Body.file and [@oas](https://github.com/oas).respone.file ([c9d86cb](https://github.com/strongloop/loopback-next/commit/c9d86cb56adcc0049d53be798d7ef85c0411bf00))
+* **docs:** add docs for tag value matching ([3a77e32](https://github.com/strongloop/loopback-next/commit/3a77e32e0619a122d0a6a978c5a24fed28e71f0d))
+* **docs:** add file upload/download to usage scenarios ([0444120](https://github.com/strongloop/loopback-next/commit/0444120cda7119c66bc2170f4817e67d8dc9d312))
+* **docs:** describe LB3 features not planned in LB4 ([955812c](https://github.com/strongloop/loopback-next/commit/955812ceb8c8e36a716643b9cb72daf9263b2c5a))
+* **docs:** generate Jekyll friendly pages for CHANGELOG files ([fd38ff5](https://github.com/strongloop/loopback-next/commit/fd38ff5922363897fcad12d531532f15a5707ec8))
+* **example-file-upload-download:** add file download support ([12afd6b](https://github.com/strongloop/loopback-next/commit/12afd6b47ee1d371c68d03bd86c03d49b5f43b8d))
+* **example-rest-crud:** add example showing CrudRestApiBuilder ([ea37afb](https://github.com/strongloop/loopback-next/commit/ea37afb8d9e4ca9aef032b84e349e918d945e8ee))
+
+
+
+
+
+## [3.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@3.0.0...@loopback/docs@3.0.1) (2020-03-05)
+
+**Note:** Version bump only for package @loopback/docs
+
+
+
+
+
+# [3.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.11.0...@loopback/docs@3.0.0) (2020-03-05)
+
+
+### Bug Fixes
+
+* remove ref for v4.loopback.io ([78f20c0](https://github.com/strongloop/loopback-next/commit/78f20c0ed4db5f3ce0d7b676449ba3b22526319e))
+* **docs:** enhanced readability of error message in controllers ([e019744](https://github.com/strongloop/loopback-next/commit/e019744fea57ccdf4399de8d8e7aee785ebd5cdd))
+* **docs:** update Authentication-Tutorial.md ([b68c256](https://github.com/strongloop/loopback-next/commit/b68c256dc8808ae8746be2189ce5f1015ce6b5a2))
+* **docs:** update connector reference to lb4 link ([899aef9](https://github.com/strongloop/loopback-next/commit/899aef9a97c104f10664547ab2a7dfdbbe49d90d))
+* **example-todo:** throw if geocode address is not found ([72d2035](https://github.com/strongloop/loopback-next/commit/72d20359c1fb57f83f0244b8104583d45f3e238e))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* support operation hooks ([8701cce](https://github.com/strongloop/loopback-next/commit/8701cce8b208c952e4d41f0570124e389506d808))
+* **docs:** add [@param](https://github.com/param).filter and [@param](https://github.com/param).where to OpenAPI decorators ([deba8b4](https://github.com/strongloop/loopback-next/commit/deba8b40102a787ef3c00ad42c2fe7c7cd43fd43))
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* adds [@response](https://github.com/response) decorator ([fe603ec](https://github.com/strongloop/loopback-next/commit/fe603ec815e6d6c446cc540860c2dc99d4b9a908))
+* use [@param](https://github.com/param).filter and [@param](https://github.com/param).where decorators ([896ef74](https://github.com/strongloop/loopback-next/commit/896ef7485376b3aedcca01a40f828bf1ed9470ae))
+* **cli:** import LB3 models with a custom base class ([aa3dc12](https://github.com/strongloop/loopback-next/commit/aa3dc12e32bd9c297742c9b54224644ea81f7526))
+* lb3 migration tests for models customized with db metadata ([c58cc11](https://github.com/strongloop/loopback-next/commit/c58cc117b6e7a75e1920ce873a9cb4b98ff1058b))
+* **rest:** add support for ajv-errors ([d151475](https://github.com/strongloop/loopback-next/commit/d151475d8fc91b4b02e0067c1db7069620143dd2))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+# [2.11.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.10.0...@loopback/docs@2.11.0) (2020-02-06)
+
+
+### Features
+
+* **extension-logging:** add http access and method invocation logging ([b3b3f3f](https://github.com/strongloop/loopback-next/commit/b3b3f3f075740092d64f9411e9b6a7893916bf06))
+
+
+
+
+
+# [2.10.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.9.0...@loopback/docs@2.10.0) (2020-02-05)
+
+
+### Bug Fixes
+
+* **docs:** correct errors in sample code ([8fc918c](https://github.com/strongloop/loopback-next/commit/8fc918c52900b2d8855996f93eeb3072182bbe73))
+
+
+### Features
+
+* adds [@oas](https://github.com/oas).deprecated() decorator ([6b6b5f0](https://github.com/strongloop/loopback-next/commit/6b6b5f05d224053d6a9735a506841d19b7331dac))
+* adds [@oas](https://github.com/oas).tags convenience decorator ([a8722dc](https://github.com/strongloop/loopback-next/commit/a8722dc68838344684a5d3de76fa6915e08d2e56))
+
+
+
+
+
+# [2.9.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.8.1...@loopback/docs@2.9.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* **docs:** add 2020 goals to roadmap ([9200ef3](https://github.com/strongloop/loopback-next/commit/9200ef3179f39cadfb4c732c528b156f79bae324))
+* **docs:** fix formatting for datasource migrations ([fd2196b](https://github.com/strongloop/loopback-next/commit/fd2196b79ab208b8850c5b0f79dbb4475353266a))
+
+
+### Features
+
+* **cli:** add static BINDING_KEY prop to non-global interceptors ([5fbd95f](https://github.com/strongloop/loopback-next/commit/5fbd95f47f67207d7e0430d8c08e2a9738e685ae))
+* **context:** make bindings as event emitters to report changes ([dddddb9](https://github.com/strongloop/loopback-next/commit/dddddb96fd6908a8d4caad8868e43d3d0bb742f6))
+* **context:** use BindingEvent for binding event listeners ([ae5febc](https://github.com/strongloop/loopback-next/commit/ae5febc35679f4d77b9970ecc26a71938a1c972e))
+* **docs:** migration guide for remoting hooks ([52cd1df](https://github.com/strongloop/loopback-next/commit/52cd1df5aea4a1aa04e5a504fa5862a3e25adc97))
+* **docs:** update docs for context event handling ([607dc0a](https://github.com/strongloop/loopback-next/commit/607dc0a3550880437568a36f3049e1de66ec73ae))
+
+
+
+
+
+## [2.8.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.8.0...@loopback/docs@2.8.1) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/docs
+
+
+
+
+
+# [2.8.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.7.0...@loopback/docs@2.8.0) (2020-01-07)
+
+
+### Bug Fixes
+
+* **docs:** add import authentication component ([ab694f6](https://github.com/strongloop/loopback-next/commit/ab694f6132816ad6ebd307b84cf4e85091e17b6d))
+* **docs:** add section from miroslav ([80a03df](https://github.com/strongloop/loopback-next/commit/80a03df5f8a0801d7cd6c5aedfbfb01b0cb17da0))
+* **docs:** fix anchor link in authorization page ([bcbd04b](https://github.com/strongloop/loopback-next/commit/bcbd04b4e2f85d527620d6a14861f44d944e2d8c))
+* **docs:** fix typo in 6-interception.md ([1df8cd1](https://github.com/strongloop/loopback-next/commit/1df8cd17f731a7af84284e0149e5d2749e6e3608))
+* **docs:** update Mixin.md ([e71a00f](https://github.com/strongloop/loopback-next/commit/e71a00f1aae2e73a037ed6ffd26fc00b7790304f))
+
+
+### Features
+
+* **docs:** add 2020Q1 roadmap ([65b6278](https://github.com/strongloop/loopback-next/commit/65b6278aa30888321eff62f0e0ba15ef64b01d72))
+* add model-api-builder and model-api-booter ([bacadcc](https://github.com/strongloop/loopback-next/commit/bacadcc22f6c813ee384d1d040f518190d9aae17))
+* openapi spec contributor extension point ([9fee3f3](https://github.com/strongloop/loopback-next/commit/9fee3f342ff76d65d1899ddf1dbf7a257c85ea26))
+* **repository:** allow custom keyFrom for hasmany/hasone ([58efff9](https://github.com/strongloop/loopback-next/commit/58efff9e166fbe1fc820fe6168e18b5c7d9630ce))
+
+
+
+
+
+# [2.7.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.6.0...@loopback/docs@2.7.0) (2019-12-09)
+
+
+### Bug Fixes
+
+* **docs:** fix formatting ([f25457c](https://github.com/strongloop/loopback-next/commit/f25457cd51bbae6ec52bc76273e9af0bd6a1c60c))
+* **docs:** improve TypeScript snippets to fix syntax highlighting ([5bf50b7](https://github.com/strongloop/loopback-next/commit/5bf50b7544573111e693096a9668f73d0ab18e49))
+* **docs:** update graphql mutation command ([237efc9](https://github.com/strongloop/loopback-next/commit/237efc93236476b2e364e6a92cd378e045ae4546))
+* **docs:** use `json` instead of `ts` syntax for JSON snippets ([759dc6f](https://github.com/strongloop/loopback-next/commit/759dc6fd22dcaa3e8039852a34b8f6886802f7cc))
+
+
+### Features
+
+* **context:** allow global interceptors to be applied based on source types ([77cbd01](https://github.com/strongloop/loopback-next/commit/77cbd019027e1441339735326bcfb86a23df8b66))
+* **context:** make it possible to set source information for interceptions ([2a1ccb4](https://github.com/strongloop/loopback-next/commit/2a1ccb409a889d8b30b03ddf3284c9e9d5554e27))
+* **core:** emit stateChanged events for application state transitions ([5257a8f](https://github.com/strongloop/loopback-next/commit/5257a8f68525921028b98a340c75758725d256b9))
+* **core:** simplify state management by checking in process states ([874d2b3](https://github.com/strongloop/loopback-next/commit/874d2b385dd8c1dbf3d3980118898c6b99f145aa))
+* **docs:** add a diagram for application state transitions ([4ccc5ac](https://github.com/strongloop/loopback-next/commit/4ccc5ac0fa243691bc34389c44ba0e684f12c556))
+* **docs:** add sections to cover application states and shutdown hooks ([93e8bb1](https://github.com/strongloop/loopback-next/commit/93e8bb1ae639eaa235ed1a48b2c2609f35652a77))
+* **docs:** expose docs for extension modules ([2bb7d09](https://github.com/strongloop/loopback-next/commit/2bb7d093192464446802ef3313fb2da9ae9cbaf4))
+* **docs:** update Authentication Tutorial with UserCredentials ([7494d68](https://github.com/strongloop/loopback-next/commit/7494d68459f653232dc310626ce6378712df2bf0))
+* **http-server:** use stoppable to handle http keep-alive gracefully ([c5fc495](https://github.com/strongloop/loopback-next/commit/c5fc495639301a494313afb33c5d156b427257e0))
+* **repository:** enable inclusion with custom scope ([4a0d595](https://github.com/strongloop/loopback-next/commit/4a0d595f65a2c80c89e2ca1263d235e4d23cd730))
+
+
+
+
+
+# [2.6.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.5.1...@loopback/docs@2.6.0) (2019-11-25)
+
+
+### Bug Fixes
+
+* **docs:** remove forgotten FIXME comment ([56201a3](https://github.com/strongloop/loopback-next/commit/56201a3b382f6fb2975b1be562f6506015ca49d3))
+* **docs:** update TodoList tutorial ([947835d](https://github.com/strongloop/loopback-next/commit/947835de58c9f53571fca154dd1a3925f63b337f))
+
+
+### Features
+
+* **cli:** add lb4 update command to check/update project dependencies ([54d1896](https://github.com/strongloop/loopback-next/commit/54d1896f63705b6938fe74ba2c21ad0b4d9bea23))
+* **cli:** update controller template to enable filter for findById endpoint ([b0ce84b](https://github.com/strongloop/loopback-next/commit/b0ce84b79158cadf2f53bbe627da4d8196f0543f))
+* **context:** allow current binding to be injected with `[@inject](https://github.com/inject).binding` ([c01b4c6](https://github.com/strongloop/loopback-next/commit/c01b4c6b4dcc5c7ac79832bda144b1ec0da191b1))
+* **core:** add [@service](https://github.com/service) decorator to inject a service by class/interface ([1d80904](https://github.com/strongloop/loopback-next/commit/1d80904b670724b00cb6a2965b8472f44d23eed0))
+* **docs:** explain justification of binding scopes and add examples ([1e00300](https://github.com/strongloop/loopback-next/commit/1e003008856c77cb580dcee871c6dbd47cbe4f35))
+* **docs:** migration guide for model relations ([0f96f2b](https://github.com/strongloop/loopback-next/commit/0f96f2b2a9ba064367ceb50a90ece2d470b51e23))
+* **repository-tests:** run repository-tests on cloudant ([a54c588](https://github.com/strongloop/loopback-next/commit/a54c588e3f59b273c22d008bf591184f5339effe))
+
+
+
+
+
+## [2.5.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.5.0...@loopback/docs@2.5.1) (2019-11-13)
+
+
+### Bug Fixes
+
+* **docs:** rename 5-extension-point-extensions.md to match references ([a586541](https://github.com/strongloop/loopback-next/commit/a58654187a974cd21f7ec448c229c4cb08c4e136))
+
+
+
+
+
+# [2.5.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.4.0...@loopback/docs@2.5.0) (2019-11-12)
+
+
+### Bug Fixes
+
+* **docs:** add sidebar for core-tutorial ([ef94d50](https://github.com/strongloop/loopback-next/commit/ef94d507e28d7353dce15afcff5c7351852a9d91))
+* **docs:** fix import statements in docs ([05b4bee](https://github.com/strongloop/loopback-next/commit/05b4beede234c8d9f9b6a5a9c95f458d6d0fec8a))
+* **docs:** fix inconsistent naming for todo tutorial ([d065e7d](https://github.com/strongloop/loopback-next/commit/d065e7d4d62cae586cde1306d987d4967b2ef64a))
+* **docs:** remove duplicate title ([3ca8602](https://github.com/strongloop/loopback-next/commit/3ca86022fc957d17f6a899fcee089bd84ae4c228))
+
+
+### Features
+
+* **cli:** generate datasource json with '.config.json` extension ([51d8f7b](https://github.com/strongloop/loopback-next/commit/51d8f7b20ec59f888fd6d0634efb47d111f00ef7))
+* **docs:** add boot and advanced topics ([15bfad9](https://github.com/strongloop/loopback-next/commit/15bfad9dbaedde7ff7bd23d51b1921efe26391a9))
+* **docs:** add core-tutorial group 3 ([af07a78](https://github.com/strongloop/loopback-next/commit/af07a786f8904f1225694b824d3fcd37c65e06f3))
+* **docs:** core tutorial part 2 ([7433324](https://github.com/strongloop/loopback-next/commit/7433324c4a4faaa8597d3853d201730d65f5b8e0))
+
+
+
+
+
+# [2.4.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.3.0...@loopback/docs@2.4.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* **docs:** add links ([b50cd6a](https://github.com/strongloop/loopback-next/commit/b50cd6ae9950eacb9ecde761d00db9e471ce9ad8))
+* **docs:** apply feedback ([1048156](https://github.com/strongloop/loopback-next/commit/1048156a9e93219fc20ccdf149e7c3bd686006f1))
+* **docs:** todoTutorial ([f424c23](https://github.com/strongloop/loopback-next/commit/f424c2313661580e1803191a24d8bbb38faf4858)), closes [#3977](https://github.com/strongloop/loopback-next/issues/3977)
+
+
+### Features
+
+* **cli:** add inclusion resolver to lb4 relation ([199e1bc](https://github.com/strongloop/loopback-next/commit/199e1bc84a6c57fe650db9588bdb121d27eca7a3))
+* **docs:** add tutorial for large scale app ([beef92c](https://github.com/strongloop/loopback-next/commit/beef92cee9a1b6c8be9e9d0958fb983d7d59c272))
+* **test-repository-postgresql:** run repository tests for postgresql ([8d029c4](https://github.com/strongloop/loopback-next/commit/8d029c46d97f5486f0a04e7f8c58e2d573b74900))
+
+
+
+
+
+# [2.3.0](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.2.1...@loopback/docs@2.3.0) (2019-10-07)
+
+
+### Bug Fixes
+
+* **docs:** add content to usage-scenario page ([bfa0be8](https://github.com/strongloop/loopback-next/commit/bfa0be8))
+
+
+### Features
+
+* **docs:** add 2019Q4 roadmap ([512d37d](https://github.com/strongloop/loopback-next/commit/512d37d))
+
+
+
+
+
 ## [2.2.1](https://github.com/strongloop/loopback-next/compare/@loopback/docs@2.2.0...@loopback/docs@2.2.1) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/docs

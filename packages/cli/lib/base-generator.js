@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2018. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -11,8 +11,11 @@ const {StatusConflicter, readTextFromStdin} = require('./utils');
 const path = require('path');
 const fs = require('fs');
 const debug = require('./debug')('base-generator');
-const semver = require('semver');
 const updateIndex = require('./update-index');
+const {checkLoopBackProject} = require('./version-helper');
+const g = require('./globalize');
+
+debug('Is stdin interactive (isTTY)?', process.stdin.isTTY);
 
 /**
  * Base Generator for LoopBack 4
@@ -21,6 +24,7 @@ module.exports = class BaseGenerator extends Generator {
   // Note: arguments and options should be defined in the constructor.
   constructor(args, opts) {
     super(args, opts);
+    debug('Initializing generator', this.constructor.name);
     this.conflicter = new StatusConflicter(
       this.env.adapter,
       this.options.force,
@@ -32,22 +36,24 @@ module.exports = class BaseGenerator extends Generator {
    * Subclasses can extend _setupGenerator() to set up the generator
    */
   _setupGenerator() {
+    debug('Setting up generator', this.constructor.name);
     this.option('config', {
       type: String,
       alias: 'c',
-      description: 'JSON file name or value to configure options',
+      description: g.f('JSON file name or value to configure options'),
     });
 
     this.option('yes', {
       type: Boolean,
       alias: 'y',
-      description:
+      description: g.f(
         'Skip all confirmation prompts with default or provided value',
+      ),
     });
 
     this.option('format', {
       type: Boolean,
-      description: 'Format generated code using npm run lint:fix',
+      description: g.f('Format generated code using npm run lint:fix'),
     });
 
     this.artifactInfo = this.artifactInfo || {
@@ -59,6 +65,7 @@ module.exports = class BaseGenerator extends Generator {
    * Read a json document from stdin
    */
   async _readJSONFromStdin() {
+    debug('Reading JSON from stdin');
     if (process.stdin.isTTY) {
       this.log(
         chalk.green(
@@ -71,6 +78,10 @@ module.exports = class BaseGenerator extends Generator {
     let jsonStr;
     try {
       jsonStr = await readTextFromStdin();
+      debug(
+        'Result:',
+        jsonStr === undefined ? '(undefined)' : JSON.stringify(jsonStr),
+      );
       return JSON.parse(jsonStr);
     } catch (e) {
       if (!process.stdin.isTTY) {
@@ -83,15 +94,27 @@ module.exports = class BaseGenerator extends Generator {
   async setOptions() {
     let opts = {};
     const jsonFileOrValue = this.options.config;
+    debug(
+      'Loading generator options from CLI args and/or stdin.',
+      ...(this.option.config === undefined
+        ? ['(No config was provided.)']
+        : ['Config:', this.options.config]),
+    );
     try {
-      if (jsonFileOrValue === 'stdin' || !process.stdin.isTTY) {
+      if (
+        jsonFileOrValue === 'stdin' ||
+        (!jsonFileOrValue && !process.stdin.isTTY)
+      ) {
+        debug('  enabling --yes and reading config from stdin');
         this.options['yes'] = true;
         opts = await this._readJSONFromStdin();
       } else if (typeof jsonFileOrValue === 'string') {
         const jsonFile = path.resolve(process.cwd(), jsonFileOrValue);
         if (fs.existsSync(jsonFile)) {
+          debug('  reading config from file', jsonFile);
           opts = this.fs.readJSON(jsonFile);
         } else {
+          debug('  parsing config from string', jsonFileOrValue);
           // Try parse the config as stringified json
           opts = JSON.parse(jsonFileOrValue);
         }
@@ -201,13 +224,19 @@ module.exports = class BaseGenerator extends Generator {
     }
     if (!this.options['yes']) {
       if (!process.stdin.isTTY) {
-        const msg = 'The stdin is not a terminal. No prompt is allowed.';
+        const msg =
+          'The stdin is not a terminal. No prompt is allowed. ' +
+          'Use --config to provide answers to required prompts and ' +
+          '--yes to skip optional prompts with default answers';
         this.log(chalk.red(msg));
         this.exit(new Error(msg));
         return;
       }
       // Non-express mode, continue to prompt
-      return super.prompt(questions);
+      debug('Questions', questions);
+      const answers = await super.prompt(questions);
+      debug('Answers', answers);
+      return answers;
     }
 
     const answers = Object.assign({}, this.options);
@@ -224,7 +253,9 @@ module.exports = class BaseGenerator extends Generator {
         answers[q.name] = answer;
       } else {
         if (!process.stdin.isTTY) {
-          const msg = 'The stdin is not a terminal. No prompt is allowed.';
+          const msg =
+            'The stdin is not a terminal. No prompt is allowed. ' +
+            `(While resolving a required prompt ${JSON.stringify(q.name)}.)`;
           this.log(chalk.red(msg));
           this.exit(new Error(msg));
           return;
@@ -312,86 +343,7 @@ module.exports = class BaseGenerator extends Generator {
    */
   async checkLoopBackProject() {
     debug('Checking for loopback project');
-    if (this.shouldExit()) return false;
-    const pkg = this.fs.readJSON(this.destinationPath('package.json'));
-
-    if (!pkg) {
-      const err = new Error(
-        'No package.json found in ' +
-          this.destinationRoot() +
-          '. ' +
-          'The command must be run in a LoopBack project.',
-      );
-      this.exit(err);
-      return;
-    }
-
-    this.packageJson = pkg;
-
-    const projectDeps = pkg.dependencies || {};
-    const projectDevDeps = pkg.devDependencies || {};
-
-    const dependentPackage = '@loopback/core';
-    const projectDepsNames = Object.keys(projectDeps);
-
-    if (!projectDepsNames.includes(dependentPackage)) {
-      const err = new Error(
-        'No `@loopback/core` package found in the "dependencies" section of ' +
-          this.destinationPath('package.json') +
-          '. ' +
-          'The command must be run in a LoopBack project.',
-      );
-      this.exit(err);
-      return;
-    }
-
-    const cliPkg = require('../package.json');
-    const templateDeps = cliPkg.config.templateDependencies;
-    const incompatibleDeps = {};
-    for (const d in templateDeps) {
-      const versionRange = projectDeps[d] || projectDevDeps[d];
-      if (!versionRange) continue;
-      // https://github.com/strongloop/loopback-next/issues/2028
-      // https://github.com/npm/node-semver/pull/238
-      // semver.intersects does not like `*`, `x`, or `X`
-      if (versionRange.match(/^\*|x|X/)) continue;
-      if (semver.intersects(versionRange, templateDeps[d])) continue;
-      incompatibleDeps[d] = [versionRange, templateDeps[d]];
-    }
-
-    if (Object.keys(incompatibleDeps).length === 0) {
-      // No incompatible dependencies
-      return;
-    }
-
-    const originalCliVersion = this.config.get('version') || '<unknown>';
-    this.log(
-      chalk.red(
-        `The project was originally generated by @loopback/cli@${originalCliVersion}.`,
-      ),
-    );
-
-    this.log(
-      chalk.red(
-        `The following dependencies are incompatible with @loopback/cli@${cliPkg.version}:`,
-      ),
-    );
-    for (const d in incompatibleDeps) {
-      this.log(chalk.yellow('- %s: %s (cli %s)'), d, ...incompatibleDeps[d]);
-    }
-    const prompts = [
-      {
-        name: 'ignoreIncompatibleDependencies',
-        message: `Continue to run the command?`,
-        type: 'confirm',
-        default: false,
-      },
-    ];
-    const answers = await this.prompt(prompts);
-    if (answers && answers.ignoreIncompatibleDependencies) {
-      return;
-    }
-    this.exit(new Error('Incompatible dependencies'));
+    await checkLoopBackProject(this);
   }
 
   _runNpmScript(projectDir, args) {
@@ -418,7 +370,7 @@ module.exports = class BaseGenerator extends Generator {
     if (this.options.format) {
       const pkg = this.packageJson || {};
       if (pkg.scripts && pkg.scripts['lint:fix']) {
-        this.log("Running 'npm run lint:fix' to format the code...");
+        this.log(g.f("Running 'npm run lint:fix' to format the code..."));
         await this._runNpmScript(this.destinationRoot(), [
           'run',
           '-s',
@@ -426,7 +378,7 @@ module.exports = class BaseGenerator extends Generator {
         ]);
       } else {
         this.log(
-          chalk.red("No 'lint:fix' script is configured in package.json."),
+          chalk.red(g.f("No 'lint:fix' script is configured in package.json.")),
         );
       }
     }
@@ -438,7 +390,9 @@ module.exports = class BaseGenerator extends Generator {
   async end() {
     if (this.shouldExit()) {
       debug(this.exitGeneration);
-      this.log(chalk.red('Generation is aborted:', this.exitGeneration));
+      this.log(
+        chalk.red(g.f('Generation is aborted: %s', this.exitGeneration)),
+      );
       // Fail the process
       process.exitCode = 1;
       return;

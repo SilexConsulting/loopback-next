@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/testlab
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -6,7 +6,7 @@
 import {readFileSync} from 'fs';
 import {ServerOptions as HttpsServerOptions} from 'https';
 import {ListenOptions} from 'net';
-import * as path from 'path';
+import path from 'path';
 
 const FIXTURES = path.resolve(__dirname, '../fixtures');
 const DUMMY_TLS_CONFIG = {

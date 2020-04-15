@@ -1,0 +1,4 @@
+email: admin@example.com
+name: Administrator
+password: admin12345678
+roles: ['admin']

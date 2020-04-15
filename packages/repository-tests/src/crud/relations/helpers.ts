@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository-tests
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -8,9 +8,11 @@ import {CrudFeatures, CrudRepositoryCtor} from '../..';
 import {
   Address,
   AddressRepository,
+  Customer,
   CustomerRepository,
   Order,
   OrderRepository,
+  Shipment,
   ShipmentRepository,
 } from './fixtures/models';
 import {
@@ -25,6 +27,10 @@ export function givenBoundCrudRepositories(
   repositoryClass: CrudRepositoryCtor,
   features: CrudFeatures,
 ) {
+  Order.definition.properties.id.type = features.idType;
+  Address.definition.properties.id.type = features.idType;
+  Customer.definition.properties.id.type = features.idType;
+  Shipment.definition.properties.id.type = features.idType;
   // when running the test suite on MongoDB, we don't really need to setup
   // this config for mongo connector to pass the test.
   // however real-world applications might have such config for MongoDB
@@ -75,6 +81,11 @@ export function givenBoundCrudRepositories(
   const shipmentRepo: ShipmentRepository = new shipmentRepoClass(
     db,
     async () => orderRepo,
+  );
+
+  shipmentRepo.inclusionResolvers.set(
+    'shipmentOrders',
+    shipmentRepo.shipmentOrders.inclusionResolver,
   );
 
   const addressRepoClass = createAddressRepo(repositoryClass);

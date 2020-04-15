@@ -3,6 +3,176 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@2.1.0...@loopback/repository-json-schema@2.1.1) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+# [2.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@2.0.2...@loopback/repository-json-schema@2.1.0) (2020-04-08)
+
+
+### Bug Fixes
+
+* **repository-json-schema:** honor {partial: 'deep'} options for referenced types ([6685560](https://github.com/strongloop/loopback-next/commit/66855602cff3c2d58c68895e4aeb3da950d7f33f))
+
+
+### Features
+
+* support any type ([03ce221](https://github.com/strongloop/loopback-next/commit/03ce221bb41a2ecd296ba235fe342d488fa2d639))
+
+
+
+
+
+## [2.0.2](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@2.0.1...@loopback/repository-json-schema@2.0.2) (2020-03-24)
+
+
+### Bug Fixes
+
+* **repository-json-schema:** fix schema generation for model inheritance ([5417ed5](https://github.com/strongloop/loopback-next/commit/5417ed5fdbf0508f1882186d9cbff64ecfb10699))
+
+
+
+
+
+## [2.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@2.0.0...@loopback/repository-json-schema@2.0.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.12.2...@loopback/repository-json-schema@2.0.0) (2020-03-05)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* improve filter schema to allow exclusion ([be73660](https://github.com/strongloop/loopback-next/commit/be736601dcf91b8b322470fc08c9ed42260fa60c))
+* **repository-json-schema:** remove deprecated `MODEL_TYPE_KEYS` ([5bc2121](https://github.com/strongloop/loopback-next/commit/5bc21219ff3beb792c6d11ac12bfc1b58aee5c09))
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+
+
+### BREAKING CHANGES
+
+* **repository-json-schema:** The following constants are no longer available:
+- `MODEL_TYPE_KEYS.ModelOnly`
+- `MODEL_TYPE_KEYS.ModelWithRelations`
+
+Please use the helper `buildModelCacheKey` to obtain the cache key
+for a given set of schema options.
+
+```diff
+- MODEL_TYPE_KEYS.ModelOnly
++ buildModelCacheKey()
+
+- MODEL_TYPE_KEYS.ModelWithRelations
++ buildModelCacheKey({includeRelations: true})
+```
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [1.12.2](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.12.1...@loopback/repository-json-schema@1.12.2) (2020-02-06)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+## [1.12.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.12.0...@loopback/repository-json-schema@1.12.1) (2020-02-05)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+# [1.12.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.11.4...@loopback/repository-json-schema@1.12.0) (2020-01-27)
+
+
+### Features
+
+* **repository-json-schema:** add filter title ([2d65971](https://github.com/strongloop/loopback-next/commit/2d6597133885c16c132221cef80893093fa3d289))
+* **repository-json-schema:** add title to filter schemas ([6105883](https://github.com/strongloop/loopback-next/commit/6105883967ca5853cc8990f423d9febd1eb07101))
+
+
+
+
+
+## [1.11.4](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.11.3...@loopback/repository-json-schema@1.11.4) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+## [1.11.3](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.11.2...@loopback/repository-json-schema@1.11.3) (2019-12-09)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+## [1.11.2](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.11.1...@loopback/repository-json-schema@1.11.2) (2019-11-25)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+## [1.11.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.11.0...@loopback/repository-json-schema@1.11.1) (2019-11-12)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
+# [1.11.0](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.10.3...@loopback/repository-json-schema@1.11.0) (2019-10-24)
+
+
+### Bug Fixes
+
+* allow json schema with circular refs to be converted to OpenAPI schema ([cd5ca92](https://github.com/strongloop/loopback-next/commit/cd5ca92c368ae35bc10d8847b3b0d379f7196544))
+
+
+### Features
+
+* **openapi-v3:** copy first example from examples to schema ([0c7843a](https://github.com/strongloop/loopback-next/commit/0c7843abd82b391557d807e7bbd80e4c7b2ae8fd))
+* improve debug logs for schema generators ([da88cdf](https://github.com/strongloop/loopback-next/commit/da88cdf9c75b0ca498b86f7cd5729f78a4b160f7))
+* simplify model schema with excluded properties ([b554ac8](https://github.com/strongloop/loopback-next/commit/b554ac8a08a518f112d111ebabcac48279ada7f8))
+* **repository-json-schema:** forbid additional properties in model data ([5fc8d53](https://github.com/strongloop/loopback-next/commit/5fc8d532c56c3dbb700c414df5b02730fb1c7764))
+
+
+
+
+
+## [1.10.3](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.10.2...@loopback/repository-json-schema@1.10.3) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/repository-json-schema
+
+
+
+
+
 ## [1.10.2](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@1.10.1...@loopback/repository-json-schema@1.10.2) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/repository-json-schema

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2018. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -23,7 +23,7 @@ const pluralize = require('pluralize');
 const urlSlug = require('url-slug');
 const validate = require('validate-npm-package-name');
 const Conflicter = require('yeoman-generator/lib/util/conflicter');
-const connectors = require('../generators/datasource/connectors.json');
+const connectors = require('./connectors.json');
 const stringifyObject = require('stringify-object');
 const camelCase = _.camelCase;
 const kebabCase = _.kebabCase;
@@ -47,7 +47,7 @@ exports.promisify = promisify;
  * taken from https://gist.github.com/mathiasbynens/6334847
  */
 function generateValidRegex() {
-  const get = function(what) {
+  const get = function (what) {
     return require('unicode-10.0.0/' + what + '/code-points.js');
   };
   const idStart = get('Binary_Property/ID_Start');
@@ -76,7 +76,7 @@ exports.validRegex = validRegex;
  * @param name
  * @returns {String|Boolean}
  */
-exports.validateClassName = function(name) {
+exports.validateClassName = function (name) {
   if (!name || name === '') {
     return 'Class name cannot be empty';
   }
@@ -104,7 +104,7 @@ exports.validateClassName = function(name) {
   return util.format('Class name is invalid: %s', name);
 };
 
-exports.logNamingIssues = function(name, log) {
+exports.logNamingIssues = function (name, log) {
   if (name.includes('_')) {
     log(
       chalk.red('>>> ') +
@@ -119,7 +119,7 @@ exports.logNamingIssues = function(name, log) {
   }
 };
 
-exports.logClassCreation = function(type, typePlural, name, log) {
+exports.logClassCreation = function (type, typePlural, name, log) {
   log(
     `${exports.toClassName(type)} ${chalk.yellow(
       name,
@@ -133,7 +133,7 @@ exports.logClassCreation = function(type, typePlural, name, log) {
 /**
  * Validate project directory to not exist
  */
-exports.validateNotExisting = function(projDir) {
+exports.validateNotExisting = function (projDir) {
   if (fs.existsSync(projDir)) {
     return util.format('Directory %s already exists.', projDir);
   }
@@ -141,9 +141,74 @@ exports.validateNotExisting = function(projDir) {
 };
 
 /**
+ * validate source key or foreign key for relations
+ */
+/* istanbul ignore next */
+exports.validateKeyName = function (name) {
+  if (!name || name === '') {
+    return 'Key name cannot be empty';
+  }
+  if (!isNaN(name.charAt(0))) {
+    return util.format('Key name cannot start with a number: %s', name);
+  }
+  if (name.includes('.')) {
+    return util.format('Key name cannot contain .: %s', name);
+  }
+  if (name.includes(' ')) {
+    return util.format('Key name cannot contain spaces: %s', name);
+  }
+  if (name.includes('-')) {
+    return util.format('Key name cannot contain hyphens: %s', name);
+  }
+  if (name.match(/[\/@\s\+%:]/)) {
+    return util.format(
+      'Key name cannot contain special characters (/@+%: ): %s',
+      name,
+    );
+  }
+  return true;
+};
+
+/**
+ * checks if the belongsTo relation has the same relation name and source key name,
+ * which is an invalid case.
+ */
+/* istanbul ignore next */
+exports.validateRelationName = function (name, type, foreignKeyName) {
+  if (!name || name === '') {
+    return 'Relation name cannot be empty';
+  }
+  if (type === 'belongsTo' && name === foreignKeyName) {
+    return util.format(
+      'Relation name cannot be the same as the source key name: %s',
+      name,
+    );
+  }
+  if (!isNaN(name.charAt(0))) {
+    return util.format('Relation name cannot start with a number: %s', name);
+  }
+  if (name.includes('.')) {
+    return util.format('Relation name cannot contain .: %s', name);
+  }
+  if (name.includes(' ')) {
+    return util.format('Relation name cannot contain spaces: %s', name);
+  }
+  if (name.includes('-')) {
+    return util.format('Relation name cannot contain hyphens: %s', name);
+  }
+  if (name.match(/[\/@\s\+%:]/)) {
+    return util.format(
+      'Relation name cannot contain special characters (/@+%: ): %s',
+      name,
+    );
+  }
+  return true;
+};
+
+/**
  * Converts a name to class name after validation
  */
-exports.toClassName = function(name) {
+exports.toClassName = function (name) {
   if (name === '') return new Error('no input');
   if (typeof name != 'string' || name == null) return new Error('bad input');
   return pascalCase(camelCase(name));
@@ -159,7 +224,7 @@ exports.urlSlug = urlSlug;
 exports.untildify = untildify;
 exports.tildify = tildify;
 
-exports.validate = function(name) {
+exports.validate = function (name) {
   const isValid = validate(name).validForNewPackages;
   if (!isValid) return 'Invalid npm package name: ' + name;
   return isValid;
@@ -176,7 +241,7 @@ exports.prependBackslash = httpPath => httpPath.replace(/^\/?/, '/');
  * Allows slugs with backslash in front of them to be validated as well
  * @param {string} name Slug to validate
  */
-exports.validateUrlSlug = function(name) {
+exports.validateUrlSlug = function (name) {
   const backslashIfNeeded = name.charAt(0) === '/' ? '/' : '';
   if (backslashIfNeeded === '/') {
     name = name.substr(1);
@@ -186,9 +251,7 @@ exports.validateUrlSlug = function(name) {
     urlSlug(name, separator, false),
   );
   if (!possibleSlugs.includes(name))
-    return `Invalid url slug. Suggested slug: ${backslashIfNeeded}${
-      possibleSlugs[0]
-    }`;
+    return `Invalid url slug. Suggested slug: ${backslashIfNeeded}${possibleSlugs[0]}`;
   return true;
 };
 
@@ -202,10 +265,20 @@ exports.StatusConflicter = class StatusConflicter extends Conflicter {
   }
 
   checkForCollision(filepath, contents, callback) {
-    super.checkForCollision(filepath, contents, (err, status) => {
-      const filename = filepath.split('/').pop();
+    // https://github.com/yeoman/generator/pull/1210
+    let options = filepath;
+    let cb = callback;
+    if (typeof contents === 'function') {
+      // The signature is `checkForCollision(options, cb)`
+      cb = contents;
+    } else {
+      // The signature is `checkForCollision(filepath, contents, cb)`
+      options = {path: filepath, contents};
+    }
+    super.checkForCollision(options, (err, status) => {
+      const filename = options.path.split('/').pop();
       this.generationStatus[filename] = status;
-      callback(err, status);
+      cb(err, status);
     });
   }
 };
@@ -222,17 +295,25 @@ exports.StatusConflicter = class StatusConflicter extends Conflicter {
  * paths. Must return a Promise.
  * @returns {Promise<string[]>} The filtered list of paths.
  */
-exports.findArtifactPaths = async function(dir, artifactType, reader) {
+exports.findArtifactPaths = async function (dir, artifactType, reader) {
   const readdir = reader || readdirAsync;
   debug(`Finding artifact paths at: ${dir}`);
 
-  // Wrapping readdir in case it's not a promise.
-  const files = await readdir(dir);
-  return _.filter(files, f => {
-    return (
-      _.endsWith(f, `${artifactType}.js`) || _.endsWith(f, `${artifactType}.ts`)
+  try {
+    // Wrapping readdir in case it's not a promise.
+    const files = await readdir(dir);
+    return files.filter(
+      f =>
+        _.endsWith(f, `${artifactType}.js`) ||
+        _.endsWith(f, `${artifactType}.ts`),
     );
-  });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      // Target directory was not found (e.g. "src/models" does not exist yet).
+      return [];
+    }
+    throw err;
+  }
 };
 /**
  * Parses the files of the target directory and returns matching JavaScript
@@ -245,7 +326,12 @@ exports.findArtifactPaths = async function(dir, artifactType, reader) {
  * @param {Function} reader An alternate function to replace the promisified
  * fs.readdir (useful for testing and for custom overrides).
  */
-exports.getArtifactList = async function(dir, artifactType, addSuffix, reader) {
+exports.getArtifactList = async function (
+  dir,
+  artifactType,
+  addSuffix,
+  reader,
+) {
   const paths = await exports.findArtifactPaths(dir, artifactType, reader);
   debug(`Filtering artifact paths: ${paths}`);
   return paths.map(p => {
@@ -261,7 +347,7 @@ exports.getArtifactList = async function(dir, artifactType, addSuffix, reader) {
  * Check package.json and dependencies.json to find out versions for generated
  * dependencies
  */
-exports.getDependencies = function() {
+exports.getDependencies = function () {
   const pkg = require('../package.json');
   let version = pkg.version;
   // First look for config.loopbackVersion
@@ -284,10 +370,10 @@ exports.getDependencies = function() {
 /**
  * Rename EJS files
  */
-exports.renameEJS = function() {
+exports.renameEJS = function () {
   const renameStream = new stream.Transform({objectMode: true});
 
-  renameStream._transform = function(file, enc, callback) {
+  renameStream._transform = function (file, enc, callback) {
     const filePath = file.relative;
     const dirname = path.dirname(filePath);
     let extname = path.extname(filePath);
@@ -311,7 +397,7 @@ exports.renameEJS = function() {
  * Get a validate function for object/array type
  * @param {String} type 'object' OR 'array'
  */
-exports.validateStringObject = function(type) {
+exports.validateStringObject = function (type) {
   return function validateStringified(val) {
     if (val === null || val === '') {
       return true;
@@ -339,7 +425,7 @@ exports.validateStringObject = function(type) {
 /**
  * Use readline to read text from stdin
  */
-exports.readTextFromStdin = function() {
+exports.readTextFromStdin = function () {
   const rl = readline.createInterface({
     input: process.stdin,
   });
@@ -374,7 +460,7 @@ exports.readTextFromStdin = function() {
  * @param {String} name The user input
  * @returns {String|Boolean}
  */
-exports.checkPropertyName = function(name) {
+exports.checkPropertyName = function (name) {
   const result = exports.validateRequiredName(name);
   if (result !== true) return result;
   if (RESERVED_PROPERTY_NAMES.includes(name)) {
@@ -389,7 +475,7 @@ exports.checkPropertyName = function(name) {
  * @param {String} name The user input
  * @returns {String|Boolean}
  */
-exports.validateRequiredName = function(name) {
+exports.validateRequiredName = function (name) {
   if (!name) {
     return 'Name is required';
   }
@@ -412,7 +498,7 @@ function validateValue(name, unallowedCharacters) {
  *  Returns the modelName in the directory file format for the model
  * @param {string} modelName
  */
-exports.getModelFileName = function(modelName) {
+exports.getModelFileName = function (modelName) {
   return `${toFileName(modelName)}.model.ts`;
 };
 
@@ -420,15 +506,23 @@ exports.getModelFileName = function(modelName) {
  * Returns the repositoryName in the directory file format for the repository
  * @param {string} repositoryName
  */
-exports.getRepositoryFileName = function(repositoryName) {
+exports.getRepositoryFileName = function (repositoryName) {
   return `${toFileName(repositoryName)}.repository.ts`;
+};
+
+/**
+ * Returns the rest-config in the directory file format for the model endpoint
+ * @param {string} modelName
+ */
+exports.getRestConfigFileName = function (modelName) {
+  return `${toFileName(modelName)}.rest-config.ts`;
 };
 
 /**
  * Returns the serviceName in the directory file format for the service
  * @param {string} serviceName
  */
-exports.getServiceFileName = function(serviceName) {
+exports.getServiceFileName = function (serviceName) {
   return `${toFileName(serviceName)}.service.ts`;
 };
 
@@ -436,7 +530,7 @@ exports.getServiceFileName = function(serviceName) {
  * Returns the observerName in the directory file format for the observer
  * @param {string} observerName
  */
-exports.getObserverFileName = function(observerName) {
+exports.getObserverFileName = function (observerName) {
   return `${toFileName(observerName)}.observer.ts`;
 };
 
@@ -444,7 +538,7 @@ exports.getObserverFileName = function(observerName) {
  * Returns the interceptorName in the directory file format for the interceptor
  * @param {string} interceptorName
  */
-exports.getInterceptorFileName = function(interceptorName) {
+exports.getInterceptorFileName = function (interceptorName) {
   return `${toFileName(interceptorName)}.interceptor.ts`;
 };
 
@@ -454,7 +548,10 @@ exports.getInterceptorFileName = function(interceptorName) {
  * @param {string} datasourcesDir path for sources
  * @param {string} dataSourceClass class name for the datasoure
  */
-exports.getDataSourceConnectorName = function(datasourcesDir, dataSourceClass) {
+exports.getDataSourceConnectorName = function (
+  datasourcesDir,
+  dataSourceClass,
+) {
   if (!dataSourceClass) {
     return false;
   }
@@ -471,6 +568,7 @@ exports.getDataSourceConnectorName = function(datasourcesDir, dataSourceClass) {
     jsonFileContent = JSON.parse(fs.readFileSync(datasourceJSONFile, 'utf8'));
   } catch (err) {
     debug(`Error reading file ${datasourceJSONFile}: ${err.message}`);
+    err.message = `Cannot load ${datasourceJSONFile}: ${err.message}`;
     throw err;
   }
 
@@ -488,7 +586,7 @@ exports.getDataSourceConnectorName = function(datasourcesDir, dataSourceClass) {
  * @param {string} datasourcesDir path for sources
  * @param {string} dataSourceClass class name for the datasoure
  */
-exports.isConnectorOfType = function(
+exports.isConnectorOfType = function (
   connectorType,
   datasourcesDir,
   dataSourceClass,
@@ -510,6 +608,7 @@ exports.isConnectorOfType = function(
     jsonFileContent = JSON.parse(fs.readFileSync(datasourceJSONFile, 'utf8'));
   } catch (err) {
     debug(`Error reading file ${datasourceJSONFile}: ${err.message}`);
+    err.message = `Cannot load  ${datasourceJSONFile}: ${err.message}`;
     throw err;
   }
 
@@ -531,7 +630,7 @@ exports.isConnectorOfType = function(
  * @param {string} datasourcesDir path for sources
  * @param {string} dataSourceClass class name for the datasoure
  */
-exports.getDataSourceName = function(datasourcesDir, dataSourceClass) {
+exports.getDataSourceName = function (datasourcesDir, dataSourceClass) {
   if (!dataSourceClass) {
     return false;
   }
@@ -548,6 +647,7 @@ exports.getDataSourceName = function(datasourcesDir, dataSourceClass) {
     jsonFileContent = JSON.parse(fs.readFileSync(datasourceJSONFile, 'utf8'));
   } catch (err) {
     debug(`Error reading file ${datasourceJSONFile}: ${err.message}`);
+    err.message = `Cannot load ${datasourceJSONFile}: ${err.message}`;
     throw err;
   }
 
@@ -557,22 +657,25 @@ exports.getDataSourceName = function(datasourcesDir, dataSourceClass) {
   return result;
 };
 
-exports.dataSourceToJSONFileName = function(dataSourceClass) {
+exports.dataSourceToJSONFileName = function (dataSourceClass) {
   return path.join(
-    toFileName(dataSourceClass.replace('Datasource', '')) + '.datasource.json',
+    toFileName(dataSourceClass.replace('Datasource', '')) +
+      '.datasource.config.json',
   );
 };
 
-exports.stringifyModelSettings = function(modelSettings) {
+exports.stringifyObject = function (data, options = {}) {
+  return stringifyObject(data, {
+    indent: '  ', // two spaces
+    singleQuotes: true,
+    inlineCharacterLimit: 80,
+    ...options,
+  });
+};
+
+exports.stringifyModelSettings = function (modelSettings) {
   if (!modelSettings || !Object.keys(modelSettings).length) return '';
-  return stringifyObject(
-    {settings: modelSettings},
-    {
-      indent: '  ', // two spaces
-      singleQuotes: true,
-      inlineCharacterLimit: 80,
-    },
-  );
+  return exports.stringifyObject({settings: modelSettings});
 };
 
 // literal strings with artifacts directory locations
@@ -582,4 +685,5 @@ exports.servicesDir = 'services';
 exports.modelsDir = 'models';
 exports.observersDir = 'observers';
 exports.interceptorsDir = 'interceptors';
+exports.modelEndpointsDir = 'model-endpoints';
 exports.sourceRootDir = 'src';

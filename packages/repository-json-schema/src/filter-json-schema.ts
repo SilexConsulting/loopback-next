@@ -1,15 +1,51 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/repository-json-schema
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Model, model, getModelRelations} from '@loopback/repository';
-import {JSONSchema6 as JsonSchema} from 'json-schema';
+import {getModelRelations, Model, model} from '@loopback/repository';
+import {JSONSchema6 as JsonSchema, JSONSchema6Definition} from 'json-schema';
 
-@model({settings: {strict: false}})
-class EmptyModel extends Model {}
+export interface FilterSchemaOptions {
+  /**
+   * Set this flag if you want the schema to set generated title property.
+   *
+   * By default the setting is enabled. (e.g. {setTitle: true})
+   *
+   */
+  setTitle?: boolean;
 
-const scopeFilter = getFilterJsonSchemaFor(EmptyModel);
+  /**
+   * To exclude one or more property from `filter`
+   */
+  exclude?: string[] | string;
+}
+
+/**
+ * Build a JSON schema describing the format of the "scope" object
+ * used to query model instances.
+ *
+ * Note we don't take the model properties into account yet and return
+ * a generic json schema allowing any "where" condition.
+ *
+ * @param modelCtor - The model constructor to build the filter schema for.
+ */
+export function getScopeFilterJsonSchemaFor(
+  modelCtor: typeof Model,
+  options: FilterSchemaOptions = {},
+): JsonSchema {
+  @model({settings: {strict: false}})
+  class EmptyModel extends Model {}
+
+  const schema: JsonSchema = {
+    ...getFilterJsonSchemaFor(EmptyModel, {setTitle: false}),
+    ...(options.setTitle !== false && {
+      title: `${modelCtor.modelName}.ScopeFilter`,
+    }),
+  };
+
+  return schema;
+}
 
 /**
  * Build a JSON schema describing the format of the "filter" object
@@ -19,36 +55,61 @@ const scopeFilter = getFilterJsonSchemaFor(EmptyModel);
  * a generic json schema allowing any "where" condition.
  *
  * @param modelCtor - The model constructor to build the filter schema for.
+ * @param options - Options to build the filter schema.
  */
-export function getFilterJsonSchemaFor(modelCtor: typeof Model): JsonSchema {
-  const schema: JsonSchema = {
-    properties: {
-      where: getWhereJsonSchemaFor(modelCtor),
+export function getFilterJsonSchemaFor(
+  modelCtor: typeof Model,
+  options: FilterSchemaOptions = {},
+): JsonSchema {
+  let excluded: string[];
+  if (typeof options.exclude === 'string') {
+    excluded = [options.exclude];
+  } else {
+    excluded = options.exclude ?? [];
+  }
+  const properties: Record<string, JSONSchema6Definition> = {
+    offset: {
+      type: 'integer',
+      minimum: 0,
+    },
 
-      fields: getFieldsJsonSchemaFor(modelCtor),
+    limit: {
+      type: 'integer',
+      minimum: 1,
+      examples: [100],
+    },
 
-      offset: {
-        type: 'integer',
-        minimum: 0,
-      },
+    skip: {
+      type: 'integer',
+      minimum: 0,
+    },
 
-      limit: {
-        type: 'integer',
-        minimum: 0,
-      },
-
-      skip: {
-        type: 'integer',
-        minimum: 0,
-      },
-
-      order: {
-        type: 'array',
-        items: {
-          type: 'string',
-        },
+    order: {
+      type: 'array',
+      items: {
+        type: 'string',
       },
     },
+  };
+
+  if (!excluded.includes('where')) {
+    properties.where = getWhereJsonSchemaFor(modelCtor, options);
+  }
+  if (!excluded.includes('fields')) {
+    properties.fields = getFieldsJsonSchemaFor(modelCtor, options);
+  }
+
+  // Remove excluded properties
+  for (const p of excluded) {
+    delete properties[p];
+  }
+
+  const schema: JsonSchema = {
+    ...(options.setTitle !== false && {
+      title: `${modelCtor.modelName}.Filter`,
+    }),
+    properties,
+    additionalProperties: false,
   };
 
   const modelRelations = getModelRelations(modelCtor);
@@ -56,14 +117,20 @@ export function getFilterJsonSchemaFor(modelCtor: typeof Model): JsonSchema {
 
   if (hasRelations) {
     schema.properties!.include = {
+      ...(options.setTitle !== false && {
+        title: `${modelCtor.modelName}.IncludeFilter`,
+      }),
       type: 'array',
       items: {
+        ...(options.setTitle !== false && {
+          title: `${modelCtor.modelName}.IncludeFilter.Items`,
+        }),
         type: 'object',
         properties: {
           // TODO(bajtos) restrict values to relations defined by "model"
           relation: {type: 'string'},
           // TODO(bajtos) describe the filter for the relation target model
-          scope: scopeFilter,
+          scope: getScopeFilterJsonSchemaFor(modelCtor, options),
         },
       },
     };
@@ -81,13 +148,20 @@ export function getFilterJsonSchemaFor(modelCtor: typeof Model): JsonSchema {
  *
  * @param modelCtor - The model constructor to build the filter schema for.
  */
-export function getWhereJsonSchemaFor(modelCtor: typeof Model): JsonSchema {
+export function getWhereJsonSchemaFor(
+  modelCtor: typeof Model,
+  options: FilterSchemaOptions = {},
+): JsonSchema {
   const schema: JsonSchema = {
+    ...(options.setTitle !== false && {
+      title: `${modelCtor.modelName}.WhereFilter`,
+    }),
     type: 'object',
     // TODO(bajtos) enumerate "model" properties and operators like "and"
     // See https://github.com/strongloop/loopback-next/issues/1748
     additionalProperties: true,
   };
+
   return schema;
 }
 
@@ -98,16 +172,24 @@ export function getWhereJsonSchemaFor(modelCtor: typeof Model): JsonSchema {
  * @param modelCtor - The model constructor to build the filter schema for.
  */
 
-export function getFieldsJsonSchemaFor(modelCtor: typeof Model): JsonSchema {
+export function getFieldsJsonSchemaFor(
+  modelCtor: typeof Model,
+  options: FilterSchemaOptions = {},
+): JsonSchema {
   const schema: JsonSchema = {
+    ...(options.setTitle !== false && {
+      title: `${modelCtor.modelName}.Fields`,
+    }),
     type: 'object',
+
     properties: Object.assign(
       {},
       ...Object.keys(modelCtor.definition.properties).map(k => ({
         [k]: {type: 'boolean'},
       })),
     ),
-    additionalProperties: !modelCtor.definition.settings.strict,
+    additionalProperties: modelCtor.definition.settings.strict === false,
   };
+
   return schema;
 }

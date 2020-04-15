@@ -1,11 +1,11 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/booter-lb3app
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {OpenApiSpec, OperationObject} from '@loopback/rest';
 import {Client, expect} from '@loopback/testlab';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {
   CoffeeApplication,
   givenCoffeeShop,
@@ -30,9 +30,19 @@ describe('booter-lb3app', () => {
     if (app) await app.stop();
   });
 
+  it('throws error if lb3 app is not found', async () => {
+    await expect(
+      setupApplication({
+        lb3app: {
+          path: '../fixtures/lb3app/wrong/server',
+        },
+      }),
+    ).to.be.rejectedWith(/Cannot find module/);
+  });
+
   context('generated OpenAPI spec', () => {
-    it('uses different request-body schema for "create" operation', () => {
-      const spec = app.restServer.getApiSpec();
+    it('uses different request-body schema for "create" operation', async () => {
+      const spec = await app.restServer.getApiSpec();
       const createOp: OperationObject = spec.paths['/api/CoffeeShops'].post;
       expect(createOp.requestBody).to.containDeep({
         content: {
@@ -42,7 +52,7 @@ describe('booter-lb3app', () => {
         },
       });
 
-      const schemas = (spec.components || {}).schemas || {};
+      const schemas = (spec.components ?? {}).schemas ?? {};
       expect(schemas._new_CoffeeShop)
         .to.have.property('properties')
         .eql({
@@ -56,9 +66,9 @@ describe('booter-lb3app', () => {
         });
     });
 
-    it('includes the target model as a property of the source model in a relation', () => {
-      const spec = app.restServer.getApiSpec();
-      const schemas = (spec.components || {}).schemas || {};
+    it('includes the target model as a property of the source model in a relation', async () => {
+      const spec = await app.restServer.getApiSpec();
+      const schemas = (spec.components ?? {}).schemas ?? {};
 
       expect(schemas.CoffeeShop)
         .to.have.property('properties')
@@ -108,8 +118,8 @@ describe('booter-lb3app', () => {
       }
     });
 
-    it('includes LoopBack 3 endpoints with `/api` base in OpenApiSpec', () => {
-      const apiSpec = app.restServer.getApiSpec();
+    it('includes LoopBack 3 endpoints with `/api` base in OpenApiSpec', async () => {
+      const apiSpec = await app.restServer.getApiSpec();
       const paths = Object.keys(apiSpec.paths);
       expect(paths).to.containDeep([
         '/api/CoffeeShops/{id}',
@@ -209,8 +219,8 @@ describe('booter-lb3app', () => {
       }));
     });
 
-    it('does apply the spec modification', () => {
-      const spec = app.restServer.getApiSpec();
+    it('does apply the spec modification', async () => {
+      const spec = await app.restServer.getApiSpec();
       const createOp: OperationObject = spec.paths['/api/CoffeeShops'].post;
       expect(createOp.summary).to.eql('just a very simple modification');
     });

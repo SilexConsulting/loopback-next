@@ -12,6 +12,7 @@ import {
   Count,
   CountSchema,
   Filter,
+  FilterExcludingWhere,
   repository,
   Where,
 } from '@loopback/repository';
@@ -19,9 +20,7 @@ import {
   post,
   param,
   get,
-  getFilterSchemaFor,
   getModelSchemaRef,
-  getWhereSchemaFor,
   patch,
   put,
   del,
@@ -69,7 +68,7 @@ export class ProductReviewController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(ProductReview)) where?: Where<ProductReview>,
+    @param.where(ProductReview) where?: Where<ProductReview>,
   ): Promise<Count> {
     return this.barRepository.count(where);
   }
@@ -80,14 +79,17 @@ export class ProductReviewController {
         description: 'Array of ProductReview model instances',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(ProductReview)},
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(ProductReview, {includeRelations: true}),
+            },
           },
         },
       },
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(ProductReview)) filter?: Filter<ProductReview>,
+    @param.filter(ProductReview) filter?: Filter<ProductReview>,
   ): Promise<ProductReview[]> {
     return this.barRepository.find(filter);
   }
@@ -109,7 +111,7 @@ export class ProductReviewController {
       },
     })
     productReview: ProductReview,
-    @param.query.object('where', getWhereSchemaFor(ProductReview)) where?: Where<ProductReview>,
+    @param.where(ProductReview) where?: Where<ProductReview>,
   ): Promise<Count> {
     return this.barRepository.updateAll(productReview, where);
   }
@@ -118,12 +120,19 @@ export class ProductReviewController {
     responses: {
       '200': {
         description: 'ProductReview model instance',
-        content: {'application/json': {schema: getModelSchemaRef(ProductReview)}},
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(ProductReview, {includeRelations: true}),
+          },
+        },
       },
     },
   })
-  async findById(@param.path.number('id') id: number): Promise<ProductReview> {
-    return this.barRepository.findById(id);
+  async findById(
+    @param.path.number('id') id: number,
+    @param.filter(ProductReview, {exclude: 'where'}) filter?: FilterExcludingWhere<ProductReview>
+  ): Promise<ProductReview> {
+    return this.barRepository.findById(id, filter);
   }
 
   @patch('/product-reviews/{id}', {
@@ -181,6 +190,7 @@ import {
   Count,
   CountSchema,
   Filter,
+  FilterExcludingWhere,
   repository,
   Where,
 } from '@loopback/repository';
@@ -188,9 +198,7 @@ import {
   post,
   param,
   get,
-  getFilterSchemaFor,
   getModelSchemaRef,
-  getWhereSchemaFor,
   patch,
   put,
   del,
@@ -238,7 +246,7 @@ export class ProductReviewController {
     },
   })
   async count(
-    @param.query.object('where', getWhereSchemaFor(ProductReview)) where?: Where<ProductReview>,
+    @param.where(ProductReview) where?: Where<ProductReview>,
   ): Promise<Count> {
     return this.barRepository.count(where);
   }
@@ -249,14 +257,17 @@ export class ProductReviewController {
         description: 'Array of ProductReview model instances',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(ProductReview)},
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(ProductReview, {includeRelations: true}),
+            },
           },
         },
       },
     },
   })
   async find(
-    @param.query.object('filter', getFilterSchemaFor(ProductReview)) filter?: Filter<ProductReview>,
+    @param.filter(ProductReview) filter?: Filter<ProductReview>,
   ): Promise<ProductReview[]> {
     return this.barRepository.find(filter);
   }
@@ -278,7 +289,7 @@ export class ProductReviewController {
       },
     })
     productReview: ProductReview,
-    @param.query.object('where', getWhereSchemaFor(ProductReview)) where?: Where<ProductReview>,
+    @param.where(ProductReview) where?: Where<ProductReview>,
   ): Promise<Count> {
     return this.barRepository.updateAll(productReview, where);
   }
@@ -287,12 +298,19 @@ export class ProductReviewController {
     responses: {
       '200': {
         description: 'ProductReview model instance',
-        content: {'application/json': {schema: getModelSchemaRef(ProductReview)}},
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(ProductReview, {includeRelations: true}),
+          },
+        },
       },
     },
   })
-  async findById(@param.path.number('id') id: number): Promise<ProductReview> {
-    return this.barRepository.findById(id);
+  async findById(
+    @param.path.number('id') id: number,
+    @param.filter(ProductReview, {exclude: 'where'}) filter?: FilterExcludingWhere<ProductReview>
+  ): Promise<ProductReview> {
+    return this.barRepository.findById(id, filter);
   }
 
   @patch('/product-reviews/{id}', {

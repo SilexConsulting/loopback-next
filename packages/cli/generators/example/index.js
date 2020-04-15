@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -10,12 +10,13 @@ const chalk = require('chalk');
 const downloadAndExtractExample = require('./downloader');
 const path = require('path');
 const fs = require('fs-extra');
+const g = require('../../lib/globalize');
 
 const EXAMPLES = {
   todo: 'Tutorial example on how to build an application with LoopBack 4.',
   'todo-list':
     'Continuation of the todo example using relations in LoopBack 4.',
-  'hello-world': 'A simple hello-world Application using LoopBack 4.',
+  'hello-world': 'A simple hello-world application using LoopBack 4.',
   'log-extension': 'An example extension project for LoopBack 4.',
   'rpc-server': 'A basic RPC server using a made-up protocol.',
   'soap-calculator': 'An example on how to integrate SOAP web services.',
@@ -29,6 +30,16 @@ const EXAMPLES = {
     'controllers, interceptors, and observers.',
   'lb3-application':
     'An example LoopBack 3 application mounted in a LoopBack 4 project.',
+  'rest-crud':
+    'A simplified version of the Todo example that only requires a model and ' +
+    'a datasource.',
+  'file-transfer':
+    'An example showing how to expose APIs to upload/download files.',
+  'access-control-migration':
+    'An access control example migrated from the LoopBack 3 repository ' +
+    'loopback-example-access-control.',
+  'metrics-prometheus': 'An example illustrating metrics using Prometheus.',
+  'validation-app': 'An example demonstrating how to add validations.',
 };
 Object.freeze(EXAMPLES);
 
@@ -46,7 +57,7 @@ module.exports = class extends BaseGenerator {
     this.projectType = 'example';
     this.argument('example-name', {
       type: String,
-      description: 'Name of the example to clone',
+      description: g.f('Name of the example to clone'),
       required: false,
     });
 
@@ -80,7 +91,7 @@ module.exports = class extends BaseGenerator {
     const prompts = [
       {
         name: 'name',
-        message: 'What example would you like to clone?',
+        message: g.f('What example would you like to clone?'),
         type: 'list',
         choices,
       },
@@ -104,7 +115,7 @@ module.exports = class extends BaseGenerator {
     const cwd = process.cwd();
     const absOutDir = await downloadAndExtractExample(this.exampleName, cwd);
     this.outDir = path.relative(cwd, absOutDir);
-    fs.rename(
+    return fs.rename(
       `${this.outDir}/tsconfig.build.json`,
       `${this.outDir}/tsconfig.json`,
     );

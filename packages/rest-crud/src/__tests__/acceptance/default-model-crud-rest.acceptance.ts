@@ -1,10 +1,9 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest-crud
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {
-  DefaultCrudRepository,
   Entity,
   EntityCrudRepository,
   juggler,
@@ -19,7 +18,7 @@ import {
   givenHttpServerConfig,
   toJSON,
 } from '@loopback/testlab';
-import {defineCrudRestController} from '../..';
+import {defineCrudRepositoryClass, defineCrudRestController} from '../..';
 
 // In this test scenario, we create a product with a required & an optional
 // property and use the default model settings (strict mode, forceId).
@@ -70,19 +69,29 @@ describe('CrudRestController for a simple Product model', () => {
 
       const created = response.body;
       expect(created).to.containEql({name: 'A pen'});
-      expect(created)
-        .to.have.property('id')
-        .of.type('number');
+      expect(created).to.have.property('id').of.type('number');
 
       const found = (await repo.find())[0];
       expect(toJSON(found)).to.deepEqual(created);
     });
 
     it('rejects request with `id` value', async () => {
-      await client
+      const {body} = await client
         .post('/products')
         .send({id: 1, name: 'a name'})
         .expect(422);
+
+      expect(body.error).to.containDeep({
+        code: 'VALIDATION_FAILED',
+        details: [
+          {
+            path: '',
+            code: 'additionalProperties',
+            message: 'should NOT have additional properties',
+            info: {additionalProperty: 'id'},
+          },
+        ],
+      });
     });
   });
 
@@ -115,7 +124,7 @@ describe('CrudRestController for a simple Product model', () => {
     // a new test suite that will configure a PK with a different name
     // and type, e.g. `pk: string` instead of `id: number`.
     it('uses correct schema for the id parameter', async () => {
-      const spec = app.restServer.getApiSpec();
+      const spec = await app.restServer.getApiSpec();
       const findByIdOp = spec.paths['/products/{id}'].get;
       expect(findByIdOp).to.containDeep({
         parameters: [
@@ -183,10 +192,7 @@ describe('CrudRestController for a simple Product model', () => {
     beforeEach(seedData);
 
     it('updates model with the given id', async () => {
-      await client
-        .patch(`/products/${pen.id}`)
-        .send(PATCH_DATA)
-        .expect(204);
+      await client.patch(`/products/${pen.id}`).send(PATCH_DATA).expect(204);
 
       const stored = await repo.find();
       expect(toJSON(stored)).to.deepEqual([
@@ -199,7 +205,7 @@ describe('CrudRestController for a simple Product model', () => {
     // a new test suite that will configure a PK with a different name
     // and type, e.g. `pk: string` instead of `id: number`.
     it('uses correct schema for the id parameter', async () => {
-      const spec = app.restServer.getApiSpec();
+      const spec = await app.restServer.getApiSpec();
       const findByIdOp = spec.paths['/products/{id}'].patch;
       expect(findByIdOp).to.containDeep({
         parameters: [
@@ -218,10 +224,7 @@ describe('CrudRestController for a simple Product model', () => {
 
     it('replaces model with the given id', async () => {
       const newData = Object.assign({}, pen.toJSON(), PATCH_DATA);
-      await client
-        .put(`/products/${pen.id}`)
-        .send(newData)
-        .expect(204);
+      await client.put(`/products/${pen.id}`).send(newData).expect(204);
 
       const stored = await repo.find();
       expect(toJSON(stored)).to.deepEqual([
@@ -234,7 +237,7 @@ describe('CrudRestController for a simple Product model', () => {
     // a new test suite that will configure a PK with a different name
     // and type, e.g. `pk: string` instead of `id: number`.
     it('uses correct schema for the id parameter', async () => {
-      const spec = app.restServer.getApiSpec();
+      const spec = await app.restServer.getApiSpec();
       const findByIdOp = spec.paths['/products/{id}']['patch'];
       expect(findByIdOp).to.containDeep({
         parameters: [
@@ -267,7 +270,7 @@ describe('CrudRestController for a simple Product model', () => {
     // a new test suite that will configure a PK with a different name
     // and type, e.g. `pk: string` instead of `id: number`.
     it('uses correct schema for the id parameter', async () => {
-      const spec = app.restServer.getApiSpec();
+      const spec = await app.restServer.getApiSpec();
       const findByIdOp = spec.paths['/products/{id}']['delete'];
       expect(findByIdOp).to.containDeep({
         parameters: [
@@ -283,10 +286,10 @@ describe('CrudRestController for a simple Product model', () => {
 
   async function setupTestScenario() {
     const db = new juggler.DataSource({connector: 'memory'});
-    repo = new DefaultCrudRepository<Product, typeof Product.prototype.id>(
-      Product,
-      db,
-    );
+
+    const ProductRepository = defineCrudRepositoryClass(Product);
+
+    repo = new ProductRepository(db);
 
     const CrudRestController = defineCrudRestController<
       Product,

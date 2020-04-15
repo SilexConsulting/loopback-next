@@ -1,9 +1,14 @@
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
+// Node module: @loopback/example-lb3-application
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
 'use strict';
 
 const debug = require('debug')('loopback:example:lb3application');
 
-module.exports = function(CoffeeShop) {
-  CoffeeShop.status = async function() {
+module.exports = function (CoffeeShop) {
+  CoffeeShop.status = async function () {
     const currentDate = new Date();
     const currentHour = currentDate.getHours();
     const OPEN_HOUR = 6;
@@ -28,7 +33,7 @@ module.exports = function(CoffeeShop) {
     },
   });
 
-  CoffeeShop.greet = async function() {
+  CoffeeShop.greet = async function () {
     return 'Hello from this Coffee Shop';
   };
   CoffeeShop.remoteMethod('greet', {

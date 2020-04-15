@@ -11,6 +11,8 @@ npm install --save @loopback/extension-health
 
 ## Basic use
 
+{% include note.html content="*this.configure()* must be called before *this.component()* to take effect. This is a [known limitation](https://github.com/strongloop/loopback-next/issues/4289#issuecomment-564617263)." %}
+
 The component should be loaded in the constructor of your custom Application
 class.
 
@@ -66,10 +68,7 @@ import {LiveCheck, ReadyCheck, HealthTags} from '@loopback/extension-health';
 const myLiveCheck: LiveCheck = () => {
   return Promise.resolve();
 };
-app
-  .bind('health.MyLiveCheck')
-  .to(myLiveCheck)
-  .tag(HealthTags.LIVE_CHECK);
+app.bind('health.MyLiveCheck').to(myLiveCheck).tag(HealthTags.LIVE_CHECK);
 
 // Define a provider to check the liveness of a datasource
 class DBLiveCheckProvider implements Provider<LiveCheck> {
@@ -88,10 +87,7 @@ app
 const myReadyCheck: ReadyCheck = () => {
   return Promise.resolve();
 };
-app
-  .bind('health.MyReadyCheck')
-  .to(myReadyCheck)
-  .tag(HealthTags.READY_CHECK);
+app.bind('health.MyReadyCheck').to(myReadyCheck).tag(HealthTags.READY_CHECK);
 ```
 
 ## Contributions

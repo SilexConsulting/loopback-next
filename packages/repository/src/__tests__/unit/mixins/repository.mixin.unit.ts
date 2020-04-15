@@ -1,9 +1,9 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Application, BindingScope, Component, bind} from '@loopback/core';
+import {Application, bind, BindingScope, Component} from '@loopback/core';
 import {expect, sinon} from '@loopback/testlab';
 import {
   Class,
@@ -15,8 +15,6 @@ import {
   Repository,
   RepositoryMixin,
 } from '../../..';
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 describe('RepositoryMixin', () => {
   it('mixed class has .repository()', () => {
@@ -49,10 +47,7 @@ describe('RepositoryMixin', () => {
 
   it('gets repository instance from app.getRepository()', async () => {
     const myApp = new AppWithRepoMixin();
-    myApp
-      .bind('repositories.NoteRepo')
-      .toClass(NoteRepo)
-      .tag('repository');
+    myApp.bind('repositories.NoteRepo').toClass(NoteRepo).tag('repository');
 
     const repoInstance = await myApp.getRepository(NoteRepo);
 
@@ -134,7 +129,8 @@ describe('RepositoryMixin', () => {
 
       const ds = new juggler.DataSource({name: 'db', connector: 'memory'});
       // FIXME(bajtos) typings for connectors are missing autoupdate/autoupgrade
-      (ds.connector as any).automigrate = function(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (ds.connector as any).automigrate = function (
         models: string[],
         cb: Function,
       ) {
@@ -177,8 +173,13 @@ describe('RepositoryMixin', () => {
       updateStub = sinon.stub().resolves();
 
       DataSourceStub = class extends juggler.DataSource {
-        automigrate = migrateStub;
-        autoupdate = updateStub;
+        automigrate(models: string | string[]): Promise<void> {
+          return migrateStub(models);
+        }
+
+        autoupdate(models: string | string[]): Promise<void> {
+          return updateStub(models);
+        }
       };
     }
   });

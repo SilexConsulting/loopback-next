@@ -1,11 +1,11 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/example-todo
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {inject} from '@loopback/core';
-import {juggler, AnyObject} from '@loopback/repository';
-import * as config from './geocoder.datasource.json';
+import {AnyObject, juggler} from '@loopback/repository';
+import config from './geocoder.datasource.config.json';
 
 export class GeocoderDataSource extends juggler.DataSource {
   static dataSourceName = 'geocoder';

@@ -1,14 +1,14 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/example-todo
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
 import {HttpCachingProxy} from '@loopback/http-caching-proxy';
 import {merge} from 'lodash';
-import * as path from 'path';
-import * as GEO_CODER_CONFIG from '../datasources/geocoder.datasource.json';
+import path from 'path';
+import GEO_CODER_CONFIG from '../datasources/geocoder.datasource.config.json';
 import {Todo} from '../models/index';
-import {GeoPoint} from '../services/geocoder.service';
+import {Geocoder, GeoPoint} from '../services/geocoder.service';
 
 /*
  ==============================================================================
@@ -67,7 +67,21 @@ export {HttpCachingProxy};
 export async function givenCachingProxy() {
   const proxy = new HttpCachingProxy({
     cachePath: path.resolve(__dirname, '.http-cache'),
+    logError: false,
+    timeout: 5000,
   });
   await proxy.start();
   return proxy;
+}
+
+export async function isGeoCoderServiceAvailable(service: Geocoder) {
+  try {
+    await service.geocode(aLocation.address);
+    return true;
+  } catch (err) {
+    if (err.statusCode === 502) {
+      return false;
+    }
+    throw err;
+  }
 }

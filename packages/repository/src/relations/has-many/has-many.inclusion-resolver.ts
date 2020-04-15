@@ -1,9 +1,9 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {AnyObject, Options} from '../../common-types';
 import {Entity} from '../../model';
 import {Filter, Inclusion} from '../../query';
@@ -42,7 +42,7 @@ export function createHasManyInclusionResolver<
 
   return async function fetchHasManyModels(
     entities: Entity[],
-    inclusion: Inclusion<Entity>,
+    inclusion: Inclusion,
     options?: Options,
   ): Promise<((Target & TargetRelations)[] | undefined)[]> {
     if (!entities.length) return [];
@@ -55,7 +55,10 @@ export function createHasManyInclusionResolver<
     const targetKey = relationMeta.keyTo as StringKeyOf<Target>;
 
     debug('Parameters:', {sourceKey, sourceIds, targetKey});
-    debug('sourceId types', sourceIds.map(i => typeof i));
+    debug(
+      'sourceId types',
+      sourceIds.map(i => typeof i),
+    );
 
     const targetRepo = await getTargetRepo();
     const targetsFound = await findByForeignKeys(

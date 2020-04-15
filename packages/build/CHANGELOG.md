@@ -3,6 +3,163 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/build@5.0.0...@loopback/build@5.0.1) (2020-04-08)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
+# [5.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/build@4.0.1...@loopback/build@5.0.0) (2020-03-24)
+
+
+### Features
+
+* update dependency prettier to v2 ([65bdee7](https://github.com/strongloop/loopback-next/commit/65bdee7b22ade4c7ba32499ce3939fa84b9c7c42))
+
+
+### BREAKING CHANGES
+
+* prettier@2.0.0 introduces breaking changes for certain rules.
+See https://prettier.io/blog/2020/03/21/2.0.0.html for more details.
+
+To reformat code using prettier, run `npm run prettier:fix`.
+
+
+
+
+
+## [4.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/build@4.0.0...@loopback/build@4.0.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
+# [4.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/build@3.1.1...@loopback/build@4.0.0) (2020-03-05)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* **build:** add --lang flag to set LANG env var for lb-mocha ([a78bb84](https://github.com/strongloop/loopback-next/commit/a78bb846c43ed34f3fd9d8562ade037a1d29c2b9))
+* **build:** enable importHelpers ([e44f084](https://github.com/strongloop/loopback-next/commit/e44f084b6c8df762c0563b3716f13135f652b082)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+
+
+### BREAKING CHANGES
+
+* **build:** enable importHelpers on the shared Typescript
+configuration file which requires `tslib` to be installed on dependent
+packages if the shared Typescript configuration is used.
+
+To migrate, run `npm install tslib` on the dependent package before
+updating to this version.
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+## [3.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/build@3.1.0...@loopback/build@3.1.1) (2020-02-05)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
+# [3.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/build@3.0.1...@loopback/build@3.1.0) (2020-01-27)
+
+
+### Bug Fixes
+
+* remove updated debug config for PR ([15e8d34](https://github.com/strongloop/loopback-next/commit/15e8d34ad628ecb5b8fafe02441c73362a873e8c))
+* typos ([852f198](https://github.com/strongloop/loopback-next/commit/852f198ae7cb2c7d8801d7222cc574d04757404c))
+
+
+### Features
+
+* adds MultiMethodDecoratorFactory ([bf6c787](https://github.com/strongloop/loopback-next/commit/bf6c7872bb8ce492b43ab8f57a641dcbb341e96e))
+
+
+
+
+
+## [3.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/build@3.0.0...@loopback/build@3.0.1) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
+# [3.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/build@2.1.0...@loopback/build@3.0.0) (2019-12-09)
+
+
+### Features
+
+* **build:** enable esModuleInterop compiler option ([3090073](https://github.com/strongloop/loopback-next/commit/309007346b72fec3ee127db5032d5cb3aa191c5d))
+
+
+### BREAKING CHANGES
+
+* **build:** The flag impacts how `import` is handled by the TypeScript
+compiler. The new behavior is:
+
+- A namespace import (i.e. import * as foo from "foo") is now correctly flagged as uncallable. Calling it will result in an error.
+- Default imports to CommonJS/AMD/UMD are now allowed (e.g. import fs from "fs"), and should work as expected.
+
+For existing projects, namespace imports (import * as express from "express"; express();) will need to be converted to default imports (import express from "express"; express();).
+
+See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-7.html#support-for-import-d-from-cjs-from-commonjs-modules-with---esmoduleinterop
+
+
+
+
+
+# [2.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/build@2.0.16...@loopback/build@2.1.0) (2019-11-25)
+
+
+### Features
+
+* **build:** add an option to control resolution of CLI module from project dependencies ([0715a91](https://github.com/strongloop/loopback-next/commit/0715a91d0eef02c7e259cbd1b62a09010995c796))
+
+
+
+
+
+## [2.0.16](https://github.com/strongloop/loopback-next/compare/@loopback/build@2.0.15...@loopback/build@2.0.16) (2019-11-12)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
+## [2.0.15](https://github.com/strongloop/loopback-next/compare/@loopback/build@2.0.14...@loopback/build@2.0.15) (2019-10-24)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
+## [2.0.14](https://github.com/strongloop/loopback-next/compare/@loopback/build@2.0.13...@loopback/build@2.0.14) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/build
+
+
+
+
+
 ## [2.0.13](https://github.com/strongloop/loopback-next/compare/@loopback/build@2.0.12...@loopback/build@2.0.13) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/build

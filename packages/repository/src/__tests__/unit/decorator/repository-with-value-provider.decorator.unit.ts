@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -26,15 +26,17 @@ class MyRepositoryProvider
   ) {}
 
   value(): ValueOrPromise<DefaultCrudRepository<Entity, string>> {
-    return new DefaultCrudRepository(this.myModel, this
-      .dataSource as juggler.DataSource);
+    return new DefaultCrudRepository(
+      this.myModel,
+      this.dataSource as juggler.DataSource,
+    );
   }
 }
 
 describe('repository class', () => {
   let ctx: Context;
 
-  before(function() {
+  before(function () {
     const ds = new juggler.DataSource({
       name: 'db',
       connector: 'memory',

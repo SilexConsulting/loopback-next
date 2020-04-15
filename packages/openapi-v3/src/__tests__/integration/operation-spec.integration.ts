@@ -3,9 +3,9 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {expect} from '@loopback/testlab';
 import {model, property} from '@loopback/repository';
-import {param, requestBody, getControllerSpec, post, get} from '../../';
+import {expect} from '@loopback/testlab';
+import {get, getControllerSpec, param, post, requestBody} from '../../';
 
 describe('operation arguments', () => {
   it('generate parameters and requestBody for operation', () => {
@@ -66,6 +66,7 @@ describe('operation arguments', () => {
             title: 'User',
             type: 'object',
             properties: {name: {type: 'string'}, password: {type: 'number'}},
+            additionalProperties: false,
           },
         },
       },

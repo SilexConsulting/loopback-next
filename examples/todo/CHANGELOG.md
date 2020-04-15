@@ -3,6 +3,250 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [3.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@3.1.0...@loopback/example-todo@3.1.1) (2020-04-11)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+# [3.1.0](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@3.0.2...@loopback/example-todo@3.1.0) (2020-04-08)
+
+
+### Features
+
+* support any type ([03ce221](https://github.com/strongloop/loopback-next/commit/03ce221bb41a2ecd296ba235fe342d488fa2d639))
+
+
+
+
+
+## [3.0.2](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@3.0.1...@loopback/example-todo@3.0.2) (2020-03-24)
+
+
+### Bug Fixes
+
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+
+
+
+
+
+## [3.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@3.0.0...@loopback/example-todo@3.0.1) (2020-03-17)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+# [3.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@2.0.0...@loopback/example-todo@3.0.0) (2020-03-05)
+
+
+### Bug Fixes
+
+* remove ref for v4.loopback.io ([78f20c0](https://github.com/strongloop/loopback-next/commit/78f20c0ed4db5f3ce0d7b676449ba3b22526319e))
+* **example-todo:** throw if geocode address is not found ([72d2035](https://github.com/strongloop/loopback-next/commit/72d20359c1fb57f83f0244b8104583d45f3e238e))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* use [@param](https://github.com/param).filter and [@param](https://github.com/param).where decorators ([896ef74](https://github.com/strongloop/loopback-next/commit/896ef7485376b3aedcca01a40f828bf1ed9470ae))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
+# [2.0.0](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.6...@loopback/example-todo@2.0.0) (2020-02-06)
+
+
+### Bug Fixes
+
+* suport complex objects for query params in api explorer ([a4ef640](https://github.com/strongloop/loopback-next/commit/a4ef64037a80d1ff7df37ba7912909a1bfcdbf51))
+
+
+### BREAKING CHANGES
+
+* This fix has modified the api definitions described by the decorator
+'param.query.object', to support Open-API's `url-encoded` definition for json query
+parameters.
+
+Previously, such parameters were described with `exploded: true` and
+`style: deepObject`, i.e exploded encoding, which turned out to be problematic as explained and discussed in,
+https://github.com/swagger-api/swagger-js/issues/1385 and
+https://github.com/OAI/OpenAPI-Specification/issues/1706
+
+```json
+  {
+    "in": "query",
+    "style": "deepObject"
+    "explode": "true",
+    "schema": {}
+  }
+```
+
+Exploded encoding worked for simple json objects as below but not for complex objects.
+
+```
+   http://localhost:3000/todos?filter[limit]=2
+```
+
+To address these issues with exploded queries, this fix switches definition of json
+query params from the `exploded`, `deep-object` style to the `url-encoded` style
+definition in Open-API spec.
+
+LoopBack already supports receiving url-encoded payload for json query parameters.
+
+For instance, to filter api results from the GET '/todo-list' endpoint in the
+todo-list example with a specific relation, { "include": [ { "relation": "todo" } ] },
+the following url-encoded query parameter can be used,
+
+```
+   http://localhost:3000/todos?filter=%7B%22include%22%3A%5B%7B%22relation%22%3A%22todoList%22%7D%5D%7D
+```
+
+The above was possible because the coercion behavior in LoopBack performed json
+parsing for `deep object` style json query params before this fix. This fix has
+modified that behavior by removing json parsing. Since the `exploded` `deep-object`
+definition has been removed from the `param.query.object` decorator, this new
+behaviour remains just an internal source code aspect as of now.
+
+In effect, this fix only modifies the open api definitions generated from LoopBack
+APIs. The 'style' and 'explode' fields are removed and the 'schema' field is moved
+under 'content[application/json]'. This is the definition that supports url-encoding
+as per Open-API spec.
+
+```json
+  {
+    "in": "query"
+    "content": {
+      "application/json": {
+        "schema": {}
+      }
+    }
+  }
+```
+
+Certain client libraries (like swagger-ui or LoopBack's api explorer) necessiate
+using Open-API's `url-encoded` style definition for json query params to support
+"sending" url-encoded payload.
+
+All consumers of LoopBack APIs may need to regenerate api definitions, if their
+client libraries require them to do so for url-encoding.
+
+Otherwise there wouldn't be any significant impact on API consumers.
+
+To preserve compatibility with existing REST API clients, this change is backward
+compatible. All exploded queries like `?filter[limit]=1` will continue to work for
+json query params, despite the fact that they are described differently in the
+OpenAPI spec.
+
+Existing api clients will continue to work after an upgrade.
+
+The signature of the 'param.query.object' decorator has not changed.
+
+There is no code changes required in the LoopBack APIs after upgrading to this
+fix. No method signatures or data structures are impacted.
+
+
+
+
+
+## [1.9.6](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.5...@loopback/example-todo@1.9.6) (2020-02-05)
+
+
+### Bug Fixes
+
+* update clean script for examples to be compatible with `lb4 example` ([d9f5741](https://github.com/strongloop/loopback-next/commit/d9f574160f6edbf73a8f728cd3695ca69297148a))
+
+
+
+
+
+## [1.9.5](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.4...@loopback/example-todo@1.9.5) (2020-01-27)
+
+
+### Bug Fixes
+
+* **cli:** reject datasources with no name property for service generator ([cc871e5](https://github.com/strongloop/loopback-next/commit/cc871e509b5c3a0de2ac0dc1108332285aa808a4))
+* **example-todo:** use latest cli code ([a1f83f8](https://github.com/strongloop/loopback-next/commit/a1f83f84fab881c1a9308329fea33b96a2d98615))
+
+
+
+
+
+## [1.9.4](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.3...@loopback/example-todo@1.9.4) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+## [1.9.3](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.2...@loopback/example-todo@1.9.3) (2020-01-07)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+## [1.9.2](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.1...@loopback/example-todo@1.9.2) (2019-12-09)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+## [1.9.1](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.9.0...@loopback/example-todo@1.9.1) (2019-11-25)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+# [1.9.0](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.8.4...@loopback/example-todo@1.9.0) (2019-11-12)
+
+
+### Features
+
+* **cli:** generate datasource json with '.config.json` extension ([51d8f7b](https://github.com/strongloop/loopback-next/commit/51d8f7b20ec59f888fd6d0634efb47d111f00ef7))
+
+
+
+
+
+## [1.8.4](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.8.3...@loopback/example-todo@1.8.4) (2019-10-24)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
+## [1.8.3](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.8.2...@loopback/example-todo@1.8.3) (2019-10-07)
+
+**Note:** Version bump only for package @loopback/example-todo
+
+
+
+
+
 ## [1.8.2](https://github.com/strongloop/loopback-next/compare/@loopback/example-todo@1.8.1...@loopback/example-todo@1.8.2) (2019-09-28)
 
 **Note:** Version bump only for package @loopback/example-todo

@@ -1,10 +1,10 @@
-// Copyright IBM Corp. 2017,2019. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/metadata
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import * as debugModule from 'debug';
-import * as _ from 'lodash';
+import debugModule from 'debug';
+import _ from 'lodash';
 import {Reflector} from './reflect';
 import {DecoratorType, MetadataKey, MetadataMap} from './types';
 const debug = debugModule('loopback:metadata:decorator');
@@ -91,7 +91,7 @@ export class DecoratorFactory<
       options,
     );
     const defaultDecoratorName = this.constructor.name.replace(/Factory$/, '');
-    this.decoratorName = this.options.decoratorName || defaultDecoratorName;
+    this.decoratorName = this.options.decoratorName ?? defaultDecoratorName;
     if (this.options.cloneInputSpec) {
       this.spec = DecoratorFactory.cloneDeep(spec);
     }
@@ -787,5 +787,82 @@ export class MethodParameterDecoratorFactory<T> extends DecoratorFactory<
       spec,
       options,
     );
+  }
+}
+
+/**
+ *  Factory for an append-array of method-level decorators
+ *  The `@response` metadata for a method is an array.
+ *  Each item in the array should be a single value, containing
+ *  a response code and a single spec or Model.  This should allow:
+ *
+ * @example
+ * ```ts
+ *  @response(200, MyFirstModel)
+ *  @response(403, [NotAuthorizedReasonOne, NotAuthorizedReasonTwo])
+ *  @response(404, NotFoundOne)
+ *  @response(404, NotFoundTwo)
+ *  @response(409, {schema: {}})
+ *  public async myMethod() {}
+ * ```
+ *
+ * In the case that a ResponseObject is passed, it becomes the
+ * default for description/content, and if possible, further Models are
+ * incorporated as a `oneOf: []` array.
+ *
+ * In the case that a ReferenceObject is passed, it and it alone is used, since
+ * references can be external and we cannot `oneOf` their content.
+ *
+ * The factory creates and updates an array of items T[], and the getter
+ * provides the values as that array.
+ */
+export class MethodMultiDecoratorFactory<T> extends MethodDecoratorFactory<
+  T[]
+> {
+  protected mergeWithInherited(
+    inheritedMetadata: MetadataMap<T[]>,
+    target: Object,
+    methodName?: string,
+  ) {
+    inheritedMetadata = inheritedMetadata || {};
+
+    inheritedMetadata[methodName!] = this._mergeArray(
+      inheritedMetadata[methodName!],
+      this.withTarget(this.spec, target),
+    );
+
+    return inheritedMetadata;
+  }
+
+  protected mergeWithOwn(
+    ownMetadata: MetadataMap<T[]>,
+    target: Object,
+    methodName?: string,
+    methodDescriptor?: TypedPropertyDescriptor<any> | number,
+  ) {
+    ownMetadata = ownMetadata || {};
+    ownMetadata[methodName!] = this._mergeArray(
+      ownMetadata[methodName!],
+      this.withTarget(this.spec, target),
+    );
+    return ownMetadata;
+  }
+
+  private _mergeArray(result: T[], methodMeta: T | T[]) {
+    if (!result) {
+      if (Array.isArray(methodMeta)) {
+        result = methodMeta;
+      } else {
+        result = [methodMeta];
+      }
+    } else {
+      if (Array.isArray(methodMeta)) {
+        result.push(...methodMeta);
+      } else {
+        result.push(methodMeta);
+      }
+    }
+
+    return result;
   }
 }

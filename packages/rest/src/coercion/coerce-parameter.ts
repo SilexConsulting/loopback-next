@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {isReferenceObject, ParameterObject} from '@loopback/openapi-v3';
-import * as debugModule from 'debug';
+import debugModule from 'debug';
 import {RestHttpErrors} from '../';
 import {parseJson} from '../parse-json';
 import {
@@ -32,7 +32,14 @@ export function coerceParameter(
   data: string | undefined | object,
   spec: ParameterObject,
 ) {
-  const schema = spec.schema;
+  let schema = spec.schema;
+
+  // If a query parameter is a url encoded Json object, the schema is defined under content['application/json']
+  if (!schema && spec.in === 'query' && spec.content) {
+    const jsonSpec = spec.content['application/json'];
+    schema = jsonSpec.schema;
+  }
+
   if (!schema || isReferenceObject(schema)) {
     debug(
       'The parameter with schema %s is not coerced since schema' +
@@ -96,7 +103,7 @@ function coerceDatetime(
   if (typeof data === 'object' || isEmpty(data))
     throw RestHttpErrors.invalidData(data, spec.name);
 
-  if (options && options.dateOnly) {
+  if (options?.dateOnly) {
     if (!matchDateFormat(data))
       throw RestHttpErrors.invalidData(data, spec.name);
   } else {
@@ -131,7 +138,7 @@ function coerceInteger(
   const coercedInt = Number(data);
   if (isNaN(coercedInt!)) throw RestHttpErrors.invalidData(data, spec.name);
 
-  if (options && options.isLong) {
+  if (options?.isLong) {
     if (!Number.isInteger(coercedInt))
       throw RestHttpErrors.invalidData(data, spec.name);
   } else {
@@ -172,9 +179,9 @@ function parseJsonIfNeeded(
 ): string | object | undefined {
   if (typeof data !== 'string') return data;
 
-  if (spec.in !== 'query' || spec.style !== 'deepObject') {
+  if (spec.in !== 'query' || (spec.in === 'query' && !spec.content)) {
     debug(
-      'Skipping JSON.parse, argument %s is not in:query style:deepObject',
+      'Skipping JSON.parse, argument %s is not a url encoded json object query parameter (since content field is missing in parameter schema)',
       spec.name,
     );
     return data;

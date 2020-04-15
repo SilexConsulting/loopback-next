@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/repository
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -191,6 +191,12 @@ describe('model', () => {
     Object.assign(customer, {extra: 'additional data'});
     expect(customer.toJSON()).to.eql({id: '123', email: 'xyz@example.com'});
     // notice that "extra" property was discarded from the output
+  });
+
+  it('skips properties with undefined values', () => {
+    const customer = createCustomer();
+    delete customer.email;
+    expect(customer.toJSON()).to.eql({id: '123'});
   });
 
   it('converts to json recursively', () => {

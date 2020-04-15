@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -12,6 +12,9 @@ const {validateUrlOrFile, escapeComment} = require('./utils');
 const {getControllerFileName} = require('./spec-helper');
 
 const updateIndex = require('../../lib/update-index');
+const MODEL = 'models';
+const CONTROLLER = 'controllers';
+const g = require('../../lib/globalize');
 
 module.exports = class OpenApiGenerator extends BaseGenerator {
   // Note: arguments and options should be defined in the constructor.
@@ -21,26 +24,26 @@ module.exports = class OpenApiGenerator extends BaseGenerator {
 
   _setupGenerator() {
     this.argument('url', {
-      description: 'URL or file path of the OpenAPI spec',
+      description: g.f('URL or file path of the OpenAPI spec'),
       required: false,
       type: String,
     });
 
     this.option('url', {
-      description: 'URL or file path of the OpenAPI spec',
+      description: g.f('URL or file path of the OpenAPI spec'),
       required: false,
       type: String,
     });
 
     this.option('validate', {
-      description: 'Validate the OpenAPI spec',
+      description: g.f('Validate the OpenAPI spec'),
       required: false,
       default: false,
       type: Boolean,
     });
 
     this.option('promote-anonymous-schemas', {
-      description: 'Promote anonymous schemas as models',
+      description: g.f('Promote anonymous schemas as models'),
       required: false,
       default: false,
       type: Boolean,
@@ -58,7 +61,7 @@ module.exports = class OpenApiGenerator extends BaseGenerator {
     const prompts = [
       {
         name: 'url',
-        message: 'Enter the OpenAPI spec url or file path:',
+        message: g.f('Enter the OpenAPI spec url or file path:'),
         default: this.options.url,
         validate: validateUrlOrFile,
         when: this.options.url == null,
@@ -99,9 +102,13 @@ module.exports = class OpenApiGenerator extends BaseGenerator {
     const prompts = [
       {
         name: 'controllerSelections',
-        message: 'Select controllers to be generated:',
+        message: g.f('Select controllers to be generated:'),
         type: 'checkbox',
         choices: choices,
+        // Require at least one item to be selected
+        // This prevents users from accidentally pressing ENTER instead of SPACE
+        // to select an item from the list
+        validate: result => !!result.length,
       },
     ];
     const selections =
@@ -118,8 +125,9 @@ module.exports = class OpenApiGenerator extends BaseGenerator {
   async scaffold() {
     if (this.shouldExit()) return false;
     this._generateModels();
+    await this._updateIndex(MODEL);
     this._generateControllers();
-    await this._updateIndex();
+    await this._updateIndex(CONTROLLER);
   }
 
   _generateControllers() {
@@ -157,13 +165,26 @@ module.exports = class OpenApiGenerator extends BaseGenerator {
     }
   }
 
-  async _updateIndex() {
-    const targetDir = this.destinationPath(`src/controllers`);
-    for (const c of this.selectedControllers) {
-      // Check all files being generated to ensure they succeeded
-      const status = this.conflicter.generationStatus[c.fileName];
-      if (status !== 'skip' && status !== 'identical') {
-        await updateIndex(targetDir, c.fileName);
+  // update index file for models and controllers
+  async _updateIndex(dir) {
+    if (dir === MODEL) {
+      const targetDir = this.destinationPath(`src/${MODEL}`);
+      for (const m of this.modelSpecs) {
+        // Check all files being generated to ensure they succeeded
+        const status = this.conflicter.generationStatus[m.fileName];
+        if (status !== 'skip' && status !== 'identical') {
+          await updateIndex(targetDir, m.fileName);
+        }
+      }
+    }
+    if (dir === CONTROLLER) {
+      const targetDir = this.destinationPath(`src/${CONTROLLER}`);
+      for (const c of this.selectedControllers) {
+        // Check all files being generated to ensure they succeeded
+        const status = this.conflicter.generationStatus[c.fileName];
+        if (status !== 'skip' && status !== 'identical') {
+          await updateIndex(targetDir, c.fileName);
+        }
       }
     }
   }

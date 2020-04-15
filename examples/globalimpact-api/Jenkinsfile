@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+    environment {
+        PORT = 3000
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'docker build . --tag gi_api --no-cache'
+            }
+        }
+        stage('Run') {
+            steps {
+                sh 'docker rm -f gi_api || true'
+                sh 'docker run -d -p 3000:${PORT} --name gi_api gi_api'
+            }
+        }
+    }
+}

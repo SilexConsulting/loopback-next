@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -20,7 +20,7 @@ const REQUIRED_BOOLEAN_PARAM = {
   required: true,
 };
 
-describe('coerce param from string to boolean - required', function() {
+describe('coerce param from string to boolean - required', function () {
   context('valid values', () => {
     test(REQUIRED_BOOLEAN_PARAM, 'false', false);
     test(REQUIRED_BOOLEAN_PARAM, 'true', true);
@@ -40,7 +40,7 @@ describe('coerce param from string to boolean - required', function() {
   });
 });
 
-describe('coerce param from string to boolean - optional', function() {
+describe('coerce param from string to boolean - optional', function () {
   context('valid values', () => {
     test(BOOLEAN_PARAM, 'false', false);
     test(BOOLEAN_PARAM, 'true', true);

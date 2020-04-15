@@ -109,7 +109,7 @@ LoopBack allows externally hosted API Explorer UI to render the OpenAPI
 endpoints for a REST server. Such URLs can be specified with `rest.apiExplorer`:
 
 - url: URL for the hosted API Explorer UI, default to
-  `https://loopback.io/api-explorer`.
+  `https://explorer.loopback.io`.
 - httpUrl: URL for the API explorer served over plain http to deal with mixed
   content security imposed by browsers as the spec is exposed over `http` by
   default. See https://github.com/strongloop/loopback-next/issues/1603. Default
@@ -141,6 +141,9 @@ const app = new RestApplication({
 });
 ```
 
+{% include note.html content="To completely disable API Explorer, we also need
+to [disable the self-hosted REST API Explorer extension](./Self-hosted-REST-API-Explorer.md#disable-self-hosted-api-explorer)." %}
+
 ### Use a self-hosted API Explorer
 
 Hosting the API Explorer at an external URL has a few downsides, for example a
@@ -160,7 +163,7 @@ certificate chain variant.
 
 ```ts
 import {RestApplication, RestServer, RestBindings} from '@loopback/rest';
-import * as fs from 'fs';
+import fs from 'fs';
 
 export async function main() {
   const options = {
@@ -262,13 +265,15 @@ The router can be configured to enforce `strict` mode as follows:
 
 1. `strict` is true:
 
-- request `/orders` matches route `/orders` but not `/orders/`
-- request `/orders/` matches route `/orders/` but not `/orders`
+   - request `/orders` matches route `/orders` but not `/orders/`
+   - request `/orders/` matches route `/orders/` but not `/orders`
 
 2. `strict` is false (default)
 
-- request `/orders` matches route `/orders` first and falls back to `/orders/`
-- request `/orders/` matches route `/orders/` first and falls back to `/orders`
+   - request `/orders` matches route `/orders` first and falls back to
+     `/orders/`
+   - request `/orders/` matches route `/orders/` first and falls back to
+     `/orders`
 
 See `strict routing` at http://expressjs.com/en/4x/api.html#app for more
 information.
@@ -290,20 +295,22 @@ for more details.
 
 ### `rest` options
 
-| Property          | Type                     | Purpose                                                                                                   |
-| ----------------- | ------------------------ | --------------------------------------------------------------------------------------------------------- |
-| host              | string                   | Specify the hostname or ip address on which the RestServer will listen for traffic.                       |
-| port              | number                   | Specify the port on which the RestServer listens for traffic.                                             |
-| protocol          | string (http/https)      | Specify the protocol on which the RestServer listens for traffic.                                         |
-| basePath          | string                   | Specify the base path that RestServer exposes http endpoints.                                             |
-| key               | string                   | Specify the SSL private key for https.                                                                    |
-| cert              | string                   | Specify the SSL certificate for https.                                                                    |
-| cors              | CorsOptions              | Specify the CORS options.                                                                                 |
-| sequence          | SequenceHandler          | Use a custom SequenceHandler to change the behavior of the RestServer for the request-response lifecycle. |
-| openApiSpec       | OpenApiSpecOptions       | Customize how OpenAPI spec is served                                                                      |
-| apiExplorer       | ApiExplorerOptions       | Customize how API explorer is served                                                                      |
-| requestBodyParser | RequestBodyParserOptions | Customize how request body is parsed                                                                      |
-| router            | RouterOptions            | Customize how trailing slashes are used for routing                                                       |
+| Property            | Type                      | Purpose                                                                                                                                                                                                                                                                                                                             |
+| ------------------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| host                | string                    | Specify the hostname or ip address on which the RestServer will listen for traffic.                                                                                                                                                                                                                                                 |
+| port                | number                    | Specify the port on which the RestServer listens for traffic.                                                                                                                                                                                                                                                                       |
+| protocol            | string (http/https)       | Specify the protocol on which the RestServer listens for traffic.                                                                                                                                                                                                                                                                   |
+| gracePeriodForClose | number                    | Specify the grace period in milliseconds to allow the RestServer to finish processing in-flight requests and reject new requests from keep-alive connections when the server is being stopped. The default value is `Infinity` (don't force-close). If you want to immediately destroy all sockets upon stop, set its value to `0`. |
+| basePath            | string                    | Specify the base path that RestServer exposes http endpoints.                                                                                                                                                                                                                                                                       |
+| key                 | string                    | Specify the SSL private key for https.                                                                                                                                                                                                                                                                                              |
+| cert                | string                    | Specify the SSL certificate for https.                                                                                                                                                                                                                                                                                              |
+| cors                | CorsOptions               | Specify the CORS options.                                                                                                                                                                                                                                                                                                           |
+| sequence            | SequenceHandler           | Use a custom SequenceHandler to change the behavior of the RestServer for the request-response lifecycle.                                                                                                                                                                                                                           |
+| openApiSpec         | OpenApiSpecOptions        | Customize how OpenAPI spec is served                                                                                                                                                                                                                                                                                                |
+| apiExplorer         | ApiExplorerOptions        | Customize how API explorer is served                                                                                                                                                                                                                                                                                                |
+| requestBodyParser   | RequestBodyParserOptions  | Customize how request body is parsed                                                                                                                                                                                                                                                                                                |
+| router              | RouterOptions             | Customize how trailing slashes are used for routing                                                                                                                                                                                                                                                                                 |
+| listenOnStart       | boolean (default to true) | Control if the server should listen on http/https when it's started                                                                                                                                                                                                                                                                 |
 
 ## Add servers to application instance
 

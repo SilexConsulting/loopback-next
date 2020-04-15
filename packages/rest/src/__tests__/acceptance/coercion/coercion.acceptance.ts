@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -68,10 +68,7 @@ describe('Coercion', () => {
 
   it('coerces parameter in query from string to number', async () => {
     spy = sinon.spy(MyController.prototype, 'createNumberFromQuery');
-    await client
-      .get('/create-number-from-query')
-      .query({num: 100})
-      .expect(200);
+    await client.get('/create-number-from-query').query({num: 100}).expect(200);
     sinon.assert.calledWithExactly(spy, 100);
   });
 

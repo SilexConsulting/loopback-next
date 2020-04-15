@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2019,2020. All Rights Reserved.
 // Node module: @loopback/core
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -7,6 +7,7 @@ import {
   bind,
   Binding,
   BindingScope,
+  BindingTag,
   Context,
   inject,
   Provider,
@@ -15,11 +16,14 @@ import {expect} from '@loopback/testlab';
 import {Application, Component, CoreBindings, CoreTags, Server} from '../..';
 
 describe('Application', () => {
-  describe('controller binding', () => {
-    let app: Application;
-    class MyController {}
+  let app: Application;
 
+  afterEach('clean up application', () => app.stop());
+
+  describe('controller binding', () => {
     beforeEach(givenApp);
+
+    class MyController {}
 
     it('binds a controller', () => {
       const binding = app.controller(MyController);
@@ -48,18 +52,12 @@ describe('Application', () => {
       expect(binding.scope).to.equal(BindingScope.SINGLETON);
       expect(findKeysByTag(app, 'controller')).to.containEql(binding.key);
     });
-
-    function givenApp() {
-      app = new Application();
-    }
   });
 
   describe('component binding', () => {
-    let app: Application;
+    beforeEach(givenApp);
 
     class MyComponent implements Component {}
-
-    beforeEach(givenApp);
 
     it('binds a component', () => {
       const binding = app.component(MyComponent);
@@ -181,15 +179,10 @@ describe('Application', () => {
       expect(app.contains('foo')).to.be.true();
       expect(app.getSync('foo')).to.be.eql('bar');
     });
-
-    function givenApp() {
-      app = new Application();
-    }
   });
 
   describe('server binding', () => {
-    let app: Application;
-    beforeEach(givenApplication);
+    beforeEach(givenApp);
 
     it('defaults to constructor name', async () => {
       const binding = app.server(FakeServer);
@@ -223,17 +216,12 @@ describe('Application', () => {
       const AnotherResult = await app.getServer(AnotherServer);
       expect(AnotherResult.constructor.name).to.equal(AnotherServer.name);
     });
-
-    function givenApplication() {
-      app = new Application();
-    }
   });
 
   describe('service binding', () => {
-    let app: Application;
-    class MyService {}
-
     beforeEach(givenApp);
+
+    class MyService {}
 
     it('binds a service', () => {
       const binding = app.service(MyService);
@@ -248,6 +236,21 @@ describe('Application', () => {
       expect(Array.from(binding.tagNames)).to.containEql(CoreTags.SERVICE);
       expect(binding.key).to.equal('services.my-service');
       expect(findKeysByTag(app, CoreTags.SERVICE)).to.containEql(binding.key);
+    });
+
+    it('binds a service with custom interface - string', () => {
+      const binding = app.service(MyService, {interface: 'MyService'});
+      expect(Array.from(binding.tagNames)).to.containEql(CoreTags.SERVICE);
+      expect(binding.tagMap[CoreTags.SERVICE_INTERFACE]).to.eql('MyService');
+    });
+
+    it('binds a service with custom interface - symbol', () => {
+      const MyServiceInterface = Symbol('MyService');
+      const binding = app.service(MyService, {interface: MyServiceInterface});
+      expect(Array.from(binding.tagNames)).to.containEql(CoreTags.SERVICE);
+      expect(binding.tagMap[CoreTags.SERVICE_INTERFACE]).to.eql(
+        MyServiceInterface,
+      );
     });
 
     it('binds a singleton service', () => {
@@ -289,15 +292,77 @@ describe('Application', () => {
       expect(binding.key).to.equal('services.my-service');
       expect(findKeysByTag(app, 'service')).to.containEql(binding.key);
     });
+  });
 
-    function givenApp() {
-      app = new Application();
+  describe('shutdown signal listener', () => {
+    beforeEach(givenApp);
+
+    it('registers a SIGTERM listener when app starts', async () => {
+      const count = getListeners().length;
+      await app.start();
+      expect(getListeners().length).to.eql(count + 1);
+    });
+
+    it('does not impact SIGTERM listener when app stops without start', async () => {
+      const count = getListeners().length;
+      await app.stop();
+      expect(getListeners().length).to.eql(count);
+    });
+
+    it('registers/removes a SIGTERM listener by start/stop', async () => {
+      await app.start();
+      const count = getListeners().length;
+      await app.stop();
+      expect(getListeners().length).to.eql(count - 1);
+      // Restart
+      await app.start();
+      expect(getListeners().length).to.eql(count);
+    });
+
+    it('does not register a SIGTERM listener when app is created', async () => {
+      const count = getListeners().length;
+      // Create another application
+      new Application();
+      expect(getListeners().length).to.eql(count);
+    });
+
+    function getListeners() {
+      return process.listeners('SIGTERM');
     }
   });
 
-  function findKeysByTag(ctx: Context, tag: string | RegExp) {
+  function findKeysByTag(ctx: Context, tag: BindingTag | RegExp) {
     return ctx.findByTag(tag).map(binding => binding.key);
   }
+
+  function givenApp() {
+    app = new Application();
+  }
+});
+
+describe('Application constructor', () => {
+  it('accepts config and parent context', () => {
+    const ctx = new Context();
+    const app = new Application({name: 'my-app'}, ctx);
+    expect(app.parent).to.eql(ctx);
+    expect(app.options).to.eql({name: 'my-app'});
+  });
+
+  it('accepts parent context without config', () => {
+    const ctx = new Context();
+    const app = new Application(ctx);
+    expect(app.parent).to.eql(ctx);
+  });
+
+  it('uses application name as the context name', () => {
+    const app = new Application({name: 'my-app'});
+    expect(app.name).to.eql('my-app');
+  });
+
+  it('uses Application-<uuid> as the context name', () => {
+    const app = new Application();
+    expect(app.name).to.match(/Application-/);
+  });
 });
 
 class FakeServer extends Context implements Server {

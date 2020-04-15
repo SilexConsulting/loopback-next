@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2018. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/rest
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -10,7 +10,7 @@ import {
   REQUEST_BODY_INDEX,
   SchemasObject,
 } from '@loopback/openapi-v3';
-import * as debugFactory from 'debug';
+import debugFactory from 'debug';
 import {RequestBody, RequestBodyParser} from './body-parsers';
 import {coerceParameter} from './coercion/coerce-parameter';
 import {RestHttpErrors} from './rest-http-error';
@@ -54,14 +54,14 @@ export async function parseOperationArgs(
   );
 }
 
-function buildOperationArguments(
+async function buildOperationArguments(
   operationSpec: OperationObject,
   request: Request,
   pathParams: PathParameterValues,
   body: RequestBody,
   globalSchemas: SchemasObject,
   options: RequestBodyValidationOptions = {},
-): OperationArgs {
+): Promise<OperationArgs> {
   let requestBodyIndex = -1;
   if (operationSpec.requestBody) {
     // the type of `operationSpec.requestBody` could be `RequestBodyObject`
@@ -75,7 +75,7 @@ function buildOperationArguments(
 
   const paramArgs: OperationArgs = [];
 
-  for (const paramSpec of operationSpec.parameters || []) {
+  for (const paramSpec of operationSpec.parameters ?? []) {
     if (isReferenceObject(paramSpec)) {
       // TODO(bajtos) implement $ref parameters
       // See https://github.com/strongloop/loopback-next/issues/435
@@ -88,7 +88,12 @@ function buildOperationArguments(
   }
 
   debug('Validating request body - value %j', body);
-  validateRequestBody(body, operationSpec.requestBody, globalSchemas, options);
+  await validateRequestBody(
+    body,
+    operationSpec.requestBody,
+    globalSchemas,
+    options,
+  );
 
   if (requestBodyIndex > -1) paramArgs.splice(requestBodyIndex, 0, body.value);
   return paramArgs;

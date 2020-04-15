@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2017,2018. All Rights Reserved.
+// Copyright IBM Corp. 2017,2020. All Rights Reserved.
 // Node module: @loopback/core
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -6,15 +6,15 @@
 import {
   Binding,
   BindingScope,
-  bindingTemplateFor,
   Constructor,
   Context,
-  ContextTags,
   createBindingFromClass,
-  isProviderClass,
+  JSONObject,
   Provider,
 } from '@loopback/context';
-import * as debugFactory from 'debug';
+import assert from 'assert';
+import debugFactory from 'debug';
+import pEvent from 'p-event';
 import {Component, mountComponent} from './component';
 import {CoreBindings, CoreTags} from './keys';
 import {
@@ -24,7 +24,32 @@ import {
 } from './lifecycle';
 import {LifeCycleObserverRegistry} from './lifecycle-registry';
 import {Server} from './server';
+import {createServiceBinding, ServiceOptions} from './service';
 const debug = debugFactory('loopback:core:application');
+const debugShutdown = debugFactory('loopback:core:application:shutdown');
+const debugWarning = debugFactory('loopback:core:application:warning');
+
+/**
+ * A helper function to build constructor args for `Context`
+ * @param configOrParent - Application config or parent context
+ * @param parent - Parent context if the first arg is application config
+ */
+function buildConstructorArgs(
+  configOrParent?: ApplicationConfig | Context,
+  parent?: Context,
+) {
+  let name: string | undefined;
+  let parentCtx: Context | undefined;
+
+  if (configOrParent instanceof Context) {
+    parentCtx = configOrParent;
+    name = undefined;
+  } else {
+    parentCtx = parent;
+    name = configOrParent?.name;
+  }
+  return [parentCtx, name];
+}
 
 /**
  * Application is the container for various types of artifacts, such as
@@ -33,6 +58,41 @@ const debug = debugFactory('loopback:core:application');
  */
 export class Application extends Context implements LifeCycleObserver {
   public readonly options: ApplicationConfig;
+
+  /**
+   * A flag to indicate that the application is being shut down
+   */
+  private _isShuttingDown = false;
+  private _shutdownOptions: ShutdownOptions;
+  private _signalListener: (signal: string) => Promise<void>;
+
+  /**
+   * State of the application
+   */
+  private _state = 'created';
+
+  /**
+   * Get the state of the application. The initial state is `created` and it can
+   * transition as follows by `start` and `stop`:
+   *
+   * 1. start
+   *   - !started -> starting -> started
+   *   - started -> started (no-op)
+   * 2. stop
+   *   - started -> stopping -> stopped
+   *   - !started -> stopped (no-op)
+   *
+   * Two types of states are expected:
+   * - stable, such as `started` and `stopped`
+   * - in process, such as `booting` and `starting`
+   *
+   * Operations such as `start` and `stop` can only be called at a stable state.
+   * The logic should immediately set the state to a new one indicating work in
+   * process, such as `starting` and `stopping`.
+   */
+  public get state() {
+    return this._state;
+  }
 
   /**
    * Create an application with the given parent context
@@ -47,13 +107,14 @@ export class Application extends Context implements LifeCycleObserver {
   constructor(config?: ApplicationConfig, parent?: Context);
 
   constructor(configOrParent?: ApplicationConfig | Context, parent?: Context) {
-    super(
-      configOrParent instanceof Context ? configOrParent : parent,
-      'application',
-    );
+    // super() has to be first statement for a constructor
+    super(...buildConstructorArgs(configOrParent, parent));
 
-    if (configOrParent instanceof Context) configOrParent = {};
-    this.options = configOrParent || {};
+    this.options =
+      configOrParent instanceof Context ? {} : configOrParent ?? {};
+
+    // Configure debug
+    this._debug = debug;
 
     // Bind the life cycle observer registry
     this.bind(CoreBindings.LIFE_CYCLE_OBSERVER_REGISTRY)
@@ -63,6 +124,8 @@ export class Application extends Context implements LifeCycleObserver {
     this.bind(CoreBindings.APPLICATION_INSTANCE).to(this);
     // Make options available to other modules as well.
     this.bind(CoreBindings.APPLICATION_CONFIG).to(this.options);
+
+    this._shutdownOptions = {signals: ['SIGTERM'], ...this.options.shutdown};
   }
 
   /**
@@ -83,7 +146,7 @@ export class Application extends Context implements LifeCycleObserver {
    * ```
    */
   controller(controllerCtor: ControllerClass, name?: string): Binding {
-    debug('Adding controller %s', name || controllerCtor.name);
+    this.debug('Adding controller %s', name ?? controllerCtor.name);
     const binding = createBindingFromClass(controllerCtor, {
       name,
       namespace: CoreBindings.CONTROLLERS,
@@ -116,7 +179,7 @@ export class Application extends Context implements LifeCycleObserver {
     ctor: Constructor<T>,
     name?: string,
   ): Binding<T> {
-    debug('Adding server %s', name || ctor.name);
+    this.debug('Adding server %s', name ?? ctor.name);
     const binding = createBindingFromClass(ctor, {
       name,
       namespace: CoreBindings.SERVERS,
@@ -177,19 +240,87 @@ export class Application extends Context implements LifeCycleObserver {
   }
 
   /**
-   * Start the application, and all of its registered observers.
+   * Assert there is no other operation is in progress, i.e., the state is not
+   * `*ing`, such as `starting` or `stopping`.
+   *
+   * @param op - The operation name, such as 'boot', 'start', or 'stop'
    */
-  public async start(): Promise<void> {
-    const registry = await this.getLifeCycleObserverRegistry();
-    await registry.start();
+  protected assertNotInProcess(op: string) {
+    assert(
+      !this._state.endsWith('ing'),
+      `Cannot ${op} the application as it is ${this._state}.`,
+    );
   }
 
   /**
-   * Stop the application instance and all of its registered observers.
+   * Assert current state of the application to be one of the expected values
+   * @param op - The operation name, such as 'boot', 'start', or 'stop'
+   * @param states - Valid states
+   */
+  protected assertInStates(op: string, ...states: string[]) {
+    assert(
+      states.includes(this._state),
+      `Cannot ${op} the application as it is ${this._state}. Valid states are ${states}.`,
+    );
+  }
+
+  /**
+   * Transition the application to a new state and emit an event
+   * @param state - The new state
+   */
+  protected setState(state: string) {
+    const oldState = this._state;
+    this._state = state;
+    if (oldState !== state) {
+      this.emit('stateChanged', {from: oldState, to: this._state});
+      this.emit(state);
+    }
+  }
+
+  protected async awaitState(state: string) {
+    await pEvent(this, state);
+  }
+
+  /**
+   * Start the application, and all of its registered observers. The application
+   * state is checked to ensure the integrity of `start`.
+   *
+   * If the application is already started, no operation is performed.
+   */
+  public async start(): Promise<void> {
+    if (this._state === 'starting') return this.awaitState('started');
+    this.assertNotInProcess('start');
+    // No-op if it's started
+    if (this._state === 'started') return;
+    this.setState('starting');
+    this.setupShutdown();
+
+    const registry = await this.getLifeCycleObserverRegistry();
+    await registry.start();
+    this.setState('started');
+  }
+
+  /**
+   * Stop the application instance and all of its registered observers. The
+   * application state is checked to ensure the integrity of `stop`.
+   *
+   * If the application is already stopped or not started, no operation is
+   * performed.
    */
   public async stop(): Promise<void> {
+    if (this._state === 'stopping') return this.awaitState('stopped');
+    this.assertNotInProcess('stop');
+    // No-op if it's created or stopped
+    if (this._state !== 'started') return;
+    this.setState('stopping');
+    if (!this._isShuttingDown) {
+      // Explicit stop is called, let's remove signal listeners to avoid
+      // memory leak and max listener warning
+      this.removeSignalListener();
+    }
     const registry = await this.getLifeCycleObserverRegistry();
     await registry.stop();
+    this.setState('stopped');
   }
 
   private async getLifeCycleObserverRegistry() {
@@ -219,7 +350,7 @@ export class Application extends Context implements LifeCycleObserver {
    * ```
    */
   public component(componentCtor: Constructor<Component>, name?: string) {
-    debug('Adding component: %s', name || componentCtor.name);
+    this.debug('Adding component: %s', name ?? componentCtor.name);
     const binding = createBindingFromClass(componentCtor, {
       name,
       namespace: CoreBindings.COMPONENTS,
@@ -255,7 +386,7 @@ export class Application extends Context implements LifeCycleObserver {
     ctor: Constructor<T>,
     name?: string,
   ): Binding<T> {
-    debug('Adding life cycle observer %s', name || ctor.name);
+    this.debug('Adding life cycle observer %s', name ?? ctor.name);
     const binding = createBindingFromClass(ctor, {
       name,
       namespace: CoreBindings.LIFE_CYCLE_OBSERVERS,
@@ -283,7 +414,7 @@ export class Application extends Context implements LifeCycleObserver {
    * }
    *
    * // Define a class to be bound via ctx.toProvider()
-   * const uuidv4 = require('uuid/v4');
+   * import {v4 as uuidv4} from 'uuid';
    * export class UuidProvider implements Provider<string> {
    *   value() {
    *     return uuidv4();
@@ -310,34 +441,122 @@ export class Application extends Context implements LifeCycleObserver {
    */
   public service<S>(
     cls: Constructor<S> | Constructor<Provider<S>>,
-    name?: string,
+    name?: string | ServiceOptions,
   ): Binding<S> {
-    if (!name && isProviderClass(cls)) {
-      // Trim `Provider` from the default service name
-      // This is needed to keep backward compatibility
-      const templateFn = bindingTemplateFor(cls);
-      const template = Binding.bind<S>('template').apply(templateFn);
-      if (
-        template.tagMap[ContextTags.PROVIDER] &&
-        !template.tagMap[ContextTags.NAME]
-      ) {
-        // The class is a provider and no `name` tag is found
-        name = cls.name.replace(/Provider$/, '');
-      }
-    }
-    const binding = createBindingFromClass(cls, {
-      name,
-      type: 'service',
-    });
+    const options = typeof name === 'string' ? {name} : name;
+    const binding = createServiceBinding(cls, options);
     this.add(binding);
     return binding;
   }
+
+  /**
+   * Set up signals that are captured to shutdown the application
+   */
+  protected setupShutdown() {
+    if (this._signalListener != null) {
+      this.registerSignalListener();
+      return this._signalListener;
+    }
+    const gracePeriod = this._shutdownOptions.gracePeriod;
+    this._signalListener = async (signal: string) => {
+      const kill = () => {
+        this.removeSignalListener();
+        process.kill(process.pid, signal);
+      };
+      debugShutdown(
+        '[%s] Signal %s received for process %d',
+        this.name,
+        signal,
+        process.pid,
+      );
+      if (!this._isShuttingDown) {
+        this._isShuttingDown = true;
+        let timer;
+        if (typeof gracePeriod === 'number' && !isNaN(gracePeriod)) {
+          timer = setTimeout(kill, gracePeriod);
+        }
+        try {
+          await this.stop();
+        } finally {
+          if (timer != null) clearTimeout(timer);
+          kill();
+        }
+      }
+    };
+    this.registerSignalListener();
+    return this._signalListener;
+  }
+
+  private registerSignalListener() {
+    const {signals = []} = this._shutdownOptions;
+    debugShutdown(
+      '[%s] Registering signal listeners on the process %d',
+      this.name,
+      process.pid,
+      signals,
+    );
+    signals.forEach(sig => {
+      if (process.getMaxListeners() <= process.listenerCount(sig)) {
+        if (debugWarning.enabled) {
+          debugWarning(
+            '[%s] %d %s listeners are added to process %d',
+            this.name,
+            process.listenerCount(sig),
+            sig,
+            process.pid,
+            new Error('MaxListenersExceededWarning'),
+          );
+        }
+      }
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      process.on(sig, this._signalListener);
+    });
+  }
+
+  private removeSignalListener() {
+    if (this._signalListener == null) return;
+    const {signals = []} = this._shutdownOptions;
+    debugShutdown(
+      '[%s] Removing signal listeners on the process %d',
+      this.name,
+      process.pid,
+      signals,
+    );
+    signals.forEach(sig =>
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      process.removeListener(sig, this._signalListener),
+    );
+  }
 }
+
+/**
+ * Options to set up application shutdown
+ */
+export type ShutdownOptions = {
+  /**
+   * An array of signals to be trapped for graceful shutdown
+   */
+  signals?: NodeJS.Signals[];
+  /**
+   * Period in milliseconds to wait for the grace shutdown to finish before
+   * exiting the process
+   */
+  gracePeriod?: number;
+};
 
 /**
  * Configuration for application
  */
 export interface ApplicationConfig {
+  /**
+   * Name of the application context
+   */
+  name?: string;
+  /**
+   * Configuration for signals that shut down the application
+   */
+  shutdown?: ShutdownOptions;
+
   /**
    * Other properties
    */
@@ -347,16 +566,6 @@ export interface ApplicationConfig {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ControllerClass = Constructor<any>;
-
-/**
- * Type definition for JSON
- */
-export type JSONPrimitive = string | number | boolean | null;
-export type JSONValue = JSONPrimitive | JSONObject | JSONArray;
-export interface JSONObject {
-  [property: string]: JSONValue;
-}
-export interface JSONArray extends Array<JSONValue> {}
 
 /**
  * Type description for `package.json`

@@ -1,4 +1,4 @@
-// Copyright IBM Corp. 2018,2019. All Rights Reserved.
+// Copyright IBM Corp. 2018,2020. All Rights Reserved.
 // Node module: @loopback/cli
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
@@ -13,8 +13,8 @@ const path = require('path');
 const deps = require('../../../lib/utils').getDependencies();
 const expect = require('@loopback/testlab').expect;
 
-module.exports = function(projGenerator, props, projectType) {
-  return function() {
+module.exports = function (projGenerator, props, projectType) {
+  return function () {
     // Increase the timeout to 60 seconds to accomodate
     // for possibly slow CI build machines
     // eslint-disable-next-line no-invalid-this
@@ -342,8 +342,9 @@ module.exports = function(projGenerator, props, projectType) {
           ['tsconfig.json', '@loopback/build'],
         ]);
         assert.fileContent([
-          ['package.json', '"clean": "rimraf dist *.tsbuildinfo"'],
-          ['package.json', '"typescript"'],
+          ['package.json', '"clean": "rimraf dist *.tsbuildinfo .eslintcache"'],
+          ['package.json', /^ {4}"typescript"/m],
+          ['package.json', /^ {4}"tslib"/m],
           ['package.json', '"eslint"'],
           ['package.json', 'eslint-config-prettier'],
           ['package.json', 'eslint-plugin-eslint-plugin'],
@@ -498,7 +499,6 @@ module.exports = function(projGenerator, props, projectType) {
 
     async function testPrompt(gen, prompts, fnName) {
       await gen.setOptions();
-      // eslint-disable-next-line require-atomic-updates
       gen.prompt = sinon.stub(gen, 'prompt');
       gen.prompt.resolves(prompts);
       return gen[fnName]();

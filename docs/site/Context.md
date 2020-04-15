@@ -240,7 +240,7 @@ the form of metadata) to your intent.
 
 ## Context events
 
-The `Context` emits the following events:
+An instance of `Context` can emit the following events:
 
 - `bind`: Emitted when a new binding is added to the context.
   - binding: the newly added binding object
@@ -252,11 +252,50 @@ The `Context` emits the following events:
   process
   - err: the error object thrown
 
+The bind/unbind events are represented as the following type:
+
+```ts
+/**
+ * Events emitted by a context
+ */
+export type ContextEvent = {
+  /**
+   * Source context that emits the event
+   */
+  context: Context;
+  /**
+   * Binding that is being added/removed/updated
+   */
+  binding: Readonly<Binding<unknown>>;
+  /**
+   * Event type
+   */
+  type: string; // 'bind' or 'unbind'
+};
+```
+
 When an existing binding key is replaced with a new one, an `unbind` event is
 emitted for the existing binding followed by a `bind` event for the new binding.
 
 If a context has a parent, binding events from the parent are re-emitted on the
 context when the binding key does not exist within the current context.
+
+A context event listener should conform to the following signature:
+
+```ts
+/**
+ * Synchronous event listener for the `Context` as en event emitter
+ */
+export type ContextEventListener = (event: ContextEvent) => void;
+```
+
+By default, `maxListeners` is set to `Infinity` for context objects to avoid
+[memory leak warnings](https://github.com/strongloop/loopback-next/issues/4363).
+The value can be reset as follows:
+
+```ts
+ctx.setMaxListeners(128);
+```
 
 ## Context observers
 
@@ -275,7 +314,7 @@ come and go. There are a few caveats associated with that:
      .bind('foo')
      .to('foo-value')
      .tag('foo-tag');
-   ctx.on('bind', binding => {
+   ctx.on('bind', {binding} => {
      console.log(binding.tagNames); // returns an empty array `[]`
    });
    ```
@@ -293,7 +332,7 @@ come and go. There are a few caveats associated with that:
      .to('foo-value')
      .tag('foo-tag');
    ctx.add(binding);
-   ctx.on('bind', binding => {
+   ctx.on('bind', {binding} => {
      console.log(binding.tagMap); // returns `['foo-tag']`
    });
    ```
@@ -344,6 +383,15 @@ export type ContextEventObserver = ContextObserver | ContextObserverFn;
 
 If `filter` is not required, we can simply use `ContextObserverFn`.
 
+Please note that `ContextEventObserver` is different from
+`ContextEventListener`:
+
+- A `ContextEventListener` is synchronous and it's invoked when the event is
+  emitted (before `emit` returns).
+
+- A `ContextEventObserver` is asynchronous and it's invoked by the notification
+  queue after the event is emitted (after `emit` returns).
+
 2. Context APIs
 
 - `subscribe(observer: ContextEventObserver)`
@@ -387,14 +435,8 @@ const observer: ContextObserver = {
 };
 
 server.subscribe(observer);
-server
-  .bind('foo-server')
-  .to('foo-value')
-  .tag('foo');
-app
-  .bind('foo-app')
-  .to('foo-value')
-  .tag('foo');
+server.bind('foo-server').to('foo-value').tag('foo');
+app.bind('foo-app').to('foo-value').tag('foo');
 
 // The following messages will be printed:
 // bind: foo-server
@@ -472,10 +514,7 @@ serverCtx
 await view.values(); // returns [an instance of Controller1];
 
 // Bind Controller2 to app context
-appCtx
-  .bind('controllers.Controller2')
-  .toClass(Controller2)
-  .tag('controller');
+appCtx.bind('controllers.Controller2').toClass(Controller2).tag('controller');
 
 // Resolve to an instance of Controller1 and an instance of Controller2
 await view.values(); // returns [an instance of Controller1, an instance of Controller2];
@@ -506,6 +545,8 @@ injection.
 
 A `ContextView` object can emit one of the following events:
 
+- 'bind': when a binding is added to the view
+- 'unbind': when a binding is removed from the view
 - 'refresh': when the view is refreshed as bindings are added/removed
 - 'resolve': when the cached values are resolved and updated
 - 'close': when the view is closed (stopped observing context events)
