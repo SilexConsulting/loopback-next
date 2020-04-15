@@ -13,6 +13,9 @@ import {
   requestBody,
   HttpErrors,
   getModelSchemaRef,
+  Response,
+  RestBindings,
+  RequestWithSession,
 } from '@loopback/rest';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
@@ -225,7 +228,7 @@ export class UserController {
     },
   })
   async login(
-    @requestBody(CredentialsRequestBody) credentials: Credentials,
+    credentials: Credentials,
   ): Promise<{token: string}> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
