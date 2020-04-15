@@ -18,7 +18,7 @@ import {
   RequestWithSession,
 } from '@loopback/rest';
 import {User} from '../models';
-import {UserRepository} from '../repositories';
+import {UserCredentialsRepository, UserRepository} from '../repositories';
 import {inject} from '@loopback/core';
 import {
   authenticate,
@@ -43,7 +43,6 @@ import {
 import _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 import {basicAuthorization} from '../services/basic.authorizor';
-import {PassportUserIdentityService} from '../services';
 import {Profile as PassportProfile} from 'passport';
 
 @model()
@@ -57,7 +56,10 @@ export class NewUserRequest extends User {
 
 export class UserController {
   constructor(
-    @repository(UserRepository) public userRepository: UserRepository,
+    @repository(UserRepository)
+    public userRepository: UserRepository,
+    @repository(UserCredentialsRepository)
+    public userCredentialsRepository: UserCredentialsRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
     @inject(TokenServiceBindings.TOKEN_SERVICE)
@@ -248,51 +250,39 @@ export class UserController {
     return {token};
   }
 
-  /***
+
   @post('/signup')
   async signup(
-    @requestBody({
-      description: 'signup user locally',
-      required: true,
-      content: {
-        'application/x-www-form-urlencoded': {schema: CredentialsSchema},
-      },
-    })
+    @requestBody(CredentialsRequestBody)
       credentials: Credentials,
-    @inject(RestBindings.Http.RESPONSE) response: Response,
+    @inject(RestBindings.Http.RESPONSE)
+      response: Response,
   ) {
-    let userCredentials;
-    try {
-      userCredentials = await this.userCredentialsRepository.findById(
-        credentials.email,
-      );
-    } catch (err) {
-      if (err.code !== 'ENTITY_NOT_FOUND') {
-        throw err;
-      }
-    }
+
+    const userCredentials = await this.userCredentialsRepository.findOne({
+      where: {id: credentials.email},
+    });
+
     if (!userCredentials) {
       const user = await this.userRepository.create({
         email: credentials.email,
-        username: credentials.email,
-        name: credentials.name,
       });
-      userCredentials = await this.userCredentialsRepository.create({
+      await this.userCredentialsRepository.create({
         id: credentials.email,
         password: credentials.password,
-        userId: user.id,
+        userId: user.id.toString(),
       });
       response.redirect('/login');
       return response;
     } else {
       /**
        * The express app that routed the /signup call to LB App, will handle the error event.
-       * /
+       */
       response.emit(
         'User Exists',
         credentials.email + ' is already registered',
       );
       return response;
     }
-  }*/
+  }
 }
