@@ -179,7 +179,7 @@ export class GlobalimpactApiApplication extends BootMixin(
         input.password = password;
         const user = await userRepo.create(_.omit(input, 'password'));
 
-        await userRepo.userCredentials(user.id).create({password});
+        await userRepo.credentials(user.id).create({password});
       }
     }
   }

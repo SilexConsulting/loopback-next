@@ -40,11 +40,20 @@ export class MyAuthenticationSequence implements SequenceHandler {
       const {request, response} = context;
       const route = this.findRoute(request);
 
+
+      // usually authentication is done before proceeding to parse params
+      // but in our case we need the path params to know the provider name
+      const args = await this.parseParams(request, route);
+
+      // if provider name is available in the request path params, set it in the query
+      if (route.pathParams && route.pathParams.provider) {
+        request.query['oauth2-provider-name'] = route.pathParams.provider;
+      }
+
       //call authentication action
       await this.authenticateRequest(request);
 
       // Authentication successful, proceed to invoke controller
-      const args = await this.parseParams(request, route);
       const result = await this.invoke(route, args);
       this.send(response, result);
     } catch (error) {

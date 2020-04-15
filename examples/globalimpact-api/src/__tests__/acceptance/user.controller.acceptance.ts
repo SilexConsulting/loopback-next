@@ -252,7 +252,7 @@ describe('UserController', () => {
     const encryptedPassword = await passwordHasher.hashPassword(userPassword);
     const newUser = await userRepo.create(userData);
 
-    await userRepo.userCredentials(newUser.id).create({
+    await userRepo.credentials(newUser.id).create({
       password: encryptedPassword,
     });
 

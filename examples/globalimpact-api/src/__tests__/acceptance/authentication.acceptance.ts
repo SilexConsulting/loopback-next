@@ -212,7 +212,7 @@ describe('authentication services', function () {
     const encryptedPassword = await bcryptHasher.hashPassword(userPassword);
     newUser = await userRepo.create(userData);
 
-    await userRepo.userCredentials(newUser.id).create({
+    await userRepo.credentials(newUser.id).create({
       password: encryptedPassword,
     });
   }

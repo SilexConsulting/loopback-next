@@ -59,14 +59,11 @@ export class User extends Entity {
   })
   verificationToken?: string;
 
-
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
 
   @hasMany(() => UserIdentity)
   profiles?: UserIdentity[];
-
-
 
   @property({
     type: 'array',
