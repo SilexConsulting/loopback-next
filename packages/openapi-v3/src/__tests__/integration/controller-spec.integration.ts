@@ -83,7 +83,6 @@ describe('controller spec', () => {
             title: 'Baz',
             type: 'object',
             properties: {name: {type: 'string'}},
-            properties: {name: {type: 'string'}},
             additionalProperties: false,
           },
           Foo: {
