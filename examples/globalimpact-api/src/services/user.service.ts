@@ -92,7 +92,7 @@ export class PassportUserIdentityService implements
       if (!users || !users.length) {
         user = await this.userRepository.create({
           email: email,
-          name: JSON.stringify(profile.name ?? profile.displayName),
+          name: profile.displayName,
         });
       } else {
         user = users[0];
