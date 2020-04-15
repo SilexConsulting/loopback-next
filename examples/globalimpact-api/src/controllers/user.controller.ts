@@ -207,11 +207,14 @@ export class UserController {
     @inject(SecurityBindings.USER)
     currentUserProfile: UserProfile,
   ): Promise<User> {
-    // (@jannyHou)FIXME: explore a way to generate OpenAPI schema
-    // for symbol property
-
     const userId = Number(currentUserProfile[securityId]);
-    return this.userRepository.findById(userId);
+    return this.userRepository.findById(userId, {
+      include: [
+        {
+          relation: 'profiles',
+        },
+      ],
+    });
   }
 
   @post('/users/login', {

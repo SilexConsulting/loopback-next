@@ -59,7 +59,7 @@ export class JWTService implements TokenService {
       );
     }
     const userInfoForToken = {
-      id: userProfile[securityId],
+      id: userProfile.id,
       name: userProfile.name,
       roles: userProfile.roles,
     };
