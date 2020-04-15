@@ -45,7 +45,7 @@ describe('authorization', function () {
     const encryptedPassword = await passwordHasher.hashPassword(userPassword);
     const aUser = await userRepo.create(userData);
 
-    await userRepo.userCredentials(aUser.id).create({
+    await userRepo.credentials(aUser.id).create({
       password: encryptedPassword,
     });
     return aUser;

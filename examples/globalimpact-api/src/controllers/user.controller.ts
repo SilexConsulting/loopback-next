@@ -114,7 +114,7 @@ export class UserController {
 
       // set the password
       await this.userRepository
-        .userCredentials(savedUser.id)
+        .credentials(savedUser.id)
         .create({password});
 
       return savedUser;
@@ -285,4 +285,5 @@ export class UserController {
       return response;
     }
   }
+
 }

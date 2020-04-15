@@ -11,7 +11,8 @@ import {
   juggler,
   repository,
 } from '@loopback/repository';
-import {User, UserCredentials} from '../models';
+import {User, UserIdentity, UserCredentials} from '../models';
+import {UserIdentityRepository} from './user-identity.repository';
 import {UserCredentialsRepository} from './user-credentials.repository';
 import {LocaldbDataSource} from '../datasources';
 
@@ -25,30 +26,47 @@ export class UserRepository extends DefaultCrudRepository<
   typeof User.prototype.id
 > {
 
-  public readonly userCredentials: HasOneRepositoryFactory<
+  public readonly profiles: HasManyRepositoryFactory<
+    UserIdentity,
+    typeof User.prototype.id
+    >;
+
+  public readonly credentials: HasOneRepositoryFactory<
     UserCredentials,
     typeof User.prototype.id
   >;
 
   constructor(
     @inject('datasources.localdb') dataSource: LocaldbDataSource,
+    @repository.getter('UserIdentityRepository')
+    protected profilesGetter: Getter<UserIdentityRepository>,
     @repository.getter('UserCredentialsRepository')
-    protected userCredentialsRepositoryGetter: Getter<
-      UserCredentialsRepository
-    >,
+    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
   ) {
     super(User, dataSource);
-    this.userCredentials = this.createHasOneRepositoryFactoryFor(
+    this.profiles = this.createHasManyRepositoryFactoryFor(
+      'profiles',
+      profilesGetter,
+    );
+    this.registerInclusionResolver('profiles', this.profiles.inclusionResolver);
+
+    this.credentials = this.createHasOneRepositoryFactoryFor(
       'userCredentials',
       userCredentialsRepositoryGetter,
     );
+
+    this.registerInclusionResolver(
+      'credentials',
+      this.credentials.inclusionResolver,
+    );
+
   }
 
   async findCredentials(
     userId: typeof User.prototype.id,
   ): Promise<UserCredentials | undefined> {
     try {
-      return await this.userCredentials(userId).get();
+      return await this.credentials(userId).get();
     } catch (err) {
       if (err.code === 'ENTITY_NOT_FOUND') {
         return undefined;

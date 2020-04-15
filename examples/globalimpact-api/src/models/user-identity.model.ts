@@ -46,6 +46,7 @@ export class UserIdentity extends Entity {
   @belongsTo(() => User)
   userId: number;
 
+
   constructor(data?: Partial<UserIdentity>) {
     super(data);
   }
