@@ -24,6 +24,7 @@ import {
   authenticate,
   TokenService,
   UserService,
+  UserIdentityService,
 } from '@loopback/authentication';
 import {authorize} from '@loopback/authorization';
 import {UserProfile, securityId, SecurityBindings} from '@loopback/security';
@@ -42,6 +43,8 @@ import {
 import _ from 'lodash';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 import {basicAuthorization} from '../services/basic.authorizor';
+import {PassportUserIdentityService} from '../services';
+import {Profile as PassportProfile} from 'passport';
 
 @model()
 export class NewUserRequest extends User {
@@ -61,6 +64,8 @@ export class UserController {
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
+    @inject(UserServiceBindings.PASSPORT_USER_IDENTITY_SERVICE)
+    public userIdentityService: UserIdentityService<PassportProfile, User>
   ) {}
 
   @post('/users', {
@@ -228,7 +233,8 @@ export class UserController {
     },
   })
   async login(
-    credentials: Credentials,
+    @requestBody(CredentialsRequestBody)
+      credentials: Credentials,
   ): Promise<{token: string}> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);

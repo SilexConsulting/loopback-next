@@ -21,9 +21,11 @@ export class PassportUserIdentityService implements
     UserIdentityService<PassportProfile, User>
   {
   constructor(
-    @repository(UserRepository) public userRepository: UserRepository,
+    @repository(UserRepository)
+    public userRepository: UserRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
+    @repository(UserIdentityRepository)
     public userIdentityRepository: UserIdentityRepository,
   ) {}
 
