@@ -10,15 +10,19 @@ import {
   RequestWithSession,
   param,
 } from '@loopback/rest';
-import {authenticate} from '@loopback/authentication';
+import {authenticate, TokenService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {SecurityBindings, UserProfile} from '@loopback/security';
+import {TokenServiceBindings} from '../keys';
 
 /**
  * Login controller for third party oauth provider
  */
 export class Oauth2Controller {
-  constructor() {}
+  constructor(
+  @inject(TokenServiceBindings.TOKEN_SERVICE)
+  public jwtService: TokenService)
+  {}
 
   @authenticate('oauth2')
   @get('/auth/thirdparty/{provider}')
@@ -58,7 +62,11 @@ export class Oauth2Controller {
       ...user.profile,
     };
     //request.session.user = profile;
-    response.redirect('/auth/account');
-    return response;
+    // getJWT token  and return to the caller
+    // create a JSON Web Token based on the user profile
+    const token = await this.jwtService.generateToken(profile);
+
+    return {token};
+
   }
 }

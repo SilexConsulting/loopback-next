@@ -125,6 +125,7 @@ export class PassportUserIdentityService implements
       } else {
         await this.userIdentityRepository.updateById(userIdentity.id, {
           profile: {
+            userId: userId,
             emails: userIdentity.emails,
           },
           created: new Date(),
