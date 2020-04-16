@@ -1,0 +1,73 @@
+// Copyright IBM Corp. 2020. All Rights Reserved.
+// Node module: @loopback/example-passport-login
+// This file is licensed under the MIT License.
+// License text available at https://opensource.org/licenses/MIT
+
+import {
+  asAuthStrategy,
+  AuthenticationStrategy,
+  UserIdentityService,
+} from '@loopback/authentication';
+import {StrategyAdapter} from '@loopback/authentication-passport';
+import {Profile} from 'passport';
+import {Strategy, StrategyOption} from 'passport-linkedin-oauth2';
+import {bind, inject} from '@loopback/context';
+import {UserServiceBindings} from '../services';
+import {extensionFor} from '@loopback/core';
+import {securityId, UserProfile} from '@loopback/security';
+import {User} from '../models';
+import {Request, RedirectRoute} from '@loopback/rest';
+import {PassportAuthenticationBindings} from './types';
+import {verifyFunctionFactory} from './types';
+
+@bind(
+  asAuthStrategy,
+  extensionFor(PassportAuthenticationBindings.OAUTH2_STRATEGY),
+)
+export class LinkedInOauth2Authorization implements AuthenticationStrategy {
+  name = 'oauth2-linkedin';
+  protected strategy: StrategyAdapter<User>;
+  passportstrategy: Strategy;
+
+  /**
+   * create an oauth2 strategy for linkedin
+   */
+  constructor(
+    @inject(UserServiceBindings.PASSPORT_USER_IDENTITY_SERVICE)
+    public userService: UserIdentityService<Profile, User>,
+    @inject('linkedinOAuth2Options')
+    public linkedinOptions: StrategyOption,
+  ) {
+    this.passportstrategy = new Strategy(
+      linkedinOptions,
+      verifyFunctionFactory(userService).bind(this),
+    );
+    this.strategy = new StrategyAdapter(
+      this.passportstrategy,
+      this.name,
+      this.mapProfile.bind(this),
+    );
+  }
+
+  /**
+   * authenticate a request
+   * @param request
+   */
+  async authenticate(request: Request): Promise<UserProfile | RedirectRoute> {
+    return this.strategy.authenticate(request);
+  }
+
+  /**
+   * map passport profile to user profile
+   * @param user
+   */
+  mapProfile(user: User): UserProfile {
+    const userProfile: UserProfile = {
+      [securityId]: '' + user.id,
+      profile: {
+        ...user,
+      },
+    };
+    return userProfile;
+  }
+}

@@ -3,6 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 import {AuthenticationComponent} from '@loopback/authentication';
 import {AuthorizationComponent} from '@loopback/authorization';
 import {BootMixin} from '@loopback/boot';
@@ -44,10 +48,13 @@ import {PassportUserIdentityService} from './services/user.service';
 import YAML = require('yaml');
 import {
   FaceBookOauth2Authorization,
+  LinkedInOauth2Authorization,
   Oauth2AuthStrategy,
   LocalAuthStrategy,
   SessionStrategy,
 } from './authentication-strategies';
+
+import providers from './providers';
 
 /**
  * Information from package.json
@@ -76,13 +83,15 @@ export class GlobalimpactApiApplication extends BootMixin(
   constructor(options?: ApplicationConfig) {
     super(options);
     options = options ? options : {};
-    const oauth2Providers = require('../oauth2-providers');
+    const oauth2Providers = providers();
     options.facebookOptions = oauth2Providers['facebook-login'];
+    options.linkedinOptions = oauth2Providers['linkedin-login'];
     options.googleOptions = oauth2Providers['google-login'];
     options.oauth2Options = oauth2Providers['oauth2'];
 
 
     this.bind('facebookOAuth2Options').to(options.facebookOptions);;
+    this.bind('linkedinOAuth2Options').to(options.linkedinOptions);;
     this.bind('customOAuth2Options').to(options.oauth2Options);
 
     this.basePath('/api');
@@ -144,6 +153,7 @@ export class GlobalimpactApiApplication extends BootMixin(
     );
     this.add(createBindingFromClass(LocalAuthStrategy));
     this.add(createBindingFromClass(FaceBookOauth2Authorization));
+    this.add(createBindingFromClass(LinkedInOauth2Authorization));
     this.add(createBindingFromClass(Oauth2AuthStrategy));
     this.add(createBindingFromClass(SessionStrategy));
 

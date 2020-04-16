@@ -66,7 +66,7 @@ export class Oauth2Controller {
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(profile);
 
-    response.redirect(`http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/sign-up/facebook?token=${token}`);
+    response.redirect(`http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/social-sign-in?token=${token}`);
 
   }
 }
