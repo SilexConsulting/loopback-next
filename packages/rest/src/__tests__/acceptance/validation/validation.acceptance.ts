@@ -154,11 +154,7 @@ describe('Validation at REST level', () => {
         category: null,
       };
 
-      await client
-        .post('/products')
-        .type('json')
-        .send(DATA)
-        .expect(422);
+      await client.post('/products').type('json').send(DATA).expect(422);
     });
 
     it('rejects requests with empty json body', async () => {
