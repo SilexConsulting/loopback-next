@@ -75,38 +75,36 @@ export class LocalAuthStrategy implements AuthenticationStrategy {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     done: (error: any, user?: any, options?: IVerifyOptions) => void,
   ): void {
-        this.userRepository.find({
-          where: {email: email},
-        })
-        .then( (users: User[]) =>{
+    this.userRepository
+      .find({
+        where: {email: email},
+      })
+      .then((users: User[]) => {
         const AUTH_FAILED_MESSAGE = 'Invalid credentials supplied.';
 
         if (!users || !users.length) {
           return done(null, null, {message: AUTH_FAILED_MESSAGE});
         }
         const foundUser = users[0];
-        const credentialsFound = this.userRepository.findCredentials(
-          foundUser.id,
-        )
+        const credentialsFound = this.userRepository
+          .findCredentials(foundUser.id)
           .then(credentialsFound => {
             if (!credentialsFound) {
               return done(null, null, {message: AUTH_FAILED_MESSAGE});
             }
-            this.passwordHasher.comparePassword(
-              password,
-              credentialsFound.password,
-            )
-              .then( passwordMatched => {
+            this.passwordHasher
+              .comparePassword(password, credentialsFound.password)
+              .then(passwordMatched => {
                 if (!passwordMatched) {
                   return done(null, null, {message: AUTH_FAILED_MESSAGE});
                 }
                 done(null, foundUser);
-            })
+              });
           });
-        })
-      .catch( err =>{
-        done(err)
       })
+      .catch(err => {
+        done(err);
+      });
   }
 
   /**

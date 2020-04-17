@@ -8,4 +8,4 @@ export * from './facebook';
 export * from './linkedin';
 export * from './local';
 export * from './types';
-export * from './session'
+export * from './session';

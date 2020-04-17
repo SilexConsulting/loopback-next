@@ -66,7 +66,7 @@ export class UserController {
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
     @inject(UserServiceBindings.PASSPORT_USER_IDENTITY_SERVICE)
-    public userIdentityService: UserIdentityService<PassportProfile, User>
+    public userIdentityService: UserIdentityService<PassportProfile, User>,
   ) {}
 
   @post('/users', {
@@ -112,9 +112,7 @@ export class UserController {
       );
 
       // set the password
-      await this.userRepository
-        .credentials(savedUser.id)
-        .create({password});
+      await this.userRepository.credentials(savedUser.id).create({password});
 
       return savedUser;
     } catch (error) {
@@ -238,7 +236,7 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody)
-      credentials: Credentials,
+    credentials: Credentials,
   ): Promise<{token: string}> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
@@ -252,15 +250,13 @@ export class UserController {
     return {token};
   }
 
-
   @post('/signup')
   async signup(
     @requestBody(CredentialsRequestBody)
-      credentials: Credentials,
+    credentials: Credentials,
     @inject(RestBindings.Http.RESPONSE)
-      response: Response,
+    response: Response,
   ) {
-
     const userCredentials = await this.userCredentialsRepository.findOne({
       where: {id: credentials.email},
     });
@@ -287,5 +283,4 @@ export class UserController {
       return response;
     }
   }
-
 }

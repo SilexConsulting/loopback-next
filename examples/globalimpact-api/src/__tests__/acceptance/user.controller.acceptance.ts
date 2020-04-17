@@ -282,4 +282,3 @@ describe('UserController', () => {
     expiredToken = await tokenService.generateToken(userProfile);
   }
 });
-

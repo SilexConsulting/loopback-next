@@ -22,9 +22,7 @@ function providers() {
       callbackPath: '/api/auth/thirdparty/facebook/callback',
       successRedirect: '/auth/account',
       failureRedirect: '/login',
-      scope: [
-      'email',
-      ],
+      scope: ['email'],
       failureFlash: true,
     },
     'linkedin-login': {
@@ -49,10 +47,7 @@ function providers() {
       callbackPath: '/api/auth/thirdparty/linkedin/callback',
       successRedirect: '/auth/account',
       failureRedirect: '/login',
-      scope: [
-        'r_liteprofile',
-        'r_emailaddress',
-      ],
+      scope: ['r_liteprofile', 'r_emailaddress'],
       failureFlash: true,
     },
     'google-login': {
@@ -66,13 +61,10 @@ function providers() {
       callbackPath: '/api/auth/thirdparty/google/callback',
       successRedirect: '/auth/account',
       failureRedirect: '/login',
-      scope: [
-        'email',
-        'profile',
-      ],
+      scope: ['email', 'profile'],
       failureFlash: true,
     },
-    'oauth2': {
+    oauth2: {
       provider: 'oauth2',
       module: 'passport-oauth2',
       strategy: 'OAuth2Strategy',
@@ -80,18 +72,15 @@ function providers() {
       callbackPath: '/api/auth/thirdparty/oauth2/callback',
       successRedirect: '/auth/account',
       failureRedirect: '/login',
-      scope: [
-        'email',
-        'profile',
-      ],
+      scope: ['email', 'profile'],
       failureFlash: true,
       clientID: '1111',
       clientSecret: 'app1_secret',
       callbackURL: 'http://localhost:3000/api/auth/thirdparty/oauth2/callback',
       authorizationURL: 'http://localhost:9000/oauth/dialog',
       tokenURL: 'http://localhost:9000/oauth/token',
-    }
-  }
+    },
+  };
 }
 
-export default providers
+export default providers;

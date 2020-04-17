@@ -25,11 +25,10 @@ export class UserRepository extends DefaultCrudRepository<
   User,
   typeof User.prototype.id
 > {
-
   public readonly profiles: HasManyRepositoryFactory<
     UserIdentity,
     typeof User.prototype.id
-    >;
+  >;
 
   public readonly credentials: HasOneRepositoryFactory<
     UserCredentials,
@@ -41,7 +40,9 @@ export class UserRepository extends DefaultCrudRepository<
     @repository.getter('UserIdentityRepository')
     protected profilesGetter: Getter<UserIdentityRepository>,
     @repository.getter('UserCredentialsRepository')
-    protected userCredentialsRepositoryGetter: Getter<UserCredentialsRepository>,
+    protected userCredentialsRepositoryGetter: Getter<
+      UserCredentialsRepository
+    >,
   ) {
     super(User, dataSource);
     this.profiles = this.createHasManyRepositoryFactoryFor(
@@ -59,7 +60,6 @@ export class UserRepository extends DefaultCrudRepository<
       'credentials',
       this.credentials.inclusionResolver,
     );
-
   }
 
   async findCredentials(

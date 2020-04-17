@@ -11,5 +11,5 @@ import {User} from '../models';
 export namespace UserServiceBindings {
   export const PASSPORT_USER_IDENTITY_SERVICE = BindingKey.create<
     UserIdentityService<PassportProfile, User>
-    >('services.passport.identity');
+  >('services.passport.identity');
 }

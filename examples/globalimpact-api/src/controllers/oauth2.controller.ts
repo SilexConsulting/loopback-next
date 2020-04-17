@@ -20,9 +20,9 @@ import {TokenServiceBindings} from '../keys';
  */
 export class Oauth2Controller {
   constructor(
-  @inject(TokenServiceBindings.TOKEN_SERVICE)
-  public jwtService: TokenService)
-  {}
+    @inject(TokenServiceBindings.TOKEN_SERVICE)
+    public jwtService: TokenService,
+  ) {}
 
   @authenticate('oauth2')
   @get('/auth/thirdparty/{provider}')
@@ -66,7 +66,8 @@ export class Oauth2Controller {
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(profile);
 
-    response.redirect(`http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/social-sign-in?token=${token}`);
-
+    response.redirect(
+      `http://${process.env.CLIENT_HOST}:${process.env.CLIENT_PORT}/social-sign-in?token=${token}`,
+    );
   }
 }

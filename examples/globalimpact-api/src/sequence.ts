@@ -40,7 +40,6 @@ export class MyAuthenticationSequence implements SequenceHandler {
       const {request, response} = context;
       const route = this.findRoute(request);
 
-
       // usually authentication is done before proceeding to parse params
       // but in our case we need the path params to know the provider name
       const args = await this.parseParams(request, route);

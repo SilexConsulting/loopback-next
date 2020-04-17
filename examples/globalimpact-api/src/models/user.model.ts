@@ -34,8 +34,8 @@ export class User extends Entity {
     required: true,
     id: true,
     index: {
-      unique: true
-    }
+      unique: true,
+    },
   })
   email: string;
 

@@ -3,7 +3,6 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -38,9 +37,7 @@ import {
   UserServiceBindings,
 } from './keys';
 import {User} from './models';
-import {
-  UserRepository,
-} from './repositories';
+import {UserRepository} from './repositories';
 import {MyAuthenticationSequence} from './sequence';
 import {BcryptHasher} from './services/hash.password.bcryptjs';
 import {JWTService} from './services/jwt-service';
@@ -89,9 +86,8 @@ export class GlobalimpactApiApplication extends BootMixin(
     options.googleOptions = oauth2Providers['google-login'];
     options.oauth2Options = oauth2Providers['oauth2'];
 
-
-    this.bind('facebookOAuth2Options').to(options.facebookOptions);;
-    this.bind('linkedinOAuth2Options').to(options.linkedinOptions);;
+    this.bind('facebookOAuth2Options').to(options.facebookOptions);
+    this.bind('linkedinOAuth2Options').to(options.linkedinOptions);
     this.bind('customOAuth2Options').to(options.oauth2Options);
 
     this.basePath('/api');
@@ -147,7 +143,9 @@ export class GlobalimpactApiApplication extends BootMixin(
     this.bind(PasswordHasherBindings.ROUNDS).to(10);
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
 
-    this.bind(UserServiceBindings.USER_SERVICE).toClass(PassportUserIdentityService);
+    this.bind(UserServiceBindings.USER_SERVICE).toClass(
+      PassportUserIdentityService,
+    );
     this.bind(UserServiceBindings.PASSPORT_USER_IDENTITY_SERVICE).toClass(
       PassportUserIdentityService,
     );
@@ -156,7 +154,6 @@ export class GlobalimpactApiApplication extends BootMixin(
     this.add(createBindingFromClass(LinkedInOauth2Authorization));
     this.add(createBindingFromClass(Oauth2AuthStrategy));
     this.add(createBindingFromClass(SessionStrategy));
-
   }
 
   async start() {

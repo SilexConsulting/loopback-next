@@ -5,7 +5,11 @@
 
 import {GlobalimpactApiApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
-export {GlobalimpactApiApplication, PackageInfo, PackageKey} from './application';
+export {
+  GlobalimpactApiApplication,
+  PackageInfo,
+  PackageKey,
+} from './application';
 
 export async function main(options?: ApplicationConfig) {
   const app = new GlobalimpactApiApplication(options);

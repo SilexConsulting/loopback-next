@@ -15,11 +15,10 @@ import {PasswordHasherBindings} from '../keys';
 import {inject} from '@loopback/context';
 import {UserIdentityRepository} from '../repositories/user-identity.repository';
 
-
-export class PassportUserIdentityService implements
+export class PassportUserIdentityService
+  implements
     UserService<User, Credentials>,
-    UserIdentityService<PassportProfile, User>
-  {
+    UserIdentityService<PassportProfile, User> {
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
@@ -69,95 +68,95 @@ export class PassportUserIdentityService implements
     return userProfile;
   }
 
-    /**
-     * find a linked local user for an external profile
-     * create a local user if not created yet.
-     * @param email
-     * @param profile
-     * @param token
-     */
-    async findOrCreateUser(profile: PassportProfile): Promise<User> {
-      if (!profile.emails || !profile.emails.length) {
-        throw new Error('email-id is required in returned profile to login');
-      }
-
-      const email = profile.emails[0].value;
-
-      const users: User[] = await this.userRepository.find({
-        where: {
-          email: email,
-        },
-      });
-      let user: User;
-      if (!users || !users.length) {
-        user = await this.userRepository.create({
-          email: email,
-          name: profile.displayName,
-        });
-      } else {
-        user = users[0];
-      }
-      user = await this.linkExternalProfile('' + user.id, profile);
-      return user;
+  /**
+   * find a linked local user for an external profile
+   * create a local user if not created yet.
+   * @param email
+   * @param profile
+   * @param token
+   */
+  async findOrCreateUser(profile: PassportProfile): Promise<User> {
+    if (!profile.emails || !profile.emails.length) {
+      throw new Error('email-id is required in returned profile to login');
     }
 
-    /**
-     * link external profile with local user
-     * @param userId
-     * @param userIdentity
-     */
-    async linkExternalProfile(
-      userId: string,
-      userIdentity: PassportProfile,
-    ): Promise<User> {
-      let profile;
-      try {
-        profile = await this.userIdentityRepository.findById(userIdentity.id);
-      } catch (err) {
-        // no need to throw an error if entity is not found
-        if (!(err.code === 'ENTITY_NOT_FOUND')) {
-          throw err;
-        }
-      }
+    const email = profile.emails[0].value;
 
-      if (!profile) {
-        await this.createUser(userId, userIdentity);
-      } else {
-        await this.userIdentityRepository.updateById(userIdentity.id, {
-          profile: {
-            userId: userId,
-            emails: userIdentity.emails,
-          },
-          created: new Date(),
-        });
-      }
-      return this.userRepository.findById(parseInt(userId), {
-        include: [
-          {
-            relation: 'profiles',
-          },
-        ],
+    const users: User[] = await this.userRepository.find({
+      where: {
+        email: email,
+      },
+    });
+    let user: User;
+    if (!users || !users.length) {
+      user = await this.userRepository.create({
+        email: email,
+        name: profile.displayName,
       });
+    } else {
+      user = users[0];
+    }
+    user = await this.linkExternalProfile('' + user.id, profile);
+    return user;
+  }
+
+  /**
+   * link external profile with local user
+   * @param userId
+   * @param userIdentity
+   */
+  async linkExternalProfile(
+    userId: string,
+    userIdentity: PassportProfile,
+  ): Promise<User> {
+    let profile;
+    try {
+      profile = await this.userIdentityRepository.findById(userIdentity.id);
+    } catch (err) {
+      // no need to throw an error if entity is not found
+      if (!(err.code === 'ENTITY_NOT_FOUND')) {
+        throw err;
+      }
     }
 
-    /**
-     * create a copy of the external profile
-     * @param userId
-     * @param userIdentity
-     */
-    async createUser(
-      userId: string,
-      userIdentity: PassportProfile,
-    ): Promise<void> {
-      await this.userIdentityRepository.create({
-        id: userIdentity.id,
-        provider: userIdentity.provider,
-        authScheme: userIdentity.provider,
-        userId: parseInt(userId),
+    if (!profile) {
+      await this.createUser(userId, userIdentity);
+    } else {
+      await this.userIdentityRepository.updateById(userIdentity.id, {
         profile: {
+          userId: userId,
           emails: userIdentity.emails,
         },
         created: new Date(),
       });
     }
+    return this.userRepository.findById(parseInt(userId), {
+      include: [
+        {
+          relation: 'profiles',
+        },
+      ],
+    });
+  }
+
+  /**
+   * create a copy of the external profile
+   * @param userId
+   * @param userIdentity
+   */
+  async createUser(
+    userId: string,
+    userIdentity: PassportProfile,
+  ): Promise<void> {
+    await this.userIdentityRepository.create({
+      id: userIdentity.id,
+      provider: userIdentity.provider,
+      authScheme: userIdentity.provider,
+      userId: parseInt(userId),
+      profile: {
+        emails: userIdentity.emails,
+      },
+      created: new Date(),
+    });
+  }
 }

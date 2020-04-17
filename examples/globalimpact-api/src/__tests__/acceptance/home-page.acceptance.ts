@@ -24,7 +24,7 @@ describe('HomePageController', () => {
       .get('/')
       .expect(200)
       .expect('Content-Type', /text\/html/);
-      
-     expect(res.body).to.match(/@loopback\/example\-shopping/);
+
+    expect(res.body).to.match(/@loopback\/example\-shopping/);
   });
 });
