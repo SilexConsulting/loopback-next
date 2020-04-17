@@ -37,3 +37,5 @@ packages/tsdocs/fixtures/monorepo/packages/pkg1/docs
 # Docs preview
 docs/_loopback.io/
 docs/_preview/
+
+data/
