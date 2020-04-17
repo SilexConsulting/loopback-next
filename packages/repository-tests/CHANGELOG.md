@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* filter null keys when including belongs-to relations in queries ([cccb37f](https://github.com/strongloop/loopback-next/commit/cccb37f43f3ccaf950c23759315b4dde41da4e8b))
+* **repository:** belongsto accessor should return undefined if foreign key is not included ([cbdba15](https://github.com/strongloop/loopback-next/commit/cbdba1554fe103109a21e20c48cd3a0edcf8fffb))
+* **repository:** make the navigational property err msg more clear ([2d493bc](https://github.com/strongloop/loopback-next/commit/2d493bc0387b9f595b82ee149fb83405f4073424))
+* **repository-tests:** refactor import referencing `src` from a different package ([f9cd7e4](https://github.com/strongloop/loopback-next/commit/f9cd7e47104eaf8b4d957aa3e767d86c742946db))
+* **repository-tests:** unify the usage of MixedIdType for all tests ([0548651](https://github.com/strongloop/loopback-next/commit/054865171d1ec29c6994ecec2342b0053792181c))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* leverage isactive for transaction ([fc94437](https://github.com/strongloop/loopback-next/commit/fc9443787039d4a1db3008a0141f5693f95bfbd4))
+* preserve custom type of auto-generated id property ([dc7ff7f](https://github.com/strongloop/loopback-next/commit/dc7ff7f7829434de3436e9352b1d9cc43392db0e))
+* **repository:** add function findByForeignKeys ([f5eaf1d](https://github.com/strongloop/loopback-next/commit/f5eaf1d8f1c0734e8f15fd799824e2ee26394a23))
+* **repository:** allow custom keyFrom for hasmany/hasone ([58efff9](https://github.com/strongloop/loopback-next/commit/58efff9e166fbe1fc820fe6168e18b5c7d9630ce))
+* **repository:** enable inclusion with custom scope ([4a0d595](https://github.com/strongloop/loopback-next/commit/4a0d595f65a2c80c89e2ca1263d235e4d23cd730))
+* **repository:** expose beginTransaction() API ([0471315](https://github.com/strongloop/loopback-next/commit/04713158da0f1de54c6508ef453bd361ebe59b70))
+* **repository:** implement inclusion resolver for belongsTo relation ([fc3d5b6](https://github.com/strongloop/loopback-next/commit/fc3d5b62bacf33820f37dc6d5869c9154d277a3d))
+* **repository:** implement inclusion resolver for hasOne relation ([8dfdf58](https://github.com/strongloop/loopback-next/commit/8dfdf586bfa82700ef185f2c5f82eb9a36bbcfd5))
+* **repository:** implement inclusionResolver for hasMany ([4cf9a70](https://github.com/strongloop/loopback-next/commit/4cf9a70d9fc466e2604420debfa417f63aa262b0))
+* **repository:** rejects create/update operations for navigational properties ([01de327](https://github.com/strongloop/loopback-next/commit/01de3275be7c6dd8e9c50ffeb64c23d6d7ec9e51))
+* **repository-tests:** rename CrudConnectorFeatures to CrudFeatures ([2d29b19](https://github.com/strongloop/loopback-next/commit/2d29b19137b7edc5cf2ef0e00ba57ed849e11394))
+* **repository-tests:** run repository-tests on cloudant ([a54c588](https://github.com/strongloop/loopback-next/commit/a54c588e3f59b273c22d008bf591184f5339effe))
+* **repository-tests:** test `replaceById`, verify plain data handling ([5791104](https://github.com/strongloop/loopback-next/commit/579110491ecb3f90e1230f4cac2eed2b685992b3))
+* **test-repository-postgresql:** run repository tests for postgresql ([8d029c4](https://github.com/strongloop/loopback-next/commit/8d029c46d97f5486f0a04e7f8c58e2d573b74900))
+* shared Repository test suite ([e9dca4c](https://github.com/strongloop/loopback-next/commit/e9dca4cbcc8ebf4e2567cebdc046f3cf1d886060))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [0.11.4](https://github.com/strongloop/loopback-next/compare/@loopback/repository-tests@0.11.3...@loopback/repository-tests@0.11.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/repository-tests

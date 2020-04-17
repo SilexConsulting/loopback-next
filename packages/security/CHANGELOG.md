@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2020-04-17)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **security:** add @loopback/security for common interfaces/types ([77d2a0b](https://github.com/strongloop/loopback-next/commit/77d2a0ba55fc1483d956e69d07c449fd741c90e7))
+* **security:** add diagram ([f2ca26e](https://github.com/strongloop/loopback-next/commit/f2ca26efefcd2e55be6ee5a64455127ee128c2cb))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [0.2.4](https://github.com/strongloop/loopback-next/compare/@loopback/security@0.2.3...@loopback/security@0.2.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/security

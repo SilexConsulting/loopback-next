@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 7.0.0 (2020-04-17)
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* **build:** add eslint scripts and default configs ([a6abe86](https://github.com/strongloop/loopback-next/commit/a6abe8606495dd16108e0b79135199c758ddb941))
+* **eslint-config:** add @typescript-eslint/prefer-nullish-coalescing rule ([b608120](https://github.com/strongloop/loopback-next/commit/b608120dbf67e1f93eabd6fa5efe1f6e6630084a))
+* **eslint-config:** add typescript-eslint/prefer-optional-chain rule ([bd1252a](https://github.com/strongloop/loopback-next/commit/bd1252a4367db8212f8b48c06fcc7434a2456b12))
+* **eslint-config:** allow detection of tsconfig file ([5c16db6](https://github.com/strongloop/loopback-next/commit/5c16db674044e0599e915b67f1059f1449c89ec3))
+* **eslint-config:** disallow non-null assertions after optional chain ([6fdc2b5](https://github.com/strongloop/loopback-next/commit/6fdc2b524b72a2cca08307e5d1a66c360c3ceb5a)), closes [#4675](https://github.com/strongloop/loopback-next/issues/4675)
+* **eslint-config:** enable "no-floating-promises" rule ([256e3e8](https://github.com/strongloop/loopback-next/commit/256e3e873f5c581e967a52d968dd5f5002ea0458))
+* **eslint-config:** enable "no-misused-promises" rule ([88d5494](https://github.com/strongloop/loopback-next/commit/88d5494a29fd6a642c4ef25f0e427f529c9b9456))
+* **eslint-config:** enable "no-return-await" rule ([e28a3c3](https://github.com/strongloop/loopback-next/commit/e28a3c3d5b57da44248c62724ab1b50ee6451d3c))
+* **eslint-config:** enable no-extra-non-null-assertion ([d74a688](https://github.com/strongloop/loopback-next/commit/d74a68889fb48d7a1cb7034cb5a8fa8587853b5e))
+* **eslint-config:** enable return-await ([be6b38b](https://github.com/strongloop/loopback-next/commit/be6b38b75b2f4c937b742398c9edcbb6c2d1d7c0))
+* **eslint-config:** upgrade eslint to v6 ([b52a40c](https://github.com/strongloop/loopback-next/commit/b52a40c2f5195a174be580efb11ff841b3598af9))
+* **eslint-config:** upgrade to @typescript-eslint/eslint-plugin 2.0.0 ([1ec5b2f](https://github.com/strongloop/loopback-next/commit/1ec5b2f921b2097ce3941cde3e19055c1aee282c))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+
+
+### BREAKING CHANGES
+
+* **eslint-config:** eslint rule
+`@typescript-eslint/no-non-null-asserted-optional-chain` is set to
+`error` which may break existing lint tests.
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* **eslint-config:** The linter will reject code using `return await`
+ouside of `try` blocks or forgetting to `await` before returning
+from inside a `try` block.
+Migration guide: use `return` outside of `try` blocks and `return await`
+inside `try` blocks.
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* **eslint-config:** the `@typescript-eslint/prefer-nullish-coalescing` rule prefers
+nullish coalescing, for example, `ttl ?? 5000` over `ttl || 5000`.
+
+See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#nullish-coalescing
+* **eslint-config:** the `@typescript-eslint/prefer-optional-chain` rule will
+report violations if optional chaining is not used. For example, it prefers
+`options?.ttl` over `options && options.ttl`.
+
+See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#optional-chaining
+* **eslint-config:** @typescript-eslint/parser and @typescript-eslint/eslint-plugin
+2.0.0 may have introduced breaking changes for recommended rules and configuration
+* **eslint-config:** "return await" is no longer allowed, just return the
+promise without awaiting its resolution.
+* **eslint-config:** We require eslint version 6.0 as a peer dependency now.
+To upgrade your project using our eslint-config, bump up eslint version
+in your package.json file to "^6.0.0".
+
+The new eslint version added new recommended rules, most notably
+"require-atomic-updates" and "no-prototype-builtins". You may get new
+linting errors after upgrade, fix them by changing your code or adding
+eslint-ignore comments as needed.
+
+
+
+
+
 ## [6.0.3](https://github.com/strongloop/loopback-next/compare/@loopback/eslint-config@6.0.2...@loopback/eslint-config@6.0.3) (2020-04-08)
 
 **Note:** Version bump only for package @loopback/eslint-config

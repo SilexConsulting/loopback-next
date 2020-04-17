@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* apply source-maps to test errors ([76a7f56](https://github.com/strongloop/loopback-next/commit/76a7f56cd1166d4407f2a50b188db91a74f7deae)), closes [#602](https://github.com/strongloop/loopback-next/issues/602)
+* change file names to fit advocated naming convention ([0331df8](https://github.com/strongloop/loopback-next/commit/0331df8e188f2ba857d04d6a6aff579c7b7726c1))
+* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
+* fix imports to use files owning the definitions ([a50405a](https://github.com/strongloop/loopback-next/commit/a50405a5a56b5f1e509a2c30d984fd262a342cba))
+* Fix node module names in source code headers ([0316f28](https://github.com/strongloop/loopback-next/commit/0316f28a22a1b85dce72f67b1dab66599c6b9403))
+* fix typo of `additional` ([2fd7610](https://github.com/strongloop/loopback-next/commit/2fd76106ecebd4d5257262f4cda8af1e5ec409a3))
+* make mocha self-contained with the source map support ([7c6d869](https://github.com/strongloop/loopback-next/commit/7c6d86975a379388f433110df91b1bf0e2e4b94d))
+* **core:** Add SwaggerUI endpoint, enable CORS ([#570](https://github.com/strongloop/loopback-next/issues/570)) ([07b025f](https://github.com/strongloop/loopback-next/commit/07b025f5711f0956a7f47d544f9d9e7bc014ee77))
+* **core:** Return binding(s) for app.server/servers ([c506b26](https://github.com/strongloop/loopback-next/commit/c506b26f4275c0ff28d7563c718b5793d4d76b48))
+
+
+### Build System
+
+* drop dist6 related targets ([#945](https://github.com/strongloop/loopback-next/issues/945)) ([a2368ce](https://github.com/strongloop/loopback-next/commit/a2368cee598c131a826ee42e347266c6e25ae582))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Code Refactoring
+
+* **core:** Component servers are now key-value pairs ([866953a](https://github.com/strongloop/loopback-next/commit/866953a9da0e4577943b82d78e4e50e3bd7797ad))
+
+
+### Features
+
+* **boot:** bind content of package.json to app context ([82f0ebe](https://github.com/strongloop/loopback-next/commit/82f0ebe79200b330ab2576dcd4ff542167d4ce77))
+* **boot:** improve service booter to load classes decorated with [@bind](https://github.com/bind) ([48e01f4](https://github.com/strongloop/loopback-next/commit/48e01f4fe702ff27eff8028322043f082c56fbf1))
+* **build:** add more TypeScript "strict" checks ([866aa2f](https://github.com/strongloop/loopback-next/commit/866aa2fa76cb2a545c1d421afbb0e97cef4c1042))
+* **cli:** lb4 example [<example-name>] ([4286c0d](https://github.com/strongloop/loopback-next/commit/4286c0d26b0fde3a681f741429fdcaf6be45b06a))
+* **context:** add binding comparator to sort bindings ([ae3d61f](https://github.com/strongloop/loopback-next/commit/ae3d61f9ad37845ef6faf74265240b987f827f67))
+* **context:** Add support for method dependency injection ([df1c879](https://github.com/strongloop/loopback-next/commit/df1c8799f681af30680a390f5d8081290c9047e7))
+* **context:** allow context.find by a filter function ([9b1e26c](https://github.com/strongloop/loopback-next/commit/9b1e26c0470202082164482b67f58826c4759d43))
+* **context:** allow tags to have an optional value ([95acd11](https://github.com/strongloop/loopback-next/commit/95acd11aab1fed9911d4f40312f85b34faeab94f))
+* **context:** honor binding scope from [@bind](https://github.com/bind) ([3b30f01](https://github.com/strongloop/loopback-next/commit/3b30f01bcbad551f9b74662c8537c06d6a9f7b3d))
+* **context:** typed binding keys ([685195c](https://github.com/strongloop/loopback-next/commit/685195c27825844f2bba9fc177767cccb68a6ebf))
+* **core:** add [@service](https://github.com/service) decorator to inject a service by class/interface ([1d80904](https://github.com/strongloop/loopback-next/commit/1d80904b670724b00cb6a2965b8472f44d23eed0))
+* **core:** add app.service() to register service classes or providers ([88eff77](https://github.com/strongloop/loopback-next/commit/88eff77b7c2bba32ac771342e913a56d524feac5))
+* **core:** add constants for namespaces and types ([a4778f7](https://github.com/strongloop/loopback-next/commit/a4778f784cf732b1b61dc2ca7691f21938254d55))
+* **core:** add help functions/decorators for extension point/extension ([89f3cbc](https://github.com/strongloop/loopback-next/commit/89f3cbcf8ec7170970771418d4d354f0dda0a260))
+* **core:** add more flavors of [@extensions](https://github.com/extensions) decorator ([192563a](https://github.com/strongloop/loopback-next/commit/192563a3f4cdb136b86d898760a33051436a56de))
+* **core:** allow an extension to be used by multiple extension points ([5cc29d6](https://github.com/strongloop/loopback-next/commit/5cc29d630b97a02ba6ac7e5962bb2af2b314a89d))
+* **core:** allow application to accept a parent context ([ee50007](https://github.com/strongloop/loopback-next/commit/ee5000750aa1bab4e2b0d0bb5d32f1637fd341ea))
+* **core:** allow application to trap shutdown signals ([2130634](https://github.com/strongloop/loopback-next/commit/213063424c2690aa7ef3f4494d8fc2a7e593b883))
+* **core:** allow controllers to be bound via constructor ([#668](https://github.com/strongloop/loopback-next/issues/668)) ([a9f0fac](https://github.com/strongloop/loopback-next/commit/a9f0fac17142ef4433db514a064775d665c56089))
+* **core:** create bindings from classes for components ([e615657](https://github.com/strongloop/loopback-next/commit/e61565770b674fc8957e9e317632de71dcd39de5))
+* **core:** emit stateChanged events for application state transitions ([5257a8f](https://github.com/strongloop/loopback-next/commit/5257a8f68525921028b98a340c75758725d256b9))
+* **core:** enable start/stop/boot to be idempotent ([b614a78](https://github.com/strongloop/loopback-next/commit/b614a7825be1dc1875556388443f72385525fa29))
+* **core:** improve application signal handler registration ([8086932](https://github.com/strongloop/loopback-next/commit/8086932b66a3aaad2fff6023231f983a43e1791a))
+* add `listening` property in the server interface ([ff0eab7](https://github.com/strongloop/loopback-next/commit/ff0eab7ae47a7a4219afaf1c662897445989bd0d)), closes [#1368](https://github.com/strongloop/loopback-next/issues/1368)
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **core:** allow components to expose an array of bindings ([eae0da3](https://github.com/strongloop/loopback-next/commit/eae0da3e1edf9118438dd00b67d656c1444695a5))
+* **core:** improve application states for start/stop ([01dac15](https://github.com/strongloop/loopback-next/commit/01dac151260e6c743cc77863f6495a85d19d338c))
+* **core:** introduce life cycle support ([27c8127](https://github.com/strongloop/loopback-next/commit/27c81277fe2e725dde24c2efbd9b3bf0f67fa1fa))
+* **core:** simplify state management by checking in process states ([874d2b3](https://github.com/strongloop/loopback-next/commit/874d2b385dd8c1dbf3d3980118898c6b99f145aa))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **example-todo:** add Geo to examples/todo ([b4a9a9e](https://github.com/strongloop/loopback-next/commit/b4a9a9ea800ac2074a738627ad011069788a1eaa))
+* add helper package "dist-util" ([532f153](https://github.com/strongloop/loopback-next/commit/532f15324f0378a951dbb7f101ce9df3bb3711ef))
+* **core:** Set tags to group bound artifacts ([aa9812f](https://github.com/strongloop/loopback-next/commit/aa9812f6bb2e5c93f2dc11f9f3f231f9adcf7be2))
+* **repository:** Allow mixins in core. Introduce mixin to bind repos ([#541](https://github.com/strongloop/loopback-next/issues/541)) ([e0de9b8](https://github.com/strongloop/loopback-next/commit/e0de9b8229c61a7d16c68e859dfdde6792f9d7db))
+* **rest:** allow factory for controller routes ([184371b](https://github.com/strongloop/loopback-next/commit/184371bccb5966814412f2c2b542a3644bc7c870))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* Support for Node.js version lower than 8.0 has been dropped.
+Please upgrade to the latest Node.js 8.x LTS version.
+
+Co-Authored-by: Taranveer Virk <taranveer@virk.cc>
+* **core:** Components must now provide key-value pairs in an
+object called "servers".
+
+
+
+
+
 # [2.3.0](https://github.com/strongloop/loopback-next/compare/@loopback/core@2.2.1...@loopback/core@2.3.0) (2020-04-11)
 
 

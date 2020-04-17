@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* **repository-json-schema:** fix schema generation for model inheritance ([5417ed5](https://github.com/strongloop/loopback-next/commit/5417ed5fdbf0508f1882186d9cbff64ecfb10699))
+* **repository-json-schema:** honor {partial: 'deep'} options for referenced types ([6685560](https://github.com/strongloop/loopback-next/commit/66855602cff3c2d58c68895e4aeb3da950d7f33f))
+* allow json schema with circular refs to be converted to OpenAPI schema ([cd5ca92](https://github.com/strongloop/loopback-next/commit/cd5ca92c368ae35bc10d8847b3b0d379f7196544))
+* emit "type: 'object'," for schema definitions ([f328199](https://github.com/strongloop/loopback-next/commit/f328199be724c9edae8d3690d0a8ea220d06a8dc))
+* **build:** fix tslint config and slipped violations ([22f8e05](https://github.com/strongloop/loopback-next/commit/22f8e056dfd7834da4073b2af8d3ebe7cd9f7e3d))
+* **metadata:** remove the default type to work around a TS bug ([fc89a2c](https://github.com/strongloop/loopback-next/commit/fc89a2c2e01d3642a557c8fca4cd0068d35f8980))
+* **repository:** change the way array property definition is built for the juggler ([2471c88](https://github.com/strongloop/loopback-next/commit/2471c88094d076bf9a0658a0d8ae656118d3037f))
+* **repository:** remove property.array() call from hasMany decorator ([56ab017](https://github.com/strongloop/loopback-next/commit/56ab017eba210ccd4efac66d389a1e9024144211)), closes [#1944](https://github.com/strongloop/loopback-next/issues/1944)
+* **repository-json-schema:** allow recursive model definitions ([1221e0b](https://github.com/strongloop/loopback-next/commit/1221e0b5dd22c92b7bfca538df92b4ac92cd1ac7))
+* **repository-json-schema:** change model to be a class ([4104e13](https://github.com/strongloop/loopback-next/commit/4104e1364c60c7235799a7a804769c2521cd57f3))
+* **repository-json-schema:** fix $ref typo ([#963](https://github.com/strongloop/loopback-next/issues/963)) ([a438729](https://github.com/strongloop/loopback-next/commit/a438729e420af7e39ff0f60337b6408adfaf6327))
+* **repository-json-schema:** generate schema title compatible with validation in azure ([b518876](https://github.com/strongloop/loopback-next/commit/b5188764906d2d60c9d958392ec49bce8bab6b7e))
+* **repository-json-schema:** make exclude option reject properties ([35027c4](https://github.com/strongloop/loopback-next/commit/35027c452f8bd2b4b79145db551d6937a3ce63db))
+* address violations of "no-floating-promises" rule ([0947531](https://github.com/strongloop/loopback-next/commit/0947531d69d07839a21ea7575cfc08580086841f))
+* change file names to fit advocated naming convention ([0331df8](https://github.com/strongloop/loopback-next/commit/0331df8e188f2ba857d04d6a6aff579c7b7726c1))
+* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
+* enforce JsonSchemaOptions type when building model schema ([9bbc932](https://github.com/strongloop/loopback-next/commit/9bbc9322ff576dc8edef74c3dd0ac2e566f8a6a7))
+* **repository-json-schema:** resolve the circular reference ([9b49773](https://github.com/strongloop/loopback-next/commit/9b49773991e01406d9e64752ef879da5eb0bbc49))
+* fix [#1643](https://github.com/strongloop/loopback-next/issues/1643): import MetadataAccessor direct from metadata to avoid TypeScript 3 compiler issue ([37d727a](https://github.com/strongloop/loopback-next/commit/37d727a3041898a656d1baff03dfe2f2bb99167a))
+* fix typo of `additional` ([2fd7610](https://github.com/strongloop/loopback-next/commit/2fd76106ecebd4d5257262f4cda8af1e5ec409a3))
+* make mocha self-contained with the source map support ([7c6d869](https://github.com/strongloop/loopback-next/commit/7c6d86975a379388f433110df91b1bf0e2e4b94d))
+* mark the access to be public for publish ([612a426](https://github.com/strongloop/loopback-next/commit/612a426d7fd1e407d5803499bafcf8feb13b9a63))
+* rework tslint comments disabling "no-unused-variable" rule ([a18a3d7](https://github.com/strongloop/loopback-next/commit/a18a3d74c5a76ba90c1fb0ea32ae83335820163f))
+
+
+### Build System
+
+* drop dist6 related targets ([#945](https://github.com/strongloop/loopback-next/issues/945)) ([a2368ce](https://github.com/strongloop/loopback-next/commit/a2368cee598c131a826ee42e347266c6e25ae582))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* improve filter schema to allow exclusion ([be73660](https://github.com/strongloop/loopback-next/commit/be736601dcf91b8b322470fc08c9ed42260fa60c))
+* support any type ([03ce221](https://github.com/strongloop/loopback-next/commit/03ce221bb41a2ecd296ba235fe342d488fa2d639))
+* **metadata:** add strongly-typed metadata accessors ([45f9f80](https://github.com/strongloop/loopback-next/commit/45f9f80c9944ab02c923ce4911ca23e6401e07c7))
+* **openapi-v3:** copy first example from examples to schema ([0c7843a](https://github.com/strongloop/loopback-next/commit/0c7843abd82b391557d807e7bbd80e4c7b2ae8fd))
+* **repository:** implement belongsTo relation ([df8c64c](https://github.com/strongloop/loopback-next/commit/df8c64c9c6280db836e2644ff11b0b61fd91911a))
+* **repository-json-schema:** add an option to emit partial schema ([14af423](https://github.com/strongloop/loopback-next/commit/14af423815076cc2f16a64641b9f3e55b450f4de))
+* **repository-json-schema:** add an option to exclude properties from schema ([53ac940](https://github.com/strongloop/loopback-next/commit/53ac940bd11643a1d86d194e00236105ef9116d9))
+* **repository-json-schema:** add an option to make properties optional ([946de02](https://github.com/strongloop/loopback-next/commit/946de02c1840510d9a4904f8809f94e223b0d013))
+* **repository-json-schema:** add filter title ([2d65971](https://github.com/strongloop/loopback-next/commit/2d6597133885c16c132221cef80893093fa3d289))
+* **repository-json-schema:** add in top-level metadata for json schema ([#907](https://github.com/strongloop/loopback-next/issues/907)) ([fe59e6b](https://github.com/strongloop/loopback-next/commit/fe59e6be0f4e67c2b259ee655c1706cf176dc918))
+* **repository-json-schema:** add property description to JSON schema ([31c02f2](https://github.com/strongloop/loopback-next/commit/31c02f2b2dc4d7e6505b31062685699c27d52936))
+* **repository-json-schema:** add title to filter schemas ([6105883](https://github.com/strongloop/loopback-next/commit/6105883967ca5853cc8990f423d9febd1eb07101))
+* **repository-json-schema:** enumerate fields ([15ca819](https://github.com/strongloop/loopback-next/commit/15ca8198c1043ee53f368dcf1333ca722bd0caeb))
+* **repository-json-schema:** include problem type in err message ([f5ad2f1](https://github.com/strongloop/loopback-next/commit/f5ad2f1de80c35f2f7ecda3bdb34fda968ed1951))
+* **repository-json-schema:** remove deprecated `MODEL_TYPE_KEYS` ([5bc2121](https://github.com/strongloop/loopback-next/commit/5bc21219ff3beb792c6d11ac12bfc1b58aee5c09))
+* builders for Filter and Where schemas ([ca8d96e](https://github.com/strongloop/loopback-next/commit/ca8d96e0cb1768c60448082e249b46dc1282aed1))
+* helpers for building JSON/OpenAPI schema referencing shared definitions ([bf07ff9](https://github.com/strongloop/loopback-next/commit/bf07ff959a1f90577849b61221b292d3127696d6))
+* improve debug logs for schema generators ([da88cdf](https://github.com/strongloop/loopback-next/commit/da88cdf9c75b0ca498b86f7cd5729f78a4b160f7))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* simplify model schema with excluded properties ([b554ac8](https://github.com/strongloop/loopback-next/commit/b554ac8a08a518f112d111ebabcac48279ada7f8))
+* **repository-json-schema:** enhance getJsonSchema to describe navigational properties ([7801f59](https://github.com/strongloop/loopback-next/commit/7801f591085bc114e555d0b0c24b68cec925dd51)), closes [#2630](https://github.com/strongloop/loopback-next/issues/2630)
+* **repository-json-schema:** forbid additional properties in model data ([5fc8d53](https://github.com/strongloop/loopback-next/commit/5fc8d532c56c3dbb700c414df5b02730fb1c7764))
+* **repository-json-schema:** introduce new option "title" ([7664b3e](https://github.com/strongloop/loopback-next/commit/7664b3eee66e71c05ec3d73fef173cc17efd1d45))
+* **repository-json-schema:** refactor metaToJsonProperty to accept custom jsonSchema ([d0014c6](https://github.com/strongloop/loopback-next/commit/d0014c607eb130bf0d2adaf3249e67c3755771ae))
+* add helper package "dist-util" ([532f153](https://github.com/strongloop/loopback-next/commit/532f15324f0378a951dbb7f101ce9df3bb3711ef))
+* support built-in JavaScript/Node schema types ([d65a17f](https://github.com/strongloop/loopback-next/commit/d65a17fab7ce44b7977e9c03388f5684558475f2))
+* type resolver for property decorators ([49454aa](https://github.com/strongloop/loopback-next/commit/49454aaa70f2345938778469c2b0cb3fef05f5e2))
+
+
+### BREAKING CHANGES
+
+* **repository-json-schema:** The following constants are no longer available:
+- `MODEL_TYPE_KEYS.ModelOnly`
+- `MODEL_TYPE_KEYS.ModelWithRelations`
+
+Please use the helper `buildModelCacheKey` to obtain the cache key
+for a given set of schema options.
+
+```diff
+- MODEL_TYPE_KEYS.ModelOnly
++ buildModelCacheKey()
+
+- MODEL_TYPE_KEYS.ModelWithRelations
++ buildModelCacheKey({includeRelations: true})
+```
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* Support for Node.js version lower than 8.0 has been dropped.
+Please upgrade to the latest Node.js 8.x LTS version.
+
+Co-Authored-by: Taranveer Virk <taranveer@virk.cc>
+
+
+
+
+
 ## [2.1.1](https://github.com/strongloop/loopback-next/compare/@loopback/repository-json-schema@2.1.0...@loopback/repository-json-schema@2.1.1) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/repository-json-schema

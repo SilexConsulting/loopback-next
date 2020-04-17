@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 1.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* **authorization:** fix sample code in README ([d2f1662](https://github.com/strongloop/loopback-next/commit/d2f1662a1d372f435794985310985177387974a2))
+* **authorization:** make sure an authorizer is only invoked once per request ([b29bbeb](https://github.com/strongloop/loopback-next/commit/b29bbeb35c0c34784aae683fe03003a3b239cb87))
+* update authorization doc ([52a6d71](https://github.com/strongloop/loopback-next/commit/52a6d71c078f98de19c421587e7fe97e812414c8))
+* user profile to principal ([1c9709a](https://github.com/strongloop/loopback-next/commit/1c9709a4bf94103091778dd5653b09827e0e7e7e))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **authorization:** add `authorize.skip` to skip authorization ([757ee16](https://github.com/strongloop/loopback-next/commit/757ee166972210bc391c7e21722e9ecd7a5b0fa9))
+* **authorization:** add an acceptance to demonstrate casbin integration ([26bd1e7](https://github.com/strongloop/loopback-next/commit/26bd1e7abbaaacf0744cdaf562d402a6dc21463c))
+* **authorization:** add options to improve decision making ([ce59488](https://github.com/strongloop/loopback-next/commit/ce594889c55c5630c0732c2d4d77395ebef9cb89))
+* **authorization:** add support for default authorization metadata ([7034bb0](https://github.com/strongloop/loopback-next/commit/7034bb0d071a74f2a6d587ebcecd58dc31322769))
+* **authorization:** allows [@authorize](https://github.com/authorize) decorator to be applied at class level ([6f34d7f](https://github.com/strongloop/loopback-next/commit/6f34d7f0cc534eeb78018c621e187da0c4ae5cd7))
+* add authorization component ([ce0b2da](https://github.com/strongloop/loopback-next/commit/ce0b2da23c95a5ba5e1b8ce81de715e6ac78f0a6))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [0.5.4](https://github.com/strongloop/loopback-next/compare/@loopback/authorization@0.5.3...@loopback/authorization@0.5.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/authorization

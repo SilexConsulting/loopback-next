@@ -3,6 +3,164 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 4.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* suport complex objects for query params in api explorer ([a4ef640](https://github.com/strongloop/loopback-next/commit/a4ef64037a80d1ff7df37ba7912909a1bfcdbf51))
+* **openapi-v3:** remove examples from schema ([c819f92](https://github.com/strongloop/loopback-next/commit/c819f92b647a5baf651b4aeec6636dd2f2e70771))
+* allow json schema with circular refs to be converted to OpenAPI schema ([cd5ca92](https://github.com/strongloop/loopback-next/commit/cd5ca92c368ae35bc10d8847b3b0d379f7196544))
+* **openapi-v3:** preserve `additionalProperties: false` ([bc7691b](https://github.com/strongloop/loopback-next/commit/bc7691b0963ee297922bd4d9652a0eccf763f085))
+* change file names to fit advocated naming convention ([0331df8](https://github.com/strongloop/loopback-next/commit/0331df8e188f2ba857d04d6a6aff579c7b7726c1))
+* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
+* emit "type: 'object'," for schema definitions ([f328199](https://github.com/strongloop/loopback-next/commit/f328199be724c9edae8d3690d0a8ea220d06a8dc))
+* enforce JsonSchemaOptions type when building model schema ([9bbc932](https://github.com/strongloop/loopback-next/commit/9bbc9322ff576dc8edef74c3dd0ac2e566f8a6a7))
+* fix typo of `additional` ([2fd7610](https://github.com/strongloop/loopback-next/commit/2fd76106ecebd4d5257262f4cda8af1e5ec409a3))
+* make the code compatible with TypeScript 2.9.x ([37aba50](https://github.com/strongloop/loopback-next/commit/37aba50dc5f47b5ff0c77624d4d02d9cfd4415b5))
+* rework tslint comments disabling "no-unused-variable" rule ([a18a3d7](https://github.com/strongloop/loopback-next/commit/a18a3d74c5a76ba90c1fb0ea32ae83335820163f))
+* update to the most recent lodash version ([65ee865](https://github.com/strongloop/loopback-next/commit/65ee8656763b3b41a0acb86d7a6c4482472abc02))
+* **metadata:** refine clone of decoration spec ([544052e](https://github.com/strongloop/loopback-next/commit/544052ead29b69791f18eeb2c314603757c81e5f))
+* **openapi-v3:** generate schemas for x-ts-type ([07f0d6c](https://github.com/strongloop/loopback-next/commit/07f0d6cdf0dc3289b89204be704b508faf457225))
+* **openapi-v3:** set required to true for path parameters ([2b13247](https://github.com/strongloop/loopback-next/commit/2b1324753185e8ddb9b8a496b3b1f706565d37bb))
+* **repository:** make sure model definition is built correctly ([2effa30](https://github.com/strongloop/loopback-next/commit/2effa301b0b66aeded9ae89a820746b66b7b3408))
+* generate schema for requestBody only if not present ([caf66c2](https://github.com/strongloop/loopback-next/commit/caf66c299621c97f548bf80b9c09d29292a9429d))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* **openapi-v3:** add sugar decorators for file requestBody/response ([e8c8f38](https://github.com/strongloop/loopback-next/commit/e8c8f38161b6b2c0ac93d047667649c97ba6eba9))
+* enable authStrategy to provide OASEnhancer ([df7dd2b](https://github.com/strongloop/loopback-next/commit/df7dd2b7852eef83a259d38819a0175fc408a5fc))
+* **openapi-v3:** add sugar decorators for filter/where params ([f61896e](https://github.com/strongloop/loopback-next/commit/f61896efa886eb580bfc2b58de1b6e4862a4c53d))
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* adds [@oas](https://github.com/oas).deprecated() decorator ([6b6b5f0](https://github.com/strongloop/loopback-next/commit/6b6b5f05d224053d6a9735a506841d19b7331dac))
+* adds [@oas](https://github.com/oas).tags convenience decorator ([a8722dc](https://github.com/strongloop/loopback-next/commit/a8722dc68838344684a5d3de76fa6915e08d2e56))
+* adds [@response](https://github.com/response) decorator ([fe603ec](https://github.com/strongloop/loopback-next/commit/fe603ec815e6d6c446cc540860c2dc99d4b9a908))
+* helpers for building JSON/OpenAPI schema referencing shared definitions ([bf07ff9](https://github.com/strongloop/loopback-next/commit/bf07ff959a1f90577849b61221b292d3127696d6))
+* improve filter schema to allow exclusion ([be73660](https://github.com/strongloop/loopback-next/commit/be736601dcf91b8b322470fc08c9ed42260fa60c))
+* openapi spec contributor extension point ([9fee3f3](https://github.com/strongloop/loopback-next/commit/9fee3f342ff76d65d1899ddf1dbf7a257c85ea26))
+* support x-ts-type in anyOf/allOf/oneOf/not ([28fcc54](https://github.com/strongloop/loopback-next/commit/28fcc545e42d4c5ae88215436b873a78a3fb6c8d))
+* **metadata:** add strongly-typed metadata accessors ([45f9f80](https://github.com/strongloop/loopback-next/commit/45f9f80c9944ab02c923ce4911ca23e6401e07c7))
+* **openapi-v3:** add operationId based on controller/method names ([89f905b](https://github.com/strongloop/loopback-next/commit/89f905b91dae74387ff153ee1c9561eb47cda5c7))
+* **openapi-v3:** add support for `anyOf` and `oneOf` on the `jsonToSchemaObject` utility ([72ba132](https://github.com/strongloop/loopback-next/commit/72ba1321a85112a3e085d62fe573f60f79d5c64c)), closes [#3524](https://github.com/strongloop/loopback-next/issues/3524)
+* **openapi-v3:** add support for openapi responses ([0ecaecd](https://github.com/strongloop/loopback-next/commit/0ecaecd8cfdbfd10b9d581bbf9edcabb0297e0d3))
+* **openapi-v3:** allow controller to reference models via openapispec ([d57f272](https://github.com/strongloop/loopback-next/commit/d57f272dcd6cfba4fbc29fc0e6147a29bf13d376))
+* **openapi-v3:** allow optional spec for `[@param](https://github.com/param).*` shortcut decorators ([4f155a4](https://github.com/strongloop/loopback-next/commit/4f155a4426b25651d2492f97f550d9180f95e9a4))
+* **openapi-v3:** copy first example from examples to schema ([0c7843a](https://github.com/strongloop/loopback-next/commit/0c7843abd82b391557d807e7bbd80e4c7b2ae8fd))
+* **openapi-v3:** remove dependency on openapi-v3-types ([4c2096c](https://github.com/strongloop/loopback-next/commit/4c2096c6ebe1747608ac8be4c9fa4d4d38d60b37))
+* **repository-json-schema:** add an option to exclude properties from schema ([53ac940](https://github.com/strongloop/loopback-next/commit/53ac940bd11643a1d86d194e00236105ef9116d9))
+* **repository-json-schema:** add title to filter schemas ([6105883](https://github.com/strongloop/loopback-next/commit/6105883967ca5853cc8990f423d9febd1eb07101))
+* add helper package "dist-util" ([532f153](https://github.com/strongloop/loopback-next/commit/532f15324f0378a951dbb7f101ce9df3bb3711ef))
+* add openapi-v3 ([#1046](https://github.com/strongloop/loopback-next/issues/1046)) ([45a4bdf](https://github.com/strongloop/loopback-next/commit/45a4bdf2ccd0a92e647ff78acea730442d78abde))
+* body validation ([d284ad8](https://github.com/strongloop/loopback-next/commit/d284ad8ce70744c811c2ed5a101f6f2fab6cc816))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **repository-json-schema:** enumerate fields ([15ca819](https://github.com/strongloop/loopback-next/commit/15ca8198c1043ee53f368dcf1333ca722bd0caeb))
+* **rest:** add support for form request body ([2d9e0a8](https://github.com/strongloop/loopback-next/commit/2d9e0a886686e2e8e585f13956b64bd66b96f860))
+* builders for Filter and Where schemas ([ca8d96e](https://github.com/strongloop/loopback-next/commit/ca8d96e0cb1768c60448082e249b46dc1282aed1))
+* coerce object arguments from query strings ([d095693](https://github.com/strongloop/loopback-next/commit/d0956931eceee89ec669e8665ecc91ea1897cec1))
+* support built-in JavaScript/Node schema types ([d65a17f](https://github.com/strongloop/loopback-next/commit/d65a17fab7ce44b7977e9c03388f5684558475f2))
+* upgrade from swagger 2 to openapi 3 ([71e5af1](https://github.com/strongloop/loopback-next/commit/71e5af10365b7fa6277cad8f6a216439610f19df))
+* upgrade to openapi3-ts@0.11.0 ([1ed79c9](https://github.com/strongloop/loopback-next/commit/1ed79c9e5ab2f258f95cc4e539df87b58b790884))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* This fix has modified the api definitions described by the decorator
+'param.query.object', to support Open-API's `url-encoded` definition for json query
+parameters.
+
+Previously, such parameters were described with `exploded: true` and
+`style: deepObject`, i.e exploded encoding, which turned out to be problematic as explained and discussed in,
+https://github.com/swagger-api/swagger-js/issues/1385 and
+https://github.com/OAI/OpenAPI-Specification/issues/1706
+
+```json
+  {
+    "in": "query",
+    "style": "deepObject"
+    "explode": "true",
+    "schema": {}
+  }
+```
+
+Exploded encoding worked for simple json objects as below but not for complex objects.
+
+```
+   http://localhost:3000/todos?filter[limit]=2
+```
+
+To address these issues with exploded queries, this fix switches definition of json
+query params from the `exploded`, `deep-object` style to the `url-encoded` style
+definition in Open-API spec.
+
+LoopBack already supports receiving url-encoded payload for json query parameters.
+
+For instance, to filter api results from the GET '/todo-list' endpoint in the
+todo-list example with a specific relation, { "include": [ { "relation": "todo" } ] },
+the following url-encoded query parameter can be used,
+
+```
+   http://localhost:3000/todos?filter=%7B%22include%22%3A%5B%7B%22relation%22%3A%22todoList%22%7D%5D%7D
+```
+
+The above was possible because the coercion behavior in LoopBack performed json
+parsing for `deep object` style json query params before this fix. This fix has
+modified that behavior by removing json parsing. Since the `exploded` `deep-object`
+definition has been removed from the `param.query.object` decorator, this new
+behaviour remains just an internal source code aspect as of now.
+
+In effect, this fix only modifies the open api definitions generated from LoopBack
+APIs. The 'style' and 'explode' fields are removed and the 'schema' field is moved
+under 'content[application/json]'. This is the definition that supports url-encoding
+as per Open-API spec.
+
+```json
+  {
+    "in": "query"
+    "content": {
+      "application/json": {
+        "schema": {}
+      }
+    }
+  }
+```
+
+Certain client libraries (like swagger-ui or LoopBack's api explorer) necessiate
+using Open-API's `url-encoded` style definition for json query params to support
+"sending" url-encoded payload.
+
+All consumers of LoopBack APIs may need to regenerate api definitions, if their
+client libraries require them to do so for url-encoding.
+
+Otherwise there wouldn't be any significant impact on API consumers.
+
+To preserve compatibility with existing REST API clients, this change is backward
+compatible. All exploded queries like `?filter[limit]=1` will continue to work for
+json query params, despite the fact that they are described differently in the
+OpenAPI spec.
+
+Existing api clients will continue to work after an upgrade.
+
+The signature of the 'param.query.object' decorator has not changed.
+
+There is no code changes required in the LoopBack APIs after upgrading to this
+fix. No method signatures or data structures are impacted.
+* **metadata:** instances of user-defined classes are not cloned any more.
+
+See https://github.com/strongloop/loopback-next/issues/1182. The root
+cause is that DataSource instances are cloned incorrectly.
+
+
+
+
+
 ## [3.1.3](https://github.com/strongloop/loopback-next/compare/@loopback/openapi-v3@3.1.2...@loopback/openapi-v3@3.1.3) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/openapi-v3

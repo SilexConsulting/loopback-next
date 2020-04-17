@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* apply source-maps to test errors ([76a7f56](https://github.com/strongloop/loopback-next/commit/76a7f56cd1166d4407f2a50b188db91a74f7deae)), closes [#602](https://github.com/strongloop/loopback-next/issues/602)
+* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
+* clarify the decorator application order ([ab0dc3d](https://github.com/strongloop/loopback-next/commit/ab0dc3d9f1dedb6b61ccf5b4d63854a4f9dfa814))
+* ensure tests follow parameter patterns ([d9d8154](https://github.com/strongloop/loopback-next/commit/d9d815403b8b7c39aa71494f46b352c646324673))
+* makes multi-decorator behavior more predictable ([0e00068](https://github.com/strongloop/loopback-next/commit/0e00068ccee12e004a2684afcf8bec5d651a9a20))
+* **metadata:** don't rely on `instanceof` checks ([a009aaf](https://github.com/strongloop/loopback-next/commit/a009aaf3e7edbf0578b2b89c10376c036568c479))
+* change file names to fit advocated naming convention ([0331df8](https://github.com/strongloop/loopback-next/commit/0331df8e188f2ba857d04d6a6aff579c7b7726c1))
+* Clean up typing ([8f429b7](https://github.com/strongloop/loopback-next/commit/8f429b7087c815bb2643de92480c405e047f740d))
+* fix typo of `additional` ([2fd7610](https://github.com/strongloop/loopback-next/commit/2fd76106ecebd4d5257262f4cda8af1e5ec409a3))
+* Improve test coverage for metadata inspector ([3b4b552](https://github.com/strongloop/loopback-next/commit/3b4b552e992c6ab1b7bd87ec7c8780dad4b9d435))
+* make the code compatible with TypeScript 2.9.x ([37aba50](https://github.com/strongloop/loopback-next/commit/37aba50dc5f47b5ff0c77624d4d02d9cfd4415b5))
+* rework tslint comments disabling "no-unused-variable" rule ([a18a3d7](https://github.com/strongloop/loopback-next/commit/a18a3d74c5a76ba90c1fb0ea32ae83335820163f))
+* update to the most recent lodash version ([65ee865](https://github.com/strongloop/loopback-next/commit/65ee8656763b3b41a0acb86d7a6c4482472abc02))
+* **metadata:** add more tests ([de969e4](https://github.com/strongloop/loopback-next/commit/de969e481ed9616205a4fa95cb9d8b382b2e6e45))
+* **metadata:** refine clone of decoration spec ([544052e](https://github.com/strongloop/loopback-next/commit/544052ead29b69791f18eeb2c314603757c81e5f))
+* **metadata:** remove the default type to work around a TS bug ([fc89a2c](https://github.com/strongloop/loopback-next/commit/fc89a2c2e01d3642a557c8fca4cd0068d35f8980))
+* make mocha self-contained with the source map support ([7c6d869](https://github.com/strongloop/loopback-next/commit/7c6d86975a379388f433110df91b1bf0e2e4b94d))
+* simplify string formatting ([4ea0485](https://github.com/strongloop/loopback-next/commit/4ea0485632175bc1f93f42c678431c9852c15797))
+* use version range for @types/debug ([3adbc0b](https://github.com/strongloop/loopback-next/commit/3adbc0be57d8177dfbc46ee5e1b92665e5706ce5))
+* **metadata:** fix method-level parameter decorators ([c5127d4](https://github.com/strongloop/loopback-next/commit/c5127d4ed2a1a2cc34409120850434c59f43fd55))
+* **metadata:** keep class prototypes untouched during clone ([195e421](https://github.com/strongloop/loopback-next/commit/195e4210b42a2049369ac0af190a2ba654513655))
+* **metadata:** use static methods ([eea3c08](https://github.com/strongloop/loopback-next/commit/eea3c08492a220c68a5620458fd5672bd0eee10d))
+
+
+### Build System
+
+* drop dist6 related targets ([#945](https://github.com/strongloop/loopback-next/issues/945)) ([a2368ce](https://github.com/strongloop/loopback-next/commit/a2368cee598c131a826ee42e347266c6e25ae582))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* adds MultiMethodDecoratorFactory ([bf6c787](https://github.com/strongloop/loopback-next/commit/bf6c7872bb8ce492b43ab8f57a641dcbb341e96e))
+* **metadata:** Add a flag to keep args of decorators safe ([3782192](https://github.com/strongloop/loopback-next/commit/37821927aa4264d311098c5cc854dedd0e5c69f0))
+* **metadata:** allow custom decorator name for error messages ([c466566](https://github.com/strongloop/loopback-next/commit/c466566e476c5810987dcac8f71868c98cc7654c))
+* Add metadata inspector ([c683019](https://github.com/strongloop/loopback-next/commit/c6830192253e532e4529c18ba680df96db47e8cd))
+* Expose reflectors via MetadataInspector ([5e6829f](https://github.com/strongloop/loopback-next/commit/5e6829f8687a039b418bb45ee391fb74e62405f8))
+* Refactor REST decorators to use factories ([d03adf7](https://github.com/strongloop/loopback-next/commit/d03adf7a2ffba92db4fe3be04eda5b93ae4a4966))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **metadata:** support symbols used as property/method keys ([9e7ea17](https://github.com/strongloop/loopback-next/commit/9e7ea172afab16192a6c885cb61d1cba69beacaa))
+* add helper package "dist-util" ([532f153](https://github.com/strongloop/loopback-next/commit/532f15324f0378a951dbb7f101ce9df3bb3711ef))
+* **context:** track injections with ResolutionSession ([cd4848e](https://github.com/strongloop/loopback-next/commit/cd4848eb08ac26a9f15846fdd7f7c0661d425ba0))
+* **metadata:** add strongly-typed metadata accessors ([45f9f80](https://github.com/strongloop/loopback-next/commit/45f9f80c9944ab02c923ce4911ca23e6401e07c7))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* **metadata:** instances of user-defined classes are not cloned any more.
+
+See https://github.com/strongloop/loopback-next/issues/1182. The root
+cause is that DataSource instances are cloned incorrectly.
+* Support for Node.js version lower than 8.0 has been dropped.
+Please upgrade to the latest Node.js 8.x LTS version.
+
+Co-Authored-by: Taranveer Virk <taranveer@virk.cc>
+
+
+
+
+
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/metadata@2.0.3...@loopback/metadata@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/metadata

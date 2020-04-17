@@ -3,6 +3,150 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 6.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* remove updated debug config for PR ([15e8d34](https://github.com/strongloop/loopback-next/commit/15e8d34ad628ecb5b8fafe02441c73362a873e8c))
+* typos ([852f198](https://github.com/strongloop/loopback-next/commit/852f198ae7cb2c7d8801d7222cc574d04757404c))
+* **build:** fix path lookup in build helpers ([16311c5](https://github.com/strongloop/loopback-next/commit/16311c502cf782bb284ba462b5a62c36323898d7))
+* **build:** honor tsconfig compilerOptions.rootDir to copy resources ([8a8857d](https://github.com/strongloop/loopback-next/commit/8a8857da7b491df24d311a19761e592301eab7b7))
+* **build:** move no-unused-variables to tslint.build.json ([15dd2db](https://github.com/strongloop/loopback-next/commit/15dd2dbd962882a63edb2227b2688dbdc961be80))
+* **build:** preserve `--outDir` path as relative to CWD ([0e72ab9](https://github.com/strongloop/loopback-next/commit/0e72ab9663626000111cec1b71c40d6654fded68))
+* **build:** remove "dom" from the list of global libraries ([781cd1d](https://github.com/strongloop/loopback-next/commit/781cd1dd6d4b00b92a64741f3d0468a9b41c7e1a))
+* **build:** remove `lb-tslint` from README ([be89eb6](https://github.com/strongloop/loopback-next/commit/be89eb63b51514f76c4bbbd77405d44828d68d84))
+* update version of nyc ([f8db27c](https://github.com/strongloop/loopback-next/commit/f8db27c474430d01693538d6a6dc2200b9f4ca6d))
+* **build:** fix select-dist script ([e91e810](https://github.com/strongloop/loopback-next/commit/e91e8100641f9b4dbfc4b896e04305c615cbd380))
+* **build:** update build scripts ([2a3f560](https://github.com/strongloop/loopback-next/commit/2a3f5603e905f5f8a3f61be383355f0b25a0ab39))
+* **build:** use options for `run` and disable stdout for tests ([0065eab](https://github.com/strongloop/loopback-next/commit/0065eaba226e19b12d13104b69321603b39d419e))
+* **build:** use variable names to reflect the accepted args ([c9350b9](https://github.com/strongloop/loopback-next/commit/c9350b9e5a4c299fa0c194ea57493a695b5abe1a))
+* **cli:** exclude json files from tslint ([bd9f864](https://github.com/strongloop/loopback-next/commit/bd9f864fb7dff3261868b553228c9580672fabc5))
+* **docs:** upgrade to strong-docs@3.1.0 and fix links ([f91af8f](https://github.com/strongloop/loopback-next/commit/f91af8fe3302f6783bb8ca6ff86f9012fc146584))
+* apply source-maps to test errors ([76a7f56](https://github.com/strongloop/loopback-next/commit/76a7f56cd1166d4407f2a50b188db91a74f7deae)), closes [#602](https://github.com/strongloop/loopback-next/issues/602)
+* change file names to fit advocated naming convention ([0331df8](https://github.com/strongloop/loopback-next/commit/0331df8e188f2ba857d04d6a6aff579c7b7726c1))
+* clean up the app run test ([c0d3731](https://github.com/strongloop/loopback-next/commit/c0d37316a22d7111b4df9693c69f15880b584a18))
+* fix build break and upgrade dependencies ([917da5d](https://github.com/strongloop/loopback-next/commit/917da5d3ea5d86988ee84ab907695d136be4ec71))
+* Fix node module names in source code headers ([0316f28](https://github.com/strongloop/loopback-next/commit/0316f28a22a1b85dce72f67b1dab66599c6b9403))
+* make mocha self-contained with the source map support ([7c6d869](https://github.com/strongloop/loopback-next/commit/7c6d86975a379388f433110df91b1bf0e2e4b94d))
+* make the code compatible with TypeScript 2.9.x ([37aba50](https://github.com/strongloop/loopback-next/commit/37aba50dc5f47b5ff0c77624d4d02d9cfd4415b5))
+* remove typedoc/node_modules/.bin from local typescript dep ([877d6a5](https://github.com/strongloop/loopback-next/commit/877d6a50d0f4dc36f0a9a426ceb22218c6cef533))
+* use rimraf to remove files with glob patterns ([50d847c](https://github.com/strongloop/loopback-next/commit/50d847c88e318e19dd259c8ee5a47f521ac8edea))
+* **build:** upgrade to strong-docs@1.7.1 ([fd02e1b](https://github.com/strongloop/loopback-next/commit/fd02e1b9f79fef31a0aa255c80b4d22c5868aace))
+* update git repo url ([444f06b](https://github.com/strongloop/loopback-next/commit/444f06b273a4698e287a952579b3f75066737610))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* update dependency prettier to v2 ([65bdee7](https://github.com/strongloop/loopback-next/commit/65bdee7b22ade4c7ba32499ce3939fa84b9c7c42))
+* **build:** add --lang flag to set LANG env var for lb-mocha ([a78bb84](https://github.com/strongloop/loopback-next/commit/a78bb846c43ed34f3fd9d8562ade037a1d29c2b9))
+* **build:** enable importHelpers ([e44f084](https://github.com/strongloop/loopback-next/commit/e44f084b6c8df762c0563b3716f13135f652b082)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* adds MultiMethodDecoratorFactory ([bf6c787](https://github.com/strongloop/loopback-next/commit/bf6c7872bb8ce492b43ab8f57a641dcbb341e96e))
+* **build:** add an option to control resolution of CLI module from project dependencies ([0715a91](https://github.com/strongloop/loopback-next/commit/0715a91d0eef02c7e259cbd1b62a09010995c796))
+* **build:** add an option to copy non ts files to outDir ([49b9a82](https://github.com/strongloop/loopback-next/commit/49b9a8272998ab8a71bddf9fb0864bfa116e000c))
+* **build:** add eslint scripts and default configs ([a6abe86](https://github.com/strongloop/loopback-next/commit/a6abe8606495dd16108e0b79135199c758ddb941))
+* **build:** add more TypeScript "strict" checks ([866aa2f](https://github.com/strongloop/loopback-next/commit/866aa2fa76cb2a545c1d421afbb0e97cef4c1042))
+* **build:** add support for dryRun to `--copy-resources` ([f8f078f](https://github.com/strongloop/loopback-next/commit/f8f078f0171fdedade1c8804218e7282ce497230))
+* **build:** enable esModuleInterop compiler option ([3090073](https://github.com/strongloop/loopback-next/commit/309007346b72fec3ee127db5032d5cb3aa191c5d))
+* **build:** enable incremental compilation ([2120712](https://github.com/strongloop/loopback-next/commit/2120712e0b0bc12f0cf4a313ae3312f88d2c3bfe))
+* **build:** enable TSC option "skipLibCheck" ([66bb506](https://github.com/strongloop/loopback-next/commit/66bb506d960d3f9239ef895a83a59c7609e10918))
+* **build:** read outDir from tsconfig when copying resources ([4f947a3](https://github.com/strongloop/loopback-next/commit/4f947a3490840b074c271cdae39df11fde309d70))
+* **build:** remove lb-tslint ([e9e4bba](https://github.com/strongloop/loopback-next/commit/e9e4bbaa135146bfe227a235c7f9cf373a090729))
+* **build:** remove strong-docs based `lb-apidocs` helper ([871457e](https://github.com/strongloop/loopback-next/commit/871457ef0686fc34a18f3030604675148051893c))
+* **build:** remove support for multi-dist compilation ([f6fcfe7](https://github.com/strongloop/loopback-next/commit/f6fcfe7caf12e5fd5375e012f1c014d7e2efd079))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **build:** use `dist/__tests__` in code examples and tests ([a3da024](https://github.com/strongloop/loopback-next/commit/a3da024a942161185ddfa81ed000ca353e9b7584))
+* **build:** use options to control cli/shell run ([c4e8bce](https://github.com/strongloop/loopback-next/commit/c4e8bcebeebd347d9dc892d4d627bac2ae2f4349))
+* **context:** add type as a generic parameter to `ctx.get()` and friends ([24b217d](https://github.com/strongloop/loopback-next/commit/24b217df94a8a21f037a85ff4d6f748741c2f599))
+* **tsdocs:** add integration with api-extractor/documenter ([c8d9572](https://github.com/strongloop/loopback-next/commit/c8d9572f0508b428d710552f41b635273ae1c119))
+* always include tslint and typescript in project dev-dependencies ([e0df285](https://github.com/strongloop/loopback-next/commit/e0df285ee96634d4c5bdb92f39ea7fb43dda9a2c))
+* move tslint config into a standalone package ([26f3543](https://github.com/strongloop/loopback-next/commit/26f3543d3a6f52ee1d9e971dfe3021227b2121ae))
+* **build:** rename --ignore-resources to --copy-resources ([2958ace](https://github.com/strongloop/loopback-next/commit/2958ace404ec5e15c973cc942f365135fa22cc40))
+* use resolveJsonModule to load datasource config ([73e19ff](https://github.com/strongloop/loopback-next/commit/73e19ff6a3649abd85d96b4139d16d503ee2ed62))
+* **repository:** add KVRepository impl using legacy juggler ([97a75dc](https://github.com/strongloop/loopback-next/commit/97a75dc54476d87770c07e2c77e8a3c28657ce15))
+* Add build scripts as a separate package ([6eacee7](https://github.com/strongloop/loopback-next/commit/6eacee7dab5755bd8a929eb7229f99a72929d127))
+
+
+### BREAKING CHANGES
+
+* prettier@2.0.0 introduces breaking changes for certain rules.
+See https://prettier.io/blog/2020/03/21/2.0.0.html for more details.
+
+To reformat code using prettier, run `npm run prettier:fix`.
+* **build:** enable importHelpers on the shared Typescript
+configuration file which requires `tslib` to be installed on dependent
+packages if the shared Typescript configuration is used.
+
+To migrate, run `npm install tslib` on the dependent package before
+updating to this version.
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* **build:** The flag impacts how `import` is handled by the TypeScript
+compiler. The new behavior is:
+
+- A namespace import (i.e. import * as foo from "foo") is now correctly flagged as uncallable. Calling it will result in an error.
+- Default imports to CommonJS/AMD/UMD are now allowed (e.g. import fs from "fs"), and should work as expected.
+
+For existing projects, namespace imports (import * as express from "express"; express();) will need to be converted to default imports (import express from "express"; express();).
+
+See https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-7.html#support-for-import-d-from-cjs-from-commonjs-modules-with---esmoduleinterop
+* **build:** We are no longer choosing outDir for you, you have to
+specify it explicitly. It is no longer possible to specify compilation target
+via non-option argument like `lb-tsc es2017`.
+
+Migration guide:
+
+- Modify your `tsconfig.json` file and configure `dist` via `compilerOptions.outDir`
+
+- If you are using target different from `es2017`, then configure it via
+  `compilerOptions.target`.
+
+- Remove `es2017` and `--outDir dist` from lb-tsc arguments.
+
+- Ensure that the output directory is listed in `lb-clean` arguments,
+  e.g. call `lb-clean dist`.
+
+- When calling `lb-mocha`, replace `DIST` with the actual outDir value,
+  typically `dist`.
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* **build:** `lb-apidocs` helper is no longer available. Please switch
+to Microsoft api-extractor and api-documenter.
+* **build:** `lb-tslint` helper is no longer available. Please
+install `tslint` directly as a dependency and invoke `tslint` instead
+of `lb-tslint`.
+
+Alternatively, you can migrate from tslint to eslint and use the
+recently introduced helper `lb-eslint`.
+
+Signed-off-by: Miroslav Bajtoš <mbajtoss@gmail.com>
+* **context:** `ctx.get()` and `ctx.getSync()` require a type now.
+See the example below for upgrade instructions:
+
+```diff
+- const c: MyController = await ctx.get('MyController');
++ const c = await ctx.get<MyController>('MyController');
+```
+
+`isPromise` was renamed to `isPromiseLike` and acts as a type guard
+for `PromiseLike`, not `Promise`.  When upgrading affected code, you
+need to determine whether the code was accepting any Promise
+implementation (i.e. `PromiseLike`) or only native Promises. In the
+former case, you should use `isPromiseLike` and potentially convert the
+userland Promise instance to a native Promise via
+`Promise.resolve(promiseLike)`. In the latter case, you can replace
+`isPromise(p)` with `p instanceof Promise`.
+
+
+
+
+
 ## [5.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/build@5.0.0...@loopback/build@5.0.1) (2020-04-08)
 
 **Note:** Version bump only for package @loopback/build

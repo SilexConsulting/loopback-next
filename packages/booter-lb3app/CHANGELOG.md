@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+* **cli:** extract messages for generators ([2f572bd](https://github.com/strongloop/loopback-next/commit/2f572bd75883420e38bfaa780bc38445aec92e65))
+* migrate LB3 models mounted on LB4 app ([7d36f6d](https://github.com/strongloop/loopback-next/commit/7d36f6dc5105b1c9d41fb1161b9052b6e25204e2))
+* **booter-lb3app:** stringify and parse lb3 spec before converting it ([30727a5](https://github.com/strongloop/loopback-next/commit/30727a5ecd05013176b3f2eb4247eeb18932cdec))
+* mention required loopback-boot version for mounting a lb3 app ([d76ad45](https://github.com/strongloop/loopback-next/commit/d76ad4554b51a4a023c185fcca6071204950f78d))
+* **booter-lb3app:** export component instead of booter ([b730320](https://github.com/strongloop/loopback-next/commit/b73032010c02e3e2dcf8f5aa137e0abf730de742))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Code Refactoring
+
+* **rest:** make getApiSpec() async ([fe3df1b](https://github.com/strongloop/loopback-next/commit/fe3df1b85904ee8b8a005fa6eddf150d28ad2a08))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **booter-lb3app:** add specTransformer ([8a51aa1](https://github.com/strongloop/loopback-next/commit/8a51aa16855414ab1bdeb1a873737ddd8200c22f))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **booter-lb3app:** enable operation-scoped model schemas ([ff014fc](https://github.com/strongloop/loopback-next/commit/ff014fc78e0388c754700a90d26becc5b70a7465))
+* add booter-lb3app package ([993a97f](https://github.com/strongloop/loopback-next/commit/993a97fa079c3f44bd925dacd7a1408e7b06724b))
+
+
+### BREAKING CHANGES
+
+* **rest:** Api specifications are now emitted as a Promise instead
+of a value object.  Calls to getApiSpec function must switch from
+the old style to new style as follows:
+
+1. Old style
+
+```ts
+function() {
+  // ...
+  const spec = restApp.restServer.getApiSpec();
+  // ...
+}
+```
+
+2. New style
+
+```ts
+async function() {
+  // ...
+  const spec = await restApp.restServer.getApiSpec();
+  // ...
+}
+```
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/booter-lb3app@2.0.3...@loopback/booter-lb3app@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/booter-lb3app

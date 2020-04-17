@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+* **service-proxy:** change default binding scope to TRANSIENT for service proxies ([c73e8d0](https://github.com/strongloop/loopback-next/commit/c73e8d00f21fd04cce50299014dd10e41781d411))
+* clean up dataSource usage ([69506a4](https://github.com/strongloop/loopback-next/commit/69506a44cf25d3c8d0b50d0758e8f5b808852917))
+* **service-proxy:** add missing dependency on dist-util ([7155570](https://github.com/strongloop/loopback-next/commit/7155570255f04469e5359aa583fafeb8a6f1938d))
+* **service-proxy:** await datasource until it connects to the service ([714344b](https://github.com/strongloop/loopback-next/commit/714344b879dae5a99903f4601f3f111c2b51e120))
+* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
+* make the code compatible with TypeScript 2.9.x ([37aba50](https://github.com/strongloop/loopback-next/commit/37aba50dc5f47b5ff0c77624d4d02d9cfd4415b5))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **core:** add app.service() to register service classes or providers ([88eff77](https://github.com/strongloop/loopback-next/commit/88eff77b7c2bba32ac771342e913a56d524feac5))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **context:** honor binding scope from [@bind](https://github.com/bind) ([3b30f01](https://github.com/strongloop/loopback-next/commit/3b30f01bcbad551f9b74662c8537c06d6a9f7b3d))
+* **repository:** add KVRepository impl using legacy juggler ([97a75dc](https://github.com/strongloop/loopback-next/commit/97a75dc54476d87770c07e2c77e8a3c28657ce15))
+* **service-proxy:** add service mixin ([fb01931](https://github.com/strongloop/loopback-next/commit/fb01931d4e193c21560811f4d6d078c89941fcfb))
+* add integration for service-oriented backends ([b9e2d4e](https://github.com/strongloop/loopback-next/commit/b9e2d4e26d89120ec0d6461fdc08162c7d0b821c))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/service-proxy@2.0.3...@loopback/service-proxy@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/service-proxy

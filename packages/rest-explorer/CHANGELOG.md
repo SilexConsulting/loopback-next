@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* **rest-explorer:** add templates to npm package ([9e04057](https://github.com/strongloop/loopback-next/commit/9e0405709ba3e6b0cbe27c23384f0c9f11639122))
+* **rest-explorer:** allow explorer for a rest app to be mounted to express ([5d2db07](https://github.com/strongloop/loopback-next/commit/5d2db07f568933817464a437eae03a327854666a))
+* **rest-explorer:** exclude basePath from /openapi URL ([960518e](https://github.com/strongloop/loopback-next/commit/960518eca4d707f0dd9f35aae2fdd0337fbc585f))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* self host oas spec by default on relative path in explorer ([887556e](https://github.com/strongloop/loopback-next/commit/887556e821f08d3eb7388f24cf0ac4d416eaf7d4))
+* **rest-explorer:** use configuration apis/decorators ([dd6b005](https://github.com/strongloop/loopback-next/commit/dd6b005031279205f824e5f559b88ad4fd1302b3))
+* an extension adding a self-hosted REST API Explorer ([4c165c7](https://github.com/strongloop/loopback-next/commit/4c165c7aea092e54c89b72fc35b08478bdc6fb8f))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+
+
+### BREAKING CHANGES
+
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/rest-explorer@2.0.3...@loopback/rest-explorer@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/rest-explorer

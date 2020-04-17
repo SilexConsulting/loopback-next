@@ -3,6 +3,44 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* extend test timeout for windows ([249198e](https://github.com/strongloop/loopback-next/commit/249198e41d6ad567f1582701c25abf29fc08c809)), closes [#4425](https://github.com/strongloop/loopback-next/issues/4425)
+* **docs:** upgrade to strong-docs@3.1.0 and fix links ([f91af8f](https://github.com/strongloop/loopback-next/commit/f91af8fe3302f6783bb8ca6ff86f9012fc146584))
+* **http-caching-proxy:** add missing dependency on dist-util ([142c5ee](https://github.com/strongloop/loopback-next/commit/142c5ee2a0483a927a058dc72842fe82d6141413))
+* **http-caching-proxy:** fix compilation error ([653f6df](https://github.com/strongloop/loopback-next/commit/653f6df0d7e9a3f235cc057fc59dd6cfe85afa21))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **http-caching-proxy:** replace usage of request with axios as http client ([cd89ad4](https://github.com/strongloop/loopback-next/commit/cd89ad4cb979931b265af24de316e11262084090))
+* leverage isactive for transaction ([fc94437](https://github.com/strongloop/loopback-next/commit/fc9443787039d4a1db3008a0141f5693f95bfbd4))
+* **http-caching-proxy:** add timeout and improve error logging ([72cd177](https://github.com/strongloop/loopback-next/commit/72cd17722174690355b220fd4127112b0edc67f2))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **http-caching-proxy:** initial implementation ([7d8345c](https://github.com/strongloop/loopback-next/commit/7d8345c089969dc389271951f1963cf68f7eb823))
+
+
+### BREAKING CHANGES
+
+* **http-caching-proxy:** [axios](https://github.com/axios/) is now used as the
+http client package to replace [request](https://github.com/request/request)
+which is now deprecated.
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+
+
+
+
+
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/http-caching-proxy@2.0.3...@loopback/http-caching-proxy@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/http-caching-proxy

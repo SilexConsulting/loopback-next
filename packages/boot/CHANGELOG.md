@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 3.0.0 (2020-04-17)
+
+
+### Bug Fixes
+
+* **boot:** fix resolution of package.json for application metadata ([854ce9a](https://github.com/strongloop/loopback-next/commit/854ce9af7180de795fbf8bc908f233e640460a65))
+* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
+* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
+* **cli:** extract messages for generators ([2f572bd](https://github.com/strongloop/loopback-next/commit/2f572bd75883420e38bfaa780bc38445aec92e65))
+* rework tslint comments disabling "no-unused-variable" rule ([a18a3d7](https://github.com/strongloop/loopback-next/commit/a18a3d74c5a76ba90c1fb0ea32ae83335820163f))
+* **boot:** fix incorrect comment ([4ad6e4f](https://github.com/strongloop/loopback-next/commit/4ad6e4fa3b01f05c8a968186bc073193744835ba))
+* change file names to fit advocated naming convention ([0331df8](https://github.com/strongloop/loopback-next/commit/0331df8e188f2ba857d04d6a6aff579c7b7726c1))
+* remove extra imports for mixin dependencies ([35b916b](https://github.com/strongloop/loopback-next/commit/35b916b2d4aac457edf62956e35b2057a3794b00))
+* **boot:** fix loadClassesFromFiles to be a sync function ([9f54ef9](https://github.com/strongloop/loopback-next/commit/9f54ef93206242c4aa13ff103a824862aff3f57d))
+* **boot:** fix spelling typos ([7292883](https://github.com/strongloop/loopback-next/commit/729288380409494eb8f62c5857521b5d27c83907))
+* **boot:** warn only if attempts to call app.repository without RepositoryMixin ([fdf9133](https://github.com/strongloop/loopback-next/commit/fdf9133d354f7033d495b510fdcd6494e157fb5a))
+
+
+### chore
+
+* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
+
+
+### Features
+
+* **testlab:** introduce TestSandboxOptions to control sanbox creation ([d03ec89](https://github.com/strongloop/loopback-next/commit/d03ec8939a5d8a16fa50f931d3b9752c501173c4))
+* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
+* **boot:** add a booter for interceptors ([467d6ea](https://github.com/strongloop/loopback-next/commit/467d6ea21dad3f1af1a24200a574c97a722a53a9))
+* **boot:** add a booter for life cycle scripts ([6912f76](https://github.com/strongloop/loopback-next/commit/6912f76d9979ae29bc0df1cdb06d81acb5abc727))
+* **boot:** add debug logs for better troubleshooting ([cdb63b7](https://github.com/strongloop/loopback-next/commit/cdb63b74516d7bdedd6d3741a6a2cea6776ef86f))
+* **boot:** bind booter classes as singleton by default ([649cfc2](https://github.com/strongloop/loopback-next/commit/649cfc27d97e7cdbf3689f19c2b8bd227e345b1c))
+* **boot:** bind content of package.json to app context ([82f0ebe](https://github.com/strongloop/loopback-next/commit/82f0ebe79200b330ab2576dcd4ff542167d4ce77))
+* **boot:** datasource booter ([470b193](https://github.com/strongloop/loopback-next/commit/470b193125267261ccb2af94566669bd35e6a81c))
+* **boot:** honor [@bind](https://github.com/bind) for booter classes ([5054155](https://github.com/strongloop/loopback-next/commit/50541552812a4418bc1fd85e240b6ca4c67c7820))
+* **boot:** implement Service booter ([bf8e9c8](https://github.com/strongloop/loopback-next/commit/bf8e9c8c5a90b5cb8b88a6dd308e5d3649efdcbe))
+* **boot:** improve service booter to load classes decorated with [@bind](https://github.com/bind) ([48e01f4](https://github.com/strongloop/loopback-next/commit/48e01f4fe702ff27eff8028322043f082c56fbf1))
+* **boot:** introduce `[@booter](https://github.com/booter)` to decorate booter classes ([f27b517](https://github.com/strongloop/loopback-next/commit/f27b517d81e4ec22cc3f2d1cc4a47058dfbcfc13))
+* **boot:** set up booting and booted states for boot() ([96c9313](https://github.com/strongloop/loopback-next/commit/96c93134db0509ce7d97ce6c5451377bed4fc6fe))
+* **boot:** use [@config](https://github.com/config) to inject options for booters ([016812d](https://github.com/strongloop/loopback-next/commit/016812d12254a01ea66b50cd2ac3d508436cc7b2))
+* **context:** add type as a generic parameter to `ctx.get()` and friends ([24b217d](https://github.com/strongloop/loopback-next/commit/24b217df94a8a21f037a85ff4d6f748741c2f599))
+* **core:** improve application states for start/stop ([01dac15](https://github.com/strongloop/loopback-next/commit/01dac151260e6c743cc77863f6495a85d19d338c))
+* **rest-crud:** add CrudRestApiBuilder ([bc5d56f](https://github.com/strongloop/loopback-next/commit/bc5d56fd4f10759756cd0ef6fbc922c02b5a9894))
+* add model-api-builder and model-api-booter ([bacadcc](https://github.com/strongloop/loopback-next/commit/bacadcc22f6c813ee384d1d040f518190d9aae17))
+* **core:** enable start/stop/boot to be idempotent ([b614a78](https://github.com/strongloop/loopback-next/commit/b614a7825be1dc1875556388443f72385525fa29))
+* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
+* **context:** typed binding keys ([685195c](https://github.com/strongloop/loopback-next/commit/685195c27825844f2bba9fc177767cccb68a6ebf))
+* **rest:** expose app.requestHandler function ([20a41ac](https://github.com/strongloop/loopback-next/commit/20a41ac7081a8cead0011447b5a8e5794a320ded))
+* **service-proxy:** add service mixin ([fb01931](https://github.com/strongloop/loopback-next/commit/fb01931d4e193c21560811f4d6d078c89941fcfb))
+* **testlab:** add createRestAppClient(), simplify usage in tests ([d75be77](https://github.com/strongloop/loopback-next/commit/d75be770dac236705e287bb86fc7b48246ff4653))
+* **testlab:** set port to 0 in givenHttpServerConfig ([90a0bfb](https://github.com/strongloop/loopback-next/commit/90a0bfbec3b5d78d3fd2e270cc1d063ca3f7d690))
+* add helper package "dist-util" ([532f153](https://github.com/strongloop/loopback-next/commit/532f15324f0378a951dbb7f101ce9df3bb3711ef))
+* **testlab:** update sourceMappingURL when copying a JS file ([aac2781](https://github.com/strongloop/loopback-next/commit/aac2781902ee5bcebaa6dbaba19b3bad02ea833b))
+* @loopback/boot ([#858](https://github.com/strongloop/loopback-next/issues/858)) ([c2ca8be](https://github.com/strongloop/loopback-next/commit/c2ca8be6d026f869e06b047b9adcd6305afcca67))
+* add repository booter ([#1030](https://github.com/strongloop/loopback-next/issues/1030)) ([43ea7a8](https://github.com/strongloop/loopback-next/commit/43ea7a8a6787022138953ca2e05a10c4a6fe2ede))
+* upgrade from swagger 2 to openapi 3 ([71e5af1](https://github.com/strongloop/loopback-next/commit/71e5af10365b7fa6277cad8f6a216439610f19df))
+
+
+### BREAKING CHANGES
+
+* **testlab:** The TestSandbox constructor changes its signature and behavior
+now. It used to take a `path` as the top-level directory of the sandbox. The
+new style is illustrated below.
+
+```ts
+// Create a sandbox as a unique temporary subdirectory under the rootPath
+const sandbox = new TestSandbox(rootPath);
+const sandbox = new TestSandbox({subdir: true});
+
+// Create a sandbox in the root path directly
+// This is same as the old behavior
+const sandbox = new TestSandbox(rootPath, {subdir: false});
+const sandbox = new TestSandbox(rootPath, {subdir: '.'});
+
+// Create a sandbox in the `test1` subdirectory of the root path
+const sandbox = new TestSandbox(rootPath, {subdir: 'test1'});
+```
+* Node.js v8.x is now end of life. Please upgrade to version
+10 and above. See https://nodejs.org/en/about/releases.
+* **rest:** `RestServer#handleHttp` was renamed to
+`RestServer#requestHandler`.
+* **context:** `ctx.get()` and `ctx.getSync()` require a type now.
+See the example below for upgrade instructions:
+
+```diff
+- const c: MyController = await ctx.get('MyController');
++ const c = await ctx.get<MyController>('MyController');
+```
+
+`isPromise` was renamed to `isPromiseLike` and acts as a type guard
+for `PromiseLike`, not `Promise`.  When upgrading affected code, you
+need to determine whether the code was accepting any Promise
+implementation (i.e. `PromiseLike`) or only native Promises. In the
+former case, you should use `isPromiseLike` and potentially convert the
+userland Promise instance to a native Promise via
+`Promise.resolve(promiseLike)`. In the latter case, you can replace
+`isPromise(p)` with `p instanceof Promise`.
+
+
+
+
+
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/boot@2.0.3...@loopback/boot@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/boot
