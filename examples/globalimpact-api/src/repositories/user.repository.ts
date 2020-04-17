@@ -8,7 +8,6 @@ import {
   DefaultCrudRepository,
   HasManyRepositoryFactory,
   HasOneRepositoryFactory,
-  juggler,
   repository,
 } from '@loopback/repository';
 import {User, UserIdentity, UserCredentials} from '../models';

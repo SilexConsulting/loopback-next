@@ -3,27 +3,18 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Client, expect} from '@loopback/testlab';
 import {GlobalimpactApiApplication} from '../..';
-import {PasswordHasherBindings} from '../../keys';
-import {User} from '../../models';
 import {UserRepository} from '../../repositories';
-import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {setupApplication} from './helper';
 
 describe('authorization', function () {
   // eslint-disable-next-line no-invalid-this
   this.timeout(5000);
   let app: GlobalimpactApiApplication;
-  let client: Client;
   let userRepo: UserRepository;
-  const userPassword = 'p4ssw0rd';
-  let passwordHasher: PasswordHasher;
-  let newUser: User;
-  let token: string;
 
   before('setupApplication', async () => {
-    ({app, client} = await setupApplication());
+    ({app} = await setupApplication());
     userRepo = await app.get('repositories.UserRepository');
   });
   before(migrateSchema);
@@ -41,17 +32,5 @@ describe('authorization', function () {
     await app.migrateSchema();
   }
 
-  async function createAUser(userData: object) {
-    const encryptedPassword = await passwordHasher.hashPassword(userPassword);
-    const aUser = await userRepo.create(userData);
-
-    await userRepo.credentials(aUser.id).create({
-      password: encryptedPassword,
-    });
-    return aUser;
-  }
-
-  async function createPasswordHasher() {
-    passwordHasher = await app.get(PasswordHasherBindings.PASSWORD_HASHER);
-  }
+  async function createPasswordHasher() {}
 });

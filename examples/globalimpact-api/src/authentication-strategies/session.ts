@@ -32,7 +32,7 @@ export class SessionStrategy implements AuthenticationStrategy {
     if (!request.user) {
       throw new HttpErrors.Unauthorized(`Invalid Session`);
     }
-    let user: User = request.user as User;
+    const user: User = request.user as User;
     if (!user.email || !user.id) {
       throw new HttpErrors.Unauthorized(`Invalid user profile`);
     }

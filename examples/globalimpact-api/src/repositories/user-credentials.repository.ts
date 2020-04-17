@@ -4,7 +4,7 @@
 // License text available at https://opensource.org/licenses/MIT
 
 import {inject} from '@loopback/core';
-import {DefaultCrudRepository, juggler} from '@loopback/repository';
+import {DefaultCrudRepository} from '@loopback/repository';
 import {UserCredentials, UserCredentialsRelations} from '../models';
 import {LocaldbDataSource} from '../datasources';
 

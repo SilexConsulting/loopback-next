@@ -5,13 +5,12 @@
 
 import {Client, expect} from '@loopback/testlab';
 import {GlobalimpactApiApplication} from '../..';
-import {UserRepository, UserCredentialsRepository} from '../../repositories';
+import {UserRepository} from '../../repositories';
 import {setupApplication} from './helper';
 import {PasswordHasher} from '../../services/hash.password.bcryptjs';
 import {PasswordHasherBindings, TokenServiceConstants} from '../../keys';
 import {JWTService} from '../../services/jwt-service';
 import {securityId} from '@loopback/security';
-import {Server} from 'grpc';
 
 describe('UserController', () => {
   let app: GlobalimpactApiApplication;
@@ -72,7 +71,7 @@ describe('UserController', () => {
   });
 
   it('throws error for POST /users with a missing email', async () => {
-    const res = await client
+    await client
       .post('/users')
       .send({
         password: 'p4ssw0rd',
@@ -239,10 +238,6 @@ describe('UserController', () => {
       );
     });
   });
-
-  async function clearDatabase() {
-    await userRepo.deleteAll();
-  }
 
   async function migrateSchema() {
     await app.migrateSchema();

@@ -81,12 +81,14 @@ export class LocalAuthStrategy implements AuthenticationStrategy {
       })
       .then((users: User[]) => {
         const AUTH_FAILED_MESSAGE = 'Invalid credentials supplied.';
+        const ERROR_OCCURRED_MESSAGE =
+          'An error occurred validating your password';
 
         if (!users || !users.length) {
           return done(null, null, {message: AUTH_FAILED_MESSAGE});
         }
         const foundUser = users[0];
-        const credentialsFound = this.userRepository
+        this.userRepository
           .findCredentials(foundUser.id)
           .then(credentialsFound => {
             if (!credentialsFound) {
@@ -99,7 +101,13 @@ export class LocalAuthStrategy implements AuthenticationStrategy {
                   return done(null, null, {message: AUTH_FAILED_MESSAGE});
                 }
                 done(null, foundUser);
+              })
+              .catch(error => {
+                done(error, null, {message: ERROR_OCCURRED_MESSAGE});
               });
+          })
+          .catch(error => {
+            done(error, null, {message: ERROR_OCCURRED_MESSAGE});
           });
       })
       .catch(err => {

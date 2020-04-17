@@ -12,8 +12,8 @@ import {Profile as PassportProfile} from 'passport';
 import {UserIdentityService} from '@loopback/authentication';
 
 export namespace TokenServiceConstants {
-  export const TOKEN_SECRET_VALUE = process.env.TOKEN_SECRET || 'token_secret';
-  export const TOKEN_EXPIRES_IN_VALUE = process.env.TOKEN_EXPIRATION || '600';
+  export const TOKEN_SECRET_VALUE = process.env.TOKEN_SECRET ?? 'token_secret';
+  export const TOKEN_EXPIRES_IN_VALUE = process.env.TOKEN_EXPIRATION ?? '600';
 }
 
 export namespace TokenServiceBindings {
