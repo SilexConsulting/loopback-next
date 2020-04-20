@@ -17,10 +17,13 @@ COPY --chown=node package*.json ./
 
 RUN npm install --loglevel error
 
+# copy loopback from parent project
+COPY --chown=node ./@loopback/ /home/node/app/node_modules/@loopback
+
 # Bundle app source code
 COPY --chown=node . .
 
 RUN npm run build
 
 EXPOSE ${PORT}
-CMD [ "npm", "start" ]
+CMD [ "node", "." ]
