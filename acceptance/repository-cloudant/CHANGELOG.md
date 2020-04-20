@@ -3,35 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# 3.0.0 (2020-04-17)
-
-
-### Bug Fixes
-
-* update package locks ([cd2f6fa](https://github.com/strongloop/loopback-next/commit/cd2f6fa7a732afe4a16f4ccf8316ff3142959fe8))
-* **test-repository-cloudant:** replace couchdb3 docker image with a stable tag ([28a4efb](https://github.com/strongloop/loopback-next/commit/28a4efb9bdb788cd7c59d5e1dd9e1ff8b79b827a))
-
-
-### chore
-
-* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
-
-
-### Features
-
-* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
-* **repository-tests:** run repository-tests on cloudant ([a54c588](https://github.com/strongloop/loopback-next/commit/a54c588e3f59b273c22d008bf591184f5339effe))
-
-
-### BREAKING CHANGES
-
-* Node.js v8.x is now end of life. Please upgrade to version
-10 and above. See https://nodejs.org/en/about/releases.
-
-
-
-
-
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/test-repository-cloudant@2.0.3...@loopback/test-repository-cloudant@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/test-repository-cloudant

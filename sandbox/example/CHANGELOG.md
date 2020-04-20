@@ -3,33 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# 3.0.0 (2020-04-17)
-
-
-### Bug Fixes
-
-* remove forgotten references to tslint ([faa0a92](https://github.com/strongloop/loopback-next/commit/faa0a92d09156c14124665ae7a8138e03b107bb3))
-
-
-### chore
-
-* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
-
-
-### Features
-
-* deprecate dist-util package ([91a343c](https://github.com/strongloop/loopback-next/commit/91a343c4ab543ee7a815cf6f42d9011609c5be97))
-
-
-### BREAKING CHANGES
-
-* Node.js v8.x is now end of life. Please upgrade to version
-10 and above. See https://nodejs.org/en/about/releases.
-
-
-
-
-
 ## [2.0.1](https://github.com/strongloop/loopback-next/compare/@loopback/sandbox-example@2.0.0...@loopback/sandbox-example@2.0.1) (2020-04-08)
 
 **Note:** Version bump only for package @loopback/sandbox-example

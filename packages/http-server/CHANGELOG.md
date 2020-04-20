@@ -3,48 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# 3.0.0 (2020-04-17)
-
-
-### Bug Fixes
-
-* **http-server:** ensure rejection handler is registered before the error event is emitted ([83e78d3](https://github.com/strongloop/loopback-next/commit/83e78d3d63d1af9d908ea0a2c6e5ae646b236847))
-* extend test timeout for windows ([249198e](https://github.com/strongloop/loopback-next/commit/249198e41d6ad567f1582701c25abf29fc08c809)), closes [#4425](https://github.com/strongloop/loopback-next/issues/4425)
-* make givenHttpServerConfig typing compatible with TypeScript 3.6 ([1edbc0b](https://github.com/strongloop/loopback-next/commit/1edbc0bfbb07be3fca899286488c2c5196da2d47))
-* **http-server:** correctly format IPv6 host in url ([c076eba](https://github.com/strongloop/loopback-next/commit/c076ebac6271d5dcd82c1021f3919c4a0ba14f46))
-* **http-server:** reset addressInfo when server is stopped ([85fcbd4](https://github.com/strongloop/loopback-next/commit/85fcbd4737983007fa63782f892d984a9ed32bdd))
-* **http-server:** simplify test-related scripts ([6911e34](https://github.com/strongloop/loopback-next/commit/6911e3466c38f02d496fbf53af493e332df08e8a))
-* **http-server:** use loopback instead of 0.0.0.0/[::] in URLs ([5b83a0c](https://github.com/strongloop/loopback-next/commit/5b83a0cfa146d2d1b8bc86e6e7fae44f6f61cae9))
-
-
-### chore
-
-* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
-
-
-### Features
-
-* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
-* **http-server:** use stoppable to handle http keep-alive gracefully ([c5fc495](https://github.com/strongloop/loopback-next/commit/c5fc495639301a494313afb33c5d156b427257e0))
-* **testlab:** add generic helper `skipOnTravis` ([3221d9f](https://github.com/strongloop/loopback-next/commit/3221d9faed0c5dbc5da8bfc65cad7992f1b91f41))
-* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
-* **http-server:** add support for unix socket/windows pipe path ([22400fe](https://github.com/strongloop/loopback-next/commit/22400fe9a40b17042a5df684300f8a007dd50edd))
-* **http-server:** exposes underlying http server before start ([ba76ecf](https://github.com/strongloop/loopback-next/commit/ba76ecfcf215fd0b272042d4134d48bd99e20f6d))
-* **testlab:** set port to 0 in givenHttpServerConfig ([90a0bfb](https://github.com/strongloop/loopback-next/commit/90a0bfbec3b5d78d3fd2e270cc1d063ca3f7d690))
-* add `listening` property in the server interface ([ff0eab7](https://github.com/strongloop/loopback-next/commit/ff0eab7ae47a7a4219afaf1c662897445989bd0d)), closes [#1368](https://github.com/strongloop/loopback-next/issues/1368)
-* add http-server package ([bac8d8c](https://github.com/strongloop/loopback-next/commit/bac8d8cb1f3070e7b46ecff4125d10687fe5d981))
-* add HTTPs protocol support ([6941a5d](https://github.com/strongloop/loopback-next/commit/6941a5d5590ac1cae725760e667d05adf5b8a5f2))
-
-
-### BREAKING CHANGES
-
-* Node.js v8.x is now end of life. Please upgrade to version
-10 and above. See https://nodejs.org/en/about/releases.
-
-
-
-
-
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/http-server@2.0.3...@loopback/http-server@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/http-server

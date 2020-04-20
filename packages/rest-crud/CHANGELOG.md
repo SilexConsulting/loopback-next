@@ -3,69 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# 1.0.0 (2020-04-17)
-
-
-### Bug Fixes
-
-* **rest-crud:** fix pkg name in license headers ([6ad0bb5](https://github.com/strongloop/loopback-next/commit/6ad0bb59c71ea2356cb951da786bdbff246b47e7))
-
-
-### chore
-
-* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
-
-
-### Code Refactoring
-
-* **rest:** make getApiSpec() async ([fe3df1b](https://github.com/strongloop/loopback-next/commit/fe3df1b85904ee8b8a005fa6eddf150d28ad2a08))
-
-
-### Features
-
-* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
-* add defineCrudRepositoryClass ([8e3e21d](https://github.com/strongloop/loopback-next/commit/8e3e21d41c7df7a52e9420da09d09881c97cb771))
-* generate controller based on Model name ([04a3318](https://github.com/strongloop/loopback-next/commit/04a33188895f5d8dd21efb9c76479e58526a770c))
-* simplify model schema with excluded properties ([b554ac8](https://github.com/strongloop/loopback-next/commit/b554ac8a08a518f112d111ebabcac48279ada7f8))
-* use [@param](https://github.com/param).filter and [@param](https://github.com/param).where decorators ([896ef74](https://github.com/strongloop/loopback-next/commit/896ef7485376b3aedcca01a40f828bf1ed9470ae))
-* **rest-crud:** add "replaceById" endpoint ([06d0967](https://github.com/strongloop/loopback-next/commit/06d0967ec145455d096e63bcf3bfac78405cd3a8))
-* **rest-crud:** add CrudRestApiBuilder ([bc5d56f](https://github.com/strongloop/loopback-next/commit/bc5d56fd4f10759756cd0ef6fbc922c02b5a9894))
-* use descriptive title to describe schema of POST (create) request bodies ([8f49a45](https://github.com/strongloop/loopback-next/commit/8f49a4552f8a4792b2e45b631e6c7422c718e7c3))
-* **rest-crud:** initial implementation ([4374160](https://github.com/strongloop/loopback-next/commit/43741608a10426c92091bb24923a71041e6d8ff0))
-
-
-### BREAKING CHANGES
-
-* **rest:** Api specifications are now emitted as a Promise instead
-of a value object.  Calls to getApiSpec function must switch from
-the old style to new style as follows:
-
-1. Old style
-
-```ts
-function() {
-  // ...
-  const spec = restApp.restServer.getApiSpec();
-  // ...
-}
-```
-
-2. New style
-
-```ts
-async function() {
-  // ...
-  const spec = await restApp.restServer.getApiSpec();
-  // ...
-}
-```
-* Node.js v8.x is now end of life. Please upgrade to version
-10 and above. See https://nodejs.org/en/about/releases.
-
-
-
-
-
 ## [0.7.4](https://github.com/strongloop/loopback-next/compare/@loopback/rest-crud@0.7.3...@loopback/rest-crud@0.7.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/rest-crud

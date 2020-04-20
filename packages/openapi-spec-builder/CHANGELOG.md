@@ -3,51 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# 3.0.0 (2020-04-17)
-
-
-### Bug Fixes
-
-* change index.d.ts files to point to dist8 ([42ca42d](https://github.com/strongloop/loopback-next/commit/42ca42d5d984df9efe52b219f2be531392256bdd))
-* Fix node module names in source code headers ([0316f28](https://github.com/strongloop/loopback-next/commit/0316f28a22a1b85dce72f67b1dab66599c6b9403))
-* fix typo of `additional` ([2fd7610](https://github.com/strongloop/loopback-next/commit/2fd76106ecebd4d5257262f4cda8af1e5ec409a3))
-
-
-### Build System
-
-* drop dist6 related targets ([#945](https://github.com/strongloop/loopback-next/issues/945)) ([a2368ce](https://github.com/strongloop/loopback-next/commit/a2368cee598c131a826ee42e347266c6e25ae582))
-
-
-### chore
-
-* remove support for Node.js v8.x ([4281d9d](https://github.com/strongloop/loopback-next/commit/4281d9df50f0715d32879e1442a90b643ec8f542))
-
-
-### Features
-
-* add `tslib` as dependency ([a6e0b4c](https://github.com/strongloop/loopback-next/commit/a6e0b4ce7b862764167cefedee14c1115b25e0a4)), closes [#4676](https://github.com/strongloop/loopback-next/issues/4676)
-* **openapi-spec-builder:** add components ([6f89655](https://github.com/strongloop/loopback-next/commit/6f89655d093f93ffe9630205a48b237df5195ea0))
-* replace tslint with eslint ([44185a7](https://github.com/strongloop/loopback-next/commit/44185a744f772566f2cb186ba8cd288fed65d04c))
-* **openapi-spec-builder:** improve openapi spec builder and add tests ([8c7bd86](https://github.com/strongloop/loopback-next/commit/8c7bd86d77f2d1230c301fa2ed09576ed9badc93))
-* **openapi-v3:** add support for openapi responses ([0ecaecd](https://github.com/strongloop/loopback-next/commit/0ecaecd8cfdbfd10b9d581bbf9edcabb0297e0d3))
-* add helper package "dist-util" ([532f153](https://github.com/strongloop/loopback-next/commit/532f15324f0378a951dbb7f101ce9df3bb3711ef))
-* upgrade from swagger 2 to openapi 3 ([71e5af1](https://github.com/strongloop/loopback-next/commit/71e5af10365b7fa6277cad8f6a216439610f19df))
-* **openapi-spec-builder:** add withTags function to spec-builder ([#826](https://github.com/strongloop/loopback-next/issues/826)) ([b70f55a](https://github.com/strongloop/loopback-next/commit/b70f55a918c0b85ce141c45e116a6c2f84966cc5))
-
-
-### BREAKING CHANGES
-
-* Node.js v8.x is now end of life. Please upgrade to version
-10 and above. See https://nodejs.org/en/about/releases.
-* Support for Node.js version lower than 8.0 has been dropped.
-Please upgrade to the latest Node.js 8.x LTS version.
-
-Co-Authored-by: Taranveer Virk <taranveer@virk.cc>
-
-
-
-
-
 ## [2.0.4](https://github.com/strongloop/loopback-next/compare/@loopback/openapi-spec-builder@2.0.3...@loopback/openapi-spec-builder@2.0.4) (2020-04-11)
 
 **Note:** Version bump only for package @loopback/openapi-spec-builder
