@@ -55,6 +55,13 @@ export class User extends Entity {
   emailVerified?: boolean;
 
   @property({
+    type: 'array',
+    itemType: 'string',
+    default: [],
+  })
+  hashtags?: string[];
+
+  @property({
     type: 'string',
   })
   verificationToken?: string;
