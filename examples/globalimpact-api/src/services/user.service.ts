@@ -92,6 +92,7 @@ export class PassportUserIdentityService
       user = await this.userRepository.create({
         email: email,
         name: profile.displayName,
+        role: 'user',
       });
     } else {
       user = users[0];
