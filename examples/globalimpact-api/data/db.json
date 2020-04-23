@@ -1,0 +1,23 @@
+{
+  "ids": {
+    "UserCredentials": 4,
+    "UserIdentity": 108339447509596,
+    "User": 5
+  },
+  "models": {
+    "UserCredentials": {
+      "1": "{\"password\":\"$2a$10$/95wt8nBbkp5utTMOCBER.V2s633yJVr.pYevwXiFr8Q//yvisMZm\",\"userId\":\"1\",\"id\":\"1\"}",
+      "2": "{\"password\":\"$2a$10$CEc8xICwFaGL4usbJ6XWLOnTUoJep0YcOIgkMmEpFzRdWLaEwQ/MG\",\"userId\":\"2\",\"id\":\"2\"}",
+      "3": "{\"password\":\"$2a$10$xRq6wFmFWdU4yEUUyPkM.eM2rF7QmwxKaK2sFL6RFVkXhyKRIPpty\",\"userId\":\"3\",\"id\":\"3\"}"
+    },
+    "UserIdentity": {
+      "108339447509595": "{\"id\":\"108339447509595\",\"provider\":\"facebook\",\"profile\":{\"userId\":\"4\",\"emails\":[{\"value\":\"j.hyde@silex-consulting.com\"}]},\"authScheme\":\"facebook\",\"created\":\"2020-04-23T13:59:31.565Z\",\"userId\":4}"
+    },
+    "User": {
+      "1": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"roles\":[\"admin\"],\"id\":1}",
+      "2": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"roles\":[\"user\"],\"id\":2}",
+      "3": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"roles\":[\"user\"],\"id\":3}",
+      "4": "{\"email\":\"j.hyde@silex-consulting.com\",\"name\":\"Joe Redmore\",\"roles\":[\"user\"],\"id\":4}"
+    }
+  }
+}
