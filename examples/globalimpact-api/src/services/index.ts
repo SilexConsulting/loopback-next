@@ -4,4 +4,5 @@
 // License text available at https://opensource.org/licenses/MIT
 
 export * from './user.service';
+export * from './file-upload.service';
 export * from './keys';
