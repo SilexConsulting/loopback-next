@@ -10,6 +10,7 @@ import {User} from './models';
 import {Credentials} from './repositories';
 import {Profile as PassportProfile} from 'passport';
 import {UserIdentityService} from '@loopback/authentication';
+import {FileUploadHandler} from './types';
 
 export namespace TokenServiceConstants {
   export const TOKEN_SECRET_VALUE = process.env.TOKEN_SECRET ?? 'token_secret';
@@ -46,3 +47,15 @@ export namespace UserServiceBindings {
     UserIdentityService<PassportProfile, User>
   >('services.passport.identity');
 }
+
+/**
+ * Binding key for the file upload service
+ */
+export const FILE_UPLOAD_SERVICE = BindingKey.create<FileUploadHandler>(
+  'services.FileUpload',
+);
+
+/**
+ * Binding key for the storage directory
+ */
+export const STORAGE_DIRECTORY = BindingKey.create<string>('storage.directory');
