@@ -56,6 +56,12 @@ export class User extends Entity {
   realm?: string;
 
   @property({
+    type: 'string',
+    default: '',
+  })
+  bio?: string;
+
+  @property({
     type: 'boolean',
   })
   emailVerified?: boolean;
