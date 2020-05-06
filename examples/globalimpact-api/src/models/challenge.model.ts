@@ -28,6 +28,13 @@ export class Challenge extends Entity {
   description: string;
 
   @property({
+    type: 'boolean',
+    required: true,
+    default: false,
+  })
+  archived: boolean;
+
+  @property({
     type: 'string',
     required: true,
   })
