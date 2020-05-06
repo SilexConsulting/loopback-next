@@ -6,3 +6,4 @@
 export * from './ping.controller';
 export * from './user.controller';
 export * from './profile-picture.controller';
+export * from './challenge.controller';
