@@ -56,6 +56,7 @@ import providers from './providers';
 import multer from 'multer';
 import {FILE_UPLOAD_SERVICE, STORAGE_DIRECTORY} from './keys';
 
+const adminApp = require('./admin-app').adminApp;
 
 /**
  * Information from package.json
@@ -113,6 +114,8 @@ export class GlobalimpactApiApplication extends BootMixin(
 
     // Set up default home page
     this.static('/', path.join(__dirname, '../public'));
+
+    this.mountExpressRouter('/admin', adminApp);
 
     // Customize @loopback/rest-explorer configuration here
     this.bind(RestExplorerBindings.CONFIG).to({
