@@ -1,27 +1,46 @@
 html
   head
     title= title
-    link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous")
-    
-    link(rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+    include ../includes/styles.pug
   body
     include ../includes/nav.pug
     div(class='container')
       div(class='row my-4')
         div(class='col-sm')
             h1= pageTitle
+
       div(class='row mb-4')
-        div(class='col-sm')
-          h4(class='mb-4') Challenges
-          table(class='table')
-            thead
-              tr
-                th ID
-                th Badge
-                th Name
-                th Short Description
-                th(class='text-right') Actions
-            tbody(id='challenge-list')
+        div(class='col')
+          ul(class='nav nav-tabs' id='challenge-tabs' role='tablist')
+            li(class='nav-item')
+              a(class='nav-link active' data-toggle='tab' href="#active" role='tab') 
+                Active Challenges
+                span(class='badge badge-secondary ml-2' id='activeTotal')
+            li(class='nav-item')
+              a(class='nav-link' data-toggle='tab' href="#archived" role='tab') 
+                Archived Challenges
+                span(class='badge badge-secondary ml-2' id='archivedTotal')
+          div(class='tab-content')
+            div(class='tab-pane fade show active' id='active' role='tabpanel')
+              table(class='table my-4')
+                thead
+                  tr
+                    th ID
+                    th Badge
+                    th Name
+                    th Short Description
+                    th(class='text-right') Actions
+                tbody(id='challenge-list-active')
+            div(class='tab-pane fade' id='archived' role='tabpanel')
+              table(class='table my-4')
+                thead
+                  tr
+                    th ID
+                    th Badge
+                    th Name
+                    th Short Description
+                    th(class='text-right') Actions
+                tbody(id='challenge-list-archived')
       div(class='row ')
         div(class='col-sm')
           div(class='card')
@@ -41,61 +60,10 @@ html
                   button(type='submit' class='btn btn-primary') Submit
 
 
-    script(src='https://code.jquery.com/jquery-3.2.1.min.js'
-           integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='
-           crossorigin='anonymous')
+    
+    include ../includes/script.pug
+    include ../scripts/challenge-scripts.pug
 
-    script(src='https://code.jquery.com/jquery-3.2.1.min.js'
-           integrity='sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4='
-           crossorigin='anonymous')
-
-    script.
-
-      var renderChallenges = function (challenges) {
-        challenges.forEach(function (challenge) {
-          jQuery('#challenge-list').append(`<tr><td>${challenge.id}</td><td><img style="width: 40px" src="/api/ProfilePicture/${challenge.badge}" /></td><td style="white-space: nowrap">${challenge.name}</td><td>${challenge.shortDescription}<br/><small class="py-2 d-block">${challenge.description.substr(1, 200) + '...'}</small></td><td></td></tr>`);
-        })
-      }
-
-      var fetchChallenges = function () {
-        fetch('/api/challenges', {
-          method: 'GET',
-        }).then(function(response) {
-          return response.json();
-        })
-        .then(function(response) {
-          renderChallenges(response);
-        })
-      }
-
-      var handleSubmit = async function (event) {
-        event.preventDefault();
-
-        var formData = new FormData(event.target)
-        var formValues = Object.fromEntries(formData);
-        var imagePayload = new FormData();
-        imagePayload.append('badge', formValues.badge, `${formValues.name}_badge.png`);
-
-        var fileResponse = await fetch('/api/ProfilePicture', {
-          method: 'POST',
-          body: imagePayload,
-        });
-        var parsedFileResponse = await fileResponse.json();
-
-        formValues.badge = parsedFileResponse.files[0].originalname;
-        let response = await fetch('/api/challenges', {
-          method: 'POST',
-          body: JSON.stringify(formValues),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        let result = await response.json();
-        fetchChallenges();
-      }
-
-      fetchChallenges();
-      jQuery(document).on('submit', 'form', handleSubmit);
+    
            
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous")
+    
