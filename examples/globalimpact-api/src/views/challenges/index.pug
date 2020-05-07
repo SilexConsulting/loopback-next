@@ -57,12 +57,32 @@ html
                   label(for='badge') Badge Graphic
                   input(type='file' name='badge' class='form-control' placeholder='Short description')
                 div(class='form-group')
-                  button(type='submit' class='btn btn-primary') Submit
+                  button(type='submit' class='btn btn-primary') Create Challenge
 
 
     
     include ../includes/script.pug
     include ../scripts/challenge-scripts.pug
+    script.
+      fetchChallenge("#{id}").then(function (challenges) {
+        renderChallenges(challenges);
+      })
+
+      jQuery(document).on('submit', 'form', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(event.target);
+        var formValues = Object.fromEntries(formData);
+
+        uploadBadge(formValues.badge, formValues.name).then(function (badge) {
+          formValues.badge = badge.files[0].originalname
+          createChallenge(formValues).then(function () {
+            fetchChallenges().then(function (challenges) {
+              renderChallenges(challenges);
+            })
+          })
+        });
+      });
 
     
            
