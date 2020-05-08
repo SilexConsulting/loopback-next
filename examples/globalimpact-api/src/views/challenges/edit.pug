@@ -1,0 +1,56 @@
+html
+  head
+    title= title
+    include ../includes/styles.pug
+  body
+    include ../includes/nav.pug
+    div(class='container')
+      div(class='row my-4')
+        div(class='col')
+          h1(id='challenge-title')
+        div(class='col col-sm-1')
+          img(id='challenge-badge-img' class='w-100')
+      div(class='row ')
+        div(class='col-sm')
+          form(class='form')
+            div(class='form-group')
+              input(type='text' id='challenge-name' name='name' class='form-control' placeholder='Challenge name')
+            div(class='form-group')
+              input(type='text' id='challenge-short-desc' name='shortDescription' class='form-control' placeholder='Short description')
+            div(class='form-group')
+              textarea(type='text' id='challenge-desc' name='description' rows='10' class='form-control' placeholder='Long description')
+            div(class='form-group')
+              label(for='badge') Upload New Badge Graphic
+              input(type='file' name='badge' class='form-control' placeholder='Short description')
+            div(class='form-group')
+              button(type='submit' class='btn btn-primary') Update Challenge
+
+
+    
+    include ../includes/script.pug
+    include ../scripts/challenge-scripts.pug
+
+    script.
+      fetchChallenge("#{id}").then(function (challenge) {
+        updateEditForm(challenge);
+      })
+
+      jQuery(document).on('submit', 'form', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(event.target);
+        var formValues = Object.fromEntries(formData);
+
+        uploadBadge(formValues.badge, formValues.name).then(function (badge) {
+          formValues.badge = badge.files[0].originalname
+          updateChallenge(formValues, #{id}).then(function () {
+            fetchChallenge("#{id}").then(function (challenge) {
+              updateEditForm(challenge);
+            })
+          })
+        });
+      });
+
+    
+           
+    

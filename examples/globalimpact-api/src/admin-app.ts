@@ -14,11 +14,11 @@ adminApp.get('/challenges', function (_req: Request, res: Response) {
     pageTitle: 'Challenges',
   })
 });
-
-adminApp.get('/challenges', function (_req: Request, res: Response) {
-  res.render('challenges/index', { 
-    title: 'Challenges | GI Admin', 
-    pageTitle: 'Challenges',
+adminApp.get('/challenges/:challengeId', function (_req: Request, res: Response) {
+  res.render('challenges/edit', { 
+    id: _req.params.challengeId,
+    title: 'Edit Challenge | GI Admin', 
+    pageTitle: 'Edit Challenge',
   })
 });
 

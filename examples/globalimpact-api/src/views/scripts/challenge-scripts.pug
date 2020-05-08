@@ -16,22 +16,42 @@ script.
         activeTotal++;
       }
 
-      container.append(`<tr><td>${challenge.id}</td><td><img style="width: 40px" src="/api/ProfilePicture/${challenge.badge}" /></td><td style="white-space: nowrap">${challenge.name}</td><td>${challenge.shortDescription}<br/><small class="py-2 d-block">${challenge.description.substr(1, 200) + '...'}</small></td><td class="text-right"><button onClick="archiveChallenge('${challenge.id}', ${!challenge.archived})" class="btn btn-outline-secondary"><i class="fa fa-archive"></i></button></td></tr>`);
+      container.append(`<tr><td>${challenge.id}</td><td><img style="width: 40px" src="/api/ProfilePicture/${challenge.badge}" /></td><td style="white-space: nowrap">${challenge.name}</td><td>${challenge.shortDescription}<br/><small class="py-2 d-block">${challenge.description.substr(1, 200) + '...'}</small></td><td class="text-right"><div class="btn-group"><a onClick="archiveChallenge(${challenge.id}, ${!challenge.archived})" class="btn btn-primary text-white"><i class="fa fa-archive"></i></a><a href="challenges/${challenge.id}" class="btn btn-primary"><i class="fa fa-pencil"></i></a></div></td></tr>`);
     })
 
     jQuery('#activeTotal').html(activeTotal);
     jQuery('#archivedTotal').html(archivedTotal);
   }
 
-  var fetchChallenges = function () {
-    fetch('/api/challenges', {
+  var fetchChallenges = async function () {
+    var response = await fetch(`/api/challenges`, {
       method: 'GET',
-    }).then(function(response) {
-      return response.json();
     })
-    .then(function(response) {
-      renderChallenges(response);
+    var parsed = await response.json();
+    return parsed;
+  }
+
+  var fetchChallenge = async function (challengeId) {
+    var response = await fetch(`/api/challenges/${challengeId}`, {
+      method: 'GET',
     })
+    var parsed = await response.json();
+    return parsed;
+  }
+
+  var updateEditForm = function (challenge) {
+    var $title = $('#challenge-title');
+    var $name = $('#challenge-name');
+    var $shortDescription = $('#challenge-short-desc');
+    var $description = $('#challenge-desc');
+    var $badgeImg = $('#challenge-badge-img');
+
+    $title.html(challenge.name);
+    $name.val(challenge.name);
+    $shortDescription.val(challenge.shortDescription);
+    $description.val(challenge.description);
+    $badgeImg.attr('src', `/api/ProfilePicture/${challenge.badge}?${Math.random().toString(36).substring(7)}`);
+
   }
 
   var archiveChallenge = async function(challengeId, shouldArchive) {
@@ -44,24 +64,34 @@ script.
         'Content-Type': 'application/json',
       },
     });
-    fetchChallenges();
+    fetchChallenges().then(function(challenges) {
+      renderChallenges(challenges)
+    });
   }
 
-  var handleSubmit = async function (event) {
-    event.preventDefault();
-
-    var formData = new FormData(event.target)
-    var formValues = Object.fromEntries(formData);
+  var uploadBadge = async function (badge, name) {
     var imagePayload = new FormData();
-    imagePayload.append('badge', formValues.badge, `${formValues.name}_badge.png`);
+    imagePayload.append('badge', badge, `${name}_badge.png`);
 
     var fileResponse = await fetch('/api/ProfilePicture', {
       method: 'POST',
       body: imagePayload,
     });
-    var parsedFileResponse = await fileResponse.json();
+    var parsedResponse = await fileResponse.json();
+    return parsedResponse;
+  }
 
-    formValues.badge = parsedFileResponse.files[0].originalname;
+  var updateChallenge = async function (challenge, id) {
+    return await fetch(`/api/challenges/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(challenge),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  var createChallenge = async function (formValues) {
     formValues.archived = false;
     let response = await fetch('/api/challenges', {
       method: 'POST',
@@ -70,10 +100,4 @@ script.
         'Content-Type': 'application/json',
       },
     });
-
-    let result = await response.json();
-    fetchChallenges();
   }
-
-  fetchChallenges();
-  jQuery(document).on('submit', 'form', handleSubmit);
