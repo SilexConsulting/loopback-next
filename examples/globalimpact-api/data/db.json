@@ -1,0 +1,24 @@
+{
+  "ids": {
+    "ChallengeLevel": 1,
+    "Challenge": 1,
+    "UserCredentials": 4,
+    "UserIdentity": 1,
+    "User": 4
+  },
+  "models": {
+    "ChallengeLevel": {},
+    "Challenge": {},
+    "UserCredentials": {
+      "1": "{\"password\":\"$2a$10$OPx/oCtE0L.NEMnEeDZsMeC8bnPW1B7mXcLG4Pq1S2ayg8v86rWGq\",\"userId\":\"1\",\"id\":\"1\"}",
+      "2": "{\"password\":\"$2a$10$5RWOGrZOYHk2DpNvlLoD3uWKcXmdQZdn3I2431pHswOBWsCFM7j/y\",\"userId\":\"2\",\"id\":\"2\"}",
+      "3": "{\"password\":\"$2a$10$NPUo/..DETJgo8VqTGNM7.ZjmN.Wlv7g4QRwNjVoiXebLiM5oyP.G\",\"userId\":\"3\",\"id\":\"3\"}"
+    },
+    "UserIdentity": {},
+    "User": {
+      "1": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":1}",
+      "2": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":2}",
+      "3": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":3}"
+    }
+  }
+}

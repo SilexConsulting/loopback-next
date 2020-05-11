@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {ChallengeLevel} from './challenge-level.model';
 
 @model()
 export class Challenge extends Entity {
@@ -40,6 +41,8 @@ export class Challenge extends Entity {
   })
   badge: string;
 
+  @hasMany(() => ChallengeLevel)
+  challengeLevels: ChallengeLevel[];
 
   constructor(data?: Partial<Challenge>) {
     super(data);
