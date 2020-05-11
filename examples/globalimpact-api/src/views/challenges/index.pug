@@ -13,33 +13,33 @@ html
         div(class='col')
           ul(class='nav nav-tabs' id='challenge-tabs' role='tablist')
             li(class='nav-item')
-              a(class='nav-link active' data-toggle='tab' href="#active" role='tab') 
-                Active Challenges
+              a(class='nav-link active' data-toggle='tab' href="#active" role='tab')
+                span Active
                 span(class='badge badge-secondary ml-2' id='activeTotal')
             li(class='nav-item')
               a(class='nav-link' data-toggle='tab' href="#archived" role='tab') 
-                Archived Challenges
+                span Archived
                 span(class='badge badge-secondary ml-2' id='archivedTotal')
           div(class='tab-content')
             div(class='tab-pane fade show active' id='active' role='tabpanel')
               table(class='table my-4')
                 thead
                   tr
-                    th ID
-                    th Badge
-                    th Name
-                    th Short Description
-                    th(class='text-right') Actions
+                    th(class='border-top-0') ID
+                    th(class='border-top-0') Badge
+                    th(class='border-top-0') Name
+                    th(class='border-top-0') Short Description
+                    th(class='border-top-0 text-right') Actions
                 tbody(id='challenge-list-active')
             div(class='tab-pane fade' id='archived' role='tabpanel')
               table(class='table my-4')
                 thead
                   tr
-                    th ID
-                    th Badge
-                    th Name
-                    th Short Description
-                    th(class='text-right') Actions
+                    th(class='border-top-0') ID
+                    th(class='border-top-0') Badge
+                    th(class='border-top-0') Name
+                    th(class='border-top-0') Short Description
+                    th(class='border-top-0 text-right') Actions
                 tbody(id='challenge-list-archived')
       div(class='row ')
         div(class='col-sm')

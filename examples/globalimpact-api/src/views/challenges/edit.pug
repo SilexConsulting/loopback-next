@@ -35,20 +35,29 @@ html
         updateEditForm(challenge);
       })
 
+      var update = async function (formValues) {
+        updateChallenge(formValues, #{id}).then(function () {
+          fetchChallenge("#{id}").then(function (challenge) {
+            updateEditForm(challenge);
+          })
+        })
+      }
+
       jQuery(document).on('submit', 'form', function (event) {
         event.preventDefault();
 
         var formData = new FormData(event.target);
         var formValues = Object.fromEntries(formData);
 
-        uploadBadge(formValues.badge, formValues.name).then(function (badge) {
-          formValues.badge = badge.files[0].originalname
-          updateChallenge(formValues, #{id}).then(function () {
-            fetchChallenge("#{id}").then(function (challenge) {
-              updateEditForm(challenge);
-            })
-          })
-        });
+        if (formValues.badge.size) {
+          uploadBadge(formValues.badge, formValues.name).then(function (badge) {
+            formValues.badge = badge.files[0].originalname
+            update(formValues);
+          });
+        } else {
+          delete formValues.badge;
+          update(formValues);
+        }
       });
 
     
