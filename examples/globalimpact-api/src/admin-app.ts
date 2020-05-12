@@ -4,22 +4,11 @@ import path from 'path';
 
 const adminApp = express();
 
-adminApp.set('views', path.resolve(__dirname, '../src//views'));
-adminApp.set('view engine', 'pug')
+adminApp.use(express.static(path.resolve(__dirname, '../admin/build')))
 
 // your existing Express routes
-adminApp.get('/challenges', function (_req: Request, res: Response) {
-  res.render('challenges/index', { 
-    title: 'Challenges | GI Admin', 
-    pageTitle: 'Challenges',
-  })
-});
-adminApp.get('/challenges/:challengeId', function (_req: Request, res: Response) {
-  res.render('challenges/edit', { 
-    id: _req.params.challengeId,
-    title: 'Edit Challenge | GI Admin', 
-    pageTitle: 'Edit Challenge',
-  })
+adminApp.get('/', function (_req: Request, res: Response) {
+  res.sendFile(path.join(__dirname + '../admin/build/index.html'));
 });
 
 export {adminApp};

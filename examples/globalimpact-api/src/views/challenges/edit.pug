@@ -10,9 +10,9 @@ html
           h1(id='challenge-title')
         div(class='col col-sm-1')
           img(id='challenge-badge-img' class='w-100')
-      div(class='row ')
+      div(class='row')
         div(class='col-sm')
-          form(class='form')
+          form(id='editChallengeForm' class='form')
             div(class='form-group')
               input(type='text' id='challenge-name' name='name' class='form-control' placeholder='Challenge name')
             div(class='form-group')
@@ -21,9 +21,26 @@ html
               textarea(type='text' id='challenge-desc' name='description' rows='10' class='form-control' placeholder='Long description')
             div(class='form-group')
               label(for='badge') Upload New Badge Graphic
-              input(type='file' name='badge' class='form-control' placeholder='Short description')
+              input(type='file' name='badge' class='form-control pb-5 pt-3' placeholder='Short description')
             div(class='form-group')
               button(type='submit' class='btn btn-primary') Update Challenge
+      hr
+      div()
+        div(class='row')
+          div(class='col')
+            h5(class='mb-3') Challenge Levels
+        div(id='challenge-levels')
+        div(id='new-challenge-level')
+          h5(class='mb-3') New Challenge Level
+          form(class='form border pt-3 pl-3 pr-3' id='addLevelForm')
+            div(class='form-group')
+              input(type='text' name='name' class='form-control' placeholder='Level name')
+            div(class='form-group')
+              input(type='text' name='description' class='form-control' placeholder='Level description')
+            div(class='form-group')
+              button(type='submit' class='btn btn-primary') Create Challenge Level
+
+
 
 
     
@@ -33,6 +50,7 @@ html
     script.
       fetchChallenge("#{id}").then(function (challenge) {
         updateEditForm(challenge);
+        renderChallengeLevels(challenge);
       })
 
       var update = async function (formValues) {
@@ -43,7 +61,17 @@ html
         })
       }
 
-      jQuery(document).on('submit', 'form', function (event) {
+      var handleDeleteChallengeLevel = function (challengeLevelId) {
+        event.preventDefault();
+        deleteChallengeLevel(challengeLevelId).then(function() {
+          fetchChallenge("#{id}").then(function (challenge) {
+            updateEditForm(challenge);
+            renderChallengeLevels(challenge);
+          })
+        });
+      }
+
+      jQuery(document).on('submit', '#editChallengeForm', function (event) {
         event.preventDefault();
 
         var formData = new FormData(event.target);
@@ -58,7 +86,21 @@ html
           delete formValues.badge;
           update(formValues);
         }
-      });
+      })
+
+      jQuery(document).on('submit', '#addLevelForm', function (event) {
+        event.preventDefault();
+
+        var formData = new FormData(event.target);
+        var formValues = Object.fromEntries(formData);
+
+        createChallengeLevel(#{id}, formValues).then(function() {
+          fetchChallenge("#{id}").then(function (challenge) {
+            updateEditForm(challenge);
+            renderChallengeLevels(challenge);
+          })
+        });
+      })
 
     
            

@@ -64,7 +64,8 @@ html
     include ../includes/script.pug
     include ../scripts/challenge-scripts.pug
     script.
-      fetchChallenge("#{id}").then(function (challenges) {
+
+      fetchChallenges().then(function (challenges) {
         renderChallenges(challenges);
       })
 

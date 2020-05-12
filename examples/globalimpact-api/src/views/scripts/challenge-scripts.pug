@@ -23,6 +23,71 @@ script.
     jQuery('#archivedTotal').html(archivedTotal);
   }
 
+  var $levelWrapper = $('#challenge-levels')
+  var renderChallengeLevels = function (challenge) {
+    if (challenge.challengeLevels) {
+      var $challengeLevelWrapper = $('#challenge-levels');
+      $challengeLevelWrapper.empty();
+      challenge.challengeLevels.forEach(function(level, index) {
+
+        let tasks = '';
+        if (level.tasks) {
+          level.tasks.forEach(function(task, index) {
+            tasks = `${tasks}<div class="row"><div class="col flex-grow-1 pt-1"><p class="alert alert-success">${task.description}</p></div></div>`
+          })
+        } else {
+          tasks = '<p class="pt-2"><em class="text-muted">No tasks found</em></p>'
+        }
+
+        $challengeLevelWrapper.append(`
+        <form class="card">
+          <div class="card-body">
+            <div class="form-group row">
+              <div class="col flex-grow-1">
+                <h5><strong>${level.name}</strong></h5>
+              </div>
+              <div class="col flex-grow-0">
+                <div class="btn-group">
+                  <button class="btn btn-danger" onClick="handleDeleteChallengeLevel(${level.id})"><span class="fa fa-trash"></span></button>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-2">Name</label>
+              <div class="col-sm-10">
+                <input class="form-control" type="text" name="level_${index}_name" placeholder="Level name" value="${level.name}" />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-2">Description</label>
+              <div class="col-sm-10">
+                <input class="form-control" type="text" name="level_${index}_description" placeholder="Level Description" value="${level.description}" />
+              </div>
+            </div>
+            <hr/>
+            <div class="row">
+              <label class="col-form-label col-sm-2"><span class="pr-3">Tasks</span><button class="btn btn-sm btn-outline-primary"><span class="fa fa-plus"></span></button></label>
+              <div class="col-sm-10">
+                  ${tasks}
+              </div>
+            </div>
+          </div>
+        </form>`)
+      })
+    }
+  }
+  var createChallengeLevel = async function (challengeId, formValues) {
+    var response = await fetch(`/api/challenges/${challengeId}/challenge-levels`, {
+      method: 'POST',
+      body: JSON.stringify(formValues),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    var parsed = await response.json();
+    return parsed;
+  }
+
   var fetchChallenges = async function () {
     var response = await fetch(`/api/challenges`, {
       method: 'GET',
@@ -31,8 +96,27 @@ script.
     return parsed;
   }
 
+  var deleteChallengeLevel = async function (id) {
+    var response = await fetch(`/api/challenge-levels/${id}`, {
+      method: 'DELETE',
+    })
+    return response;
+  }
+
   var fetchChallenge = async function (challengeId) {
-    var response = await fetch(`/api/challenges/${challengeId}`, {
+    var params = {
+      include: [
+        { 
+          relation: "challengeLevels",
+          scope: {
+            include: [
+              { relation: "tasks" }
+            ]
+          }
+        },
+      ]
+    }
+    var response = await fetch(`/api/challenges/${challengeId}?filter=${JSON.stringify(params)}`, {
       method: 'GET',
     })
     var parsed = await response.json();
@@ -89,6 +173,17 @@ script.
         'Content-Type': 'application/json',
       },
     });
+  }
+
+  var updateChallengeLevel = async function (formValues, id) {
+    var response = await fetch(`/api/challenge-levels/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(formValues),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return response;
   }
 
   var createChallenge = async function (formValues) {

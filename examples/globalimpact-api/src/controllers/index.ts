@@ -7,3 +7,8 @@ export * from './ping.controller';
 export * from './user.controller';
 export * from './profile-picture.controller';
 export * from './challenge.controller';
+export * from './challenge-level-challenge.controller';
+export * from './challenge-challenge-level.controller';
+export * from './task.controller';
+export * from './challenge-level-task.controller';
+export * from './challenge-level.controller';
