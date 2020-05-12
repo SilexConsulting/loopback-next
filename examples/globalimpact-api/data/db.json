@@ -5,7 +5,7 @@
     "UserCredentials": 31,
     "UserIdentity": 1,
     "User": 31,
-    "Task": 4
+    "Task": 4,
   },
   "models": {
     "ChallengeLevel": {
