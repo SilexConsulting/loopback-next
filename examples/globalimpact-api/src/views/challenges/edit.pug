@@ -84,7 +84,12 @@ html
         var formData = new FormData(event.target);
         var formValues = Object.fromEntries(formData);
 
-        createChallengeLevel(#{id}, formValues);
+        createChallengeLevel(#{id}, formValues).then(function() {
+          fetchChallenge("#{id}").then(function (challenge) {
+            updateEditForm(challenge);
+            renderChallengeLevels(challenge);
+          })
+        });
       });
 
     

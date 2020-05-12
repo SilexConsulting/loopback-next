@@ -24,15 +24,10 @@ script.
   }
 
   var $levelWrapper = $('#challenge-levels')
-  var challengeLevels = [
-    {
-      name: '',
-      description: '',
-    }
-  ]
   var renderChallengeLevels = function (challenge) {
     if (challenge.challengeLevels) {
       var $challengeLevelWrapper = $('#challenge-levels');
+      $challengeLevelWrapper.empty();
       challenge.challengeLevels.forEach(function(level, index) {
         $challengeLevelWrapper.append(`
         <form class="card">

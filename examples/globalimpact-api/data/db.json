@@ -1,14 +1,20 @@
 {
   "ids": {
-    "ChallengeLevel": 1,
-    "Challenge": 1,
+    "ChallengeLevel": 4,
+    "Challenge": 2,
     "UserCredentials": 7,
     "UserIdentity": 1,
     "User": 7
   },
   "models": {
-    "ChallengeLevel": {},
-    "Challenge": {},
+    "ChallengeLevel": {
+      "1": "{\"name\":\"Beginner\",\"description\":\"Your first step in making an impact!\",\"challengeId\":1,\"id\":1}",
+      "2": "{\"name\":\"Intermediate\",\"description\":\"Nearly there!\",\"challengeId\":1,\"id\":2}",
+      "3": "{\"name\":\"Advanced\",\"description\":\"Congratulations!\",\"challengeId\":1,\"id\":3}"
+    },
+    "Challenge": {
+      "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Sed porttitor lectus nibh. Nulla quis lorem ut libero malesuada feugiat.\",\"description\":\"Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"archived\":false,\"badge\":\"Impact Citizen_badge.png\",\"id\":1}"
+    },
     "UserCredentials": {
       "1": "{\"password\":\"$2a$10$OPx/oCtE0L.NEMnEeDZsMeC8bnPW1B7mXcLG4Pq1S2ayg8v86rWGq\",\"userId\":\"1\",\"id\":\"1\"}",
       "2": "{\"password\":\"$2a$10$5RWOGrZOYHk2DpNvlLoD3uWKcXmdQZdn3I2431pHswOBWsCFM7j/y\",\"userId\":\"2\",\"id\":\"2\"}",
