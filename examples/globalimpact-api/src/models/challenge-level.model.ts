@@ -1,5 +1,6 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Entity, model, property, belongsTo, hasMany} from '@loopback/repository';
 import {Challenge} from './challenge.model';
+import {Task} from './task.model';
 
 @model()
 export class ChallengeLevel extends Entity {
@@ -16,8 +17,17 @@ export class ChallengeLevel extends Entity {
   })
   name: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  description: string;
+
   @belongsTo(() => Challenge)
   challengeId: number;
+
+  @hasMany(() => Task)
+  tasks: Task[];
 
   constructor(data?: Partial<ChallengeLevel>) {
     super(data);

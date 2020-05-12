@@ -23,6 +23,50 @@ script.
     jQuery('#archivedTotal').html(archivedTotal);
   }
 
+  var $levelWrapper = $('#challenge-levels')
+  var challengeLevels = [
+    {
+      name: '',
+      description: '',
+    }
+  ]
+  var renderChallengeLevels = function (challenge) {
+    if (challenge.challengeLevels) {
+      var $challengeLevelWrapper = $('#challenge-levels');
+      challenge.challengeLevels.forEach(function(level, index) {
+        $challengeLevelWrapper.append(`
+        <form class="card">
+          <div class="card-body">
+            <div class="form-group row">
+              <label class="col-form-label col-sm-2">Name</label>
+              <div class="col-sm-10">
+                <input class="form-control" type="text" name="level_${index}_name" placeholder="Level name" value="${level.name}" />
+              </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-form-label col-sm-2">Description</label>
+              <div class="col-sm-10">
+                <input class="form-control" type="text" name="level_${index}_description" placeholder="Level Description" value="${level.description}" />
+              </div>
+            </div>
+          </div>
+        </form>`)
+      })
+    }
+  }
+  var createChallengeLevel = async function (challengeId, formValues) {
+    var response = await fetch(`/api/challenges/${challengeId}/challenge-levels`, {
+      method: 'POST',
+      body: JSON.stringify(formValues),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    var parsed = await response.json();
+    return parsed;
+  }
+
+
   var fetchChallenges = async function () {
     var response = await fetch(`/api/challenges`, {
       method: 'GET',
@@ -32,7 +76,12 @@ script.
   }
 
   var fetchChallenge = async function (challengeId) {
-    var response = await fetch(`/api/challenges/${challengeId}`, {
+    var params = {
+      "include": [
+        { relation: "challengeLevels" }
+      ]
+    }
+    var response = await fetch(`/api/challenges/${challengeId}?filter=${JSON.stringify(params)}`, {
       method: 'GET',
     })
     var parsed = await response.json();

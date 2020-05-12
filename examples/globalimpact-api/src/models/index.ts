@@ -8,3 +8,4 @@ export * from './user-credentials.model';
 export * from './user-identity.model';
 export * from './challenge.model';
 export * from './challenge-level.model';
+export * from './task.model';
