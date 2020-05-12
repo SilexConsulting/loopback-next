@@ -24,7 +24,7 @@ export class ChallengeLevelChallengeController {
         description: 'Challenge belonging to ChallengeLevel',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(Challenge)},
+            schema: {type: 'array', items: getModelSchemaRef(Challenge, {includeRelations: true})},
           },
         },
       },

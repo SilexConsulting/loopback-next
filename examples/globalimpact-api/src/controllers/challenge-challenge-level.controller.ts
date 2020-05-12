@@ -32,7 +32,10 @@ export class ChallengeChallengeLevelController {
         description: 'Array of Challenge has many ChallengeLevel',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(ChallengeLevel)},
+            schema: {
+              type: 'array', 
+              items: getModelSchemaRef(ChallengeLevel, {includeRelations: true})
+            },
           },
         },
       },
