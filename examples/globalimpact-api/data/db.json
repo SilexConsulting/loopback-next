@@ -1,63 +1,42 @@
 {
   "ids": {
-    "ChallengeLevel": 6,
-    "Challenge": 2,
-    "UserCredentials": 31,
+    "ChallengeLevel": 1,
+    "Challenge": 4,
+    "Task": 1,
+    "UserCredentials": 16,
     "UserIdentity": 1,
-    "User": 31,
-    "Task": 4,
+    "User": 16
   },
   "models": {
-    "ChallengeLevel": {
-      "1": "{\"name\":\"Beginner\",\"description\":\"Your first step in making an impact!\",\"challengeId\":1,\"id\":1}",
-      "2": "{\"name\":\"Intermediate\",\"description\":\"Nearly there!\",\"challengeId\":1,\"id\":2}",
-      "5": "{\"name\":\"Advanced\",\"description\":\"Congratulations!\",\"challengeId\":1,\"id\":5}"
-    },
+    "ChallengeLevel": {},
     "Challenge": {
-      "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Sed porttitor lectus nibh. Nulla quis lorem ut libero malesuada feugiat.\",\"description\":\"Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Curabitur aliquet quam id dui posuere blandit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\"archived\":false,\"badge\":\"Impact Citizen_badge.png\",\"id\":1}"
+      "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.\",\"description\":\"Donec sollicitudin molestie malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec sollicitudin molestie malesuada. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Nulla porttitor accumsan tincidunt. Sed porttitor lectus nibh. Donec sollicitudin molestie malesuada. Nulla quis lorem ut libero malesuada feugiat.\",\"archived\":false,\"badge\":\" \",\"id\":1}",
+      "2": "{\"name\":\"Impact Citizen 2\",\"shortDescription\":\"sadasdasd\",\"description\":\"asdaadfasdfasdf asdfgadfgsadfsdfs\",\"archived\":false,\"badge\":\"badge_ImpactCitizen2\",\"id\":2}",
+      "3": "{\"name\":\"sdfsfsdf\",\"shortDescription\":\"sdfsdfsdf\",\"description\":\"dsfsdfgsdfgsfghsgh\",\"archived\":false,\"badge\":\"badge_sdfsfsdf\",\"id\":3}"
     },
+    "Task": {},
     "UserCredentials": {
-      "1": "{\"password\":\"$2a$10$OPx/oCtE0L.NEMnEeDZsMeC8bnPW1B7mXcLG4Pq1S2ayg8v86rWGq\",\"userId\":\"1\",\"id\":\"1\"}",
-      "2": "{\"password\":\"$2a$10$5RWOGrZOYHk2DpNvlLoD3uWKcXmdQZdn3I2431pHswOBWsCFM7j/y\",\"userId\":\"2\",\"id\":\"2\"}",
-      "3": "{\"password\":\"$2a$10$NPUo/..DETJgo8VqTGNM7.ZjmN.Wlv7g4QRwNjVoiXebLiM5oyP.G\",\"userId\":\"3\",\"id\":\"3\"}",
-      "4": "{\"password\":\"$2a$10$OGK8IFjXbtvRIeo04oNbF.dapCaxXdoDko4ug6JBijWG0OUa8RLzy\",\"userId\":\"4\",\"id\":\"4\"}",
-      "5": "{\"password\":\"$2a$10$PV4Ffzu67PLsiHtDta2kae/RHL4JpPV2N9CrAmJzX/zHXvBHt7JHq\",\"userId\":\"5\",\"id\":\"5\"}",
-      "6": "{\"password\":\"$2a$10$bxtRWxEj.O3efMOPttGBXenDFipD3SL/G1D/ngJjPw5mFwp88Xnfa\",\"userId\":\"6\",\"id\":\"6\"}",
-      "7": "{\"password\":\"$2a$10$Bx3IJ1aJCRM8WYICZMJhF.LyKAJKIEUo3f43Rc2HOwtP7uOp1Qnwy\",\"userId\":\"7\",\"id\":\"7\"}",
-      "8": "{\"password\":\"$2a$10$BkJSHms0kxI0kgcPJj4Li.kfMlSzpeEX/7m3jpq/bFo7AW.e7vQP2\",\"userId\":\"8\",\"id\":\"8\"}",
-      "9": "{\"password\":\"$2a$10$FnOgZmxkuDnLzdo3GHeSmufty.YtO6wRDEJ4FZ4gN2kxAvlXpcf72\",\"userId\":\"9\",\"id\":\"9\"}",
-      "10": "{\"password\":\"$2a$10$2TeZJRs9ui.PBcI.7bW6v.wwLCKLFCecWhEIfDvatG2VtP.1U8/0G\",\"userId\":\"10\",\"id\":\"10\"}",
-      "11": "{\"password\":\"$2a$10$sh3zQuSeheENT.7ueQAVj.77GeVKjR1FfL2fREDKkpxHpsnWleutu\",\"userId\":\"11\",\"id\":\"11\"}",
-      "12": "{\"password\":\"$2a$10$5rUkcAveAc3ph.egfTVrC.lqDKEl0N1vW4Y8UfSfqS3PxEgJLa5x2\",\"userId\":\"12\",\"id\":\"12\"}",
-      "13": "{\"password\":\"$2a$10$VVorocpm./RJUBsRjL1eo.98MIE/FFJWiEBeLpviP66Bo5nGtzC9S\",\"userId\":\"13\",\"id\":\"13\"}",
-      "14": "{\"password\":\"$2a$10$OUpnWlsU7IMH7JnQzZRGh.eU02UbIJsLCNKHN4Qsd65T1jf13k70W\",\"userId\":\"14\",\"id\":\"14\"}",
-      "15": "{\"password\":\"$2a$10$VpcJC3EJDJ49nSwneTf8ge8Z/uNOvtYZvbAFQkoUZRcqTzLrJP1Vy\",\"userId\":\"15\",\"id\":\"15\"}",
-      "16": "{\"password\":\"$2a$10$Ddj3peI/VRUiS5VV7gMZiuogz0Ft.Fx10zadVA.JkegBjQee7ofYi\",\"userId\":\"16\",\"id\":\"16\"}",
-      "17": "{\"password\":\"$2a$10$.U5XYPq2vKyIP/8Wu49WF.Plw1L8Vrgte4EQq6gSuwhuzDBkXhPEy\",\"userId\":\"17\",\"id\":\"17\"}",
-      "18": "{\"password\":\"$2a$10$DJJUv3VHwZz/dYQfXCKWROStpRBiodHDXwnFd2DaCrB9CGdeCQrM6\",\"userId\":\"18\",\"id\":\"18\"}",
-      "19": "{\"password\":\"$2a$10$ExAwB4XyADPKjYje6rblyON4v7jmpLpAZ16g13n/gbbeuIqTYkPhe\",\"userId\":\"19\",\"id\":\"19\"}",
-      "20": "{\"password\":\"$2a$10$vzxz0TrSE3.02URpLxzkFezx3rhctHjqSKy0JNHhE//TvIEXQVJaK\",\"userId\":\"20\",\"id\":\"20\"}",
-      "21": "{\"password\":\"$2a$10$ois.O0ngmcPWCV8.KfKwhuDhNCyAgervMAqGgh2GRWxHdAl0hVjw.\",\"userId\":\"21\",\"id\":\"21\"}",
-      "22": "{\"password\":\"$2a$10$havkDYpuSX8ZI3L8SmGwCe6WwdMJSwapF9S8hJFx0NaqOiLi7vgcO\",\"userId\":\"22\",\"id\":\"22\"}",
-      "23": "{\"password\":\"$2a$10$hWt7Xdu0VMDeWCROQvfbx.gt2YE7iJA816ykIOgpN/yEXpcL5oPiG\",\"userId\":\"23\",\"id\":\"23\"}",
-      "24": "{\"password\":\"$2a$10$vavp.2ALxm4wsQL6vqzBFuxBN6S3wpcjz2/LGnrvUKR.o1GbG0.c6\",\"userId\":\"24\",\"id\":\"24\"}",
-      "25": "{\"password\":\"$2a$10$SrgM/GPGWeVMSkiSlOx3o.0WUH0wCMFNVDktQaR4L9wi13N09BxOS\",\"userId\":\"25\",\"id\":\"25\"}",
-      "26": "{\"password\":\"$2a$10$LXxgdXcSAg7p3LOr2KQ3UO7NyErTe30avOqEcjUaFSrxhHgf7A0Ye\",\"userId\":\"26\",\"id\":\"26\"}",
-      "27": "{\"password\":\"$2a$10$E.FAxNlVr2NS9vsVeonu0Oso4l3nAm2qMSPUhOJzH6vT0XB.9DqXO\",\"userId\":\"27\",\"id\":\"27\"}",
-      "28": "{\"password\":\"$2a$10$ahcRsJZBnAWiK7pAHVcYEOfI9D7ghrkTgSr0vCAw4TfRB9U7br.1y\",\"userId\":\"28\",\"id\":\"28\"}",
-      "29": "{\"password\":\"$2a$10$wir0G0P40VTcHZywd//smel7V/yzhtnZyVdkSYM1wp9kLcCMDKooa\",\"userId\":\"29\",\"id\":\"29\"}",
-      "30": "{\"password\":\"$2a$10$FKefMqO6BYpXIduk/0C7Ouf4jEOvaeh8Ia.b8trvtWRSIZFDyJtWq\",\"userId\":\"30\",\"id\":\"30\"}"
+      "1": "{\"password\":\"$2a$10$mdWtYrgMlxd8HbGfI838/eju7aW4cwaDh0MfJeEUfF6khEQ1tUGz2\",\"userId\":\"1\",\"id\":\"1\"}",
+      "2": "{\"password\":\"$2a$10$IVETeEql1yQGSohoQCboX.Flc4YbCSydvK1p891kYQhDKgRDrQakm\",\"userId\":\"2\",\"id\":\"2\"}",
+      "3": "{\"password\":\"$2a$10$SPmLX7Qf.X/eLkqfk/VlYeVHpFd37ql55ET5ZW8l2CllrXGdmSSdC\",\"userId\":\"3\",\"id\":\"3\"}",
+      "4": "{\"password\":\"$2a$10$Zc60fjwJQn9Cvx2wSLqHCOgIUwYCc/t/aIrUiuDqD35QeL.yDNTr6\",\"userId\":\"4\",\"id\":\"4\"}",
+      "5": "{\"password\":\"$2a$10$fd4bliM13G8soWG1IpF4Ne2fmeKV.dpV08WHtufkzyyJLEKu5h1sy\",\"userId\":\"5\",\"id\":\"5\"}",
+      "6": "{\"password\":\"$2a$10$fgy.tT2umwXJzvP/FFUriuJmcSK7.HTHs4YemoIMxBXvEVl0K4Z1O\",\"userId\":\"6\",\"id\":\"6\"}",
+      "7": "{\"password\":\"$2a$10$F.TySDrd3NcCgg.JfhLd5udf/Dy8Lt0n/DuhyhiwSB9bBZYgjwopu\",\"userId\":\"7\",\"id\":\"7\"}",
+      "8": "{\"password\":\"$2a$10$xRpwa1IaWy/AEaSjBUAxuOjcOsRY0E7h2nyKMF9xqXSY4OvthlU2O\",\"userId\":\"8\",\"id\":\"8\"}",
+      "9": "{\"password\":\"$2a$10$/zch2t2dReUbeZGOX8OK3OSBwdWa0lhCMtvaCDqiwqqxdaGxN6h26\",\"userId\":\"9\",\"id\":\"9\"}",
+      "10": "{\"password\":\"$2a$10$NTavh3mfEUalqV3scdiHxuv7tc0IhhQhCXPaV6sobB6I2sIffLbu2\",\"userId\":\"10\",\"id\":\"10\"}",
+      "11": "{\"password\":\"$2a$10$j9KgCPJIkb3ExtWoW6eBzeleUdPyNcDCLKgMkQXuYWEjmr39VlRGa\",\"userId\":\"11\",\"id\":\"11\"}",
+      "12": "{\"password\":\"$2a$10$.BKZt4EwF98txY.WfieDwOSWGfvc5ga1LK3jzczcEghhUfWZzcMt6\",\"userId\":\"12\",\"id\":\"12\"}",
+      "13": "{\"password\":\"$2a$10$QsLusMWStwBnq6rIMGbY7u.nL7Tttwg/4UfBU07n/8wv8ln38junK\",\"userId\":\"13\",\"id\":\"13\"}",
+      "14": "{\"password\":\"$2a$10$lavtz6XVwfTXcmYFjcp4T.2P2Q/kLkMdoOc9dYY9a4IJ4jN9.Jd6q\",\"userId\":\"14\",\"id\":\"14\"}",
+      "15": "{\"password\":\"$2a$10$caRf3uvu36dNR2XgMnFbCePIQCYwYnEsHttDCVmloyxfLKU3qSt9m\",\"userId\":\"15\",\"id\":\"15\"}"
     },
     "UserIdentity": {},
     "User": {
-      "28": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":28}",
-      "29": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":29}",
-      "30": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":30}"
-    },
-    "Task": {
-      "1": "{\"description\":\"Post a picture\",\"challengeLevelId\":1,\"id\":1}",
-      "2": "{\"description\":\"Post a beginner picture\",\"challengeLevelId\":0,\"id\":2}",
-      "3": "{\"description\":\"Post an advanced picture\",\"challengeLevelId\":2,\"id\":3}"
+      "13": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":13}",
+      "14": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":14}",
+      "15": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":15}"
     }
   }
 }

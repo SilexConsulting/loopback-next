@@ -5,7 +5,12 @@ const intitialState = {
   nav: {
     drawerOpen: false,
   },
-  modals: {}
+  modals: {
+    newChallenge: {
+      visible: false,
+      data: {}
+    }
+  }
 }
 
 const ui = createSlice({
@@ -16,6 +21,7 @@ const ui = createSlice({
       state.nav.drawerOpen = !state.nav.drawerOpen; 
     },
     openModal: (state, action) => {
+      console.log(state, action);
       state.modals[action.payload.modal].visible = true;
       if (action.payload.data) {
         state.modals[action.payload.modal].data = action.payload.data;

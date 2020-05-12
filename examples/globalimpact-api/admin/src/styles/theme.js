@@ -16,7 +16,6 @@ export default createMuiTheme({
     },
     MuiContainer: {
       root: {
-        height: '100%',
       },
       maxWidthLg: {
         maxWidth: '1920px !important',

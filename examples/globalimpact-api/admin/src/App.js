@@ -16,6 +16,7 @@ import styles from './styles/globalStyles';
 import theme from './styles/theme';
 
 import Home from './components/views/Home';
+import Challenges from './components/views/Challenges';
 
 function App() {
   const classes = styles();
@@ -27,6 +28,7 @@ function App() {
           <Provider store={store}>
             <ConnectedRouter history={history}>
               <Switch>
+                <Route path="/challenges" component={Challenges} />
                 <Route path="/" component={Home} />
               </Switch>
             </ConnectedRouter>
