@@ -3,15 +3,15 @@
     "ChallengeLevel": 1,
     "Challenge": 5,
     "Task": 1,
-    "UserCredentials": 16,
+    "UserCredentials": 19,
     "UserIdentity": 1,
-    "User": 16
+    "User": 19
   },
   "models": {
     "ChallengeLevel": {},
     "Challenge": {
-      "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.\",\"description\":\"Donec sollicitudin molestie malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec sollicitudin molestie malesuada. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Nulla porttitor accumsan tincidunt. Sed porttitor lectus nibh. Donec sollicitudin molestie malesuada. Nulla quis lorem ut libero malesuada feugiat.\",\"archived\":false,\"badge\":\" \",\"id\":1}",
-      "2": "{\"name\":\"Impact Citizen 2\",\"shortDescription\":\"sadasdasd\",\"description\":\"asdaadfasdfasdf asdfgadfgsadfsdfs\",\"archived\":false,\"badge\":\"badge_ImpactCitizen2\",\"id\":2}",
+      "1": "{\"name\":\"Challenge 5\",\"shortDescription\":\"Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.dsfsdfsdf\",\"description\":\"Donec sollicitudin molestie malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec sollicitudin molestie malesuada. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Nulla porttitor accumsan tincidunt. Sed porttitor lectus nibh. Donec sollicitudin molestie malesuada. Nulla quis lorem ut libero malesuada feugiat.\",\"archived\":false,\"badge\":\" \",\"id\":1}",
+      "2": "{\"name\":\"Citizen 2\",\"shortDescription\":\"sadasdasd\",\"description\":\"asdaadfasdfasdf asdfgadfgsadfsdfs\",\"archived\":false,\"badge\":\"badge_ImpactCitizen2\",\"id\":2}",
       "3": "{\"name\":\"sdfsfsdf\",\"shortDescription\":\"sdfsdfsdf\",\"description\":\"dsfsdfgsdfgsfghsgh\",\"archived\":false,\"badge\":\"badge_sdfsfsdf\",\"id\":3}",
       "4": "{\"name\":\"dsfsdfgsd\",\"shortDescription\":\"dfgdfgdfg\",\"description\":\"dfgdfgdfg\",\"archived\":false,\"badge\":\"badge_\",\"id\":4}"
     },
@@ -31,13 +31,16 @@
       "12": "{\"password\":\"$2a$10$.BKZt4EwF98txY.WfieDwOSWGfvc5ga1LK3jzczcEghhUfWZzcMt6\",\"userId\":\"12\",\"id\":\"12\"}",
       "13": "{\"password\":\"$2a$10$QsLusMWStwBnq6rIMGbY7u.nL7Tttwg/4UfBU07n/8wv8ln38junK\",\"userId\":\"13\",\"id\":\"13\"}",
       "14": "{\"password\":\"$2a$10$lavtz6XVwfTXcmYFjcp4T.2P2Q/kLkMdoOc9dYY9a4IJ4jN9.Jd6q\",\"userId\":\"14\",\"id\":\"14\"}",
-      "15": "{\"password\":\"$2a$10$caRf3uvu36dNR2XgMnFbCePIQCYwYnEsHttDCVmloyxfLKU3qSt9m\",\"userId\":\"15\",\"id\":\"15\"}"
+      "15": "{\"password\":\"$2a$10$caRf3uvu36dNR2XgMnFbCePIQCYwYnEsHttDCVmloyxfLKU3qSt9m\",\"userId\":\"15\",\"id\":\"15\"}",
+      "16": "{\"password\":\"$2a$10$UP0Ga1Q/iPGxf61IvXb3HONFQw/ROsNM1WrplaoHXCx7FHnMAYOv2\",\"userId\":\"16\",\"id\":\"16\"}",
+      "17": "{\"password\":\"$2a$10$3CrajZ/z20XFJ2ZI1XS.x.PcS.pIOXwnUZ.68srw0lOXYAJfrZkxC\",\"userId\":\"17\",\"id\":\"17\"}",
+      "18": "{\"password\":\"$2a$10$Kgv.6Vy2zncbDJM6KrxA9.YZk0eX7G3/ltcM6ztR7hPr9l2Dle33C\",\"userId\":\"18\",\"id\":\"18\"}"
     },
     "UserIdentity": {},
     "User": {
-      "13": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":13}",
-      "14": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":14}",
-      "15": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":15}"
+      "16": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":16}",
+      "17": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":17}",
+      "18": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":18}"
     }
   }
 }

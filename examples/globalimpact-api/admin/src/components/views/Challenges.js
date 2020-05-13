@@ -61,9 +61,13 @@ const Challenges = ({ children, challenges, dispatch }) => {
       })
   }
 
-  useEffect(() => { 
-    dispatch(getChallenges());
-  }, []);
+  const populate = async () => {
+    await dispatch(getChallenges());
+  }
+
+  useEffect(() => {
+    populate() 
+  }, [challenges]);
 
   const renderChallenge = (challenge) => {
     return (
@@ -94,7 +98,7 @@ const Challenges = ({ children, challenges, dispatch }) => {
             <Box mt={2}>
               <Fab
                 onClick={() => dispatch(uiActions.openModal({modal: 'newChallenge'}))}
-                variant="outlined"
+                variant="round"
                 color="primary"
               ><AddIcon /></Fab>
             </Box>
