@@ -24,6 +24,7 @@ import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import ArchiveIcon from '@material-ui/icons/Archive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 
 import {getChallenges} from '../../redux/reducers/challengeReducer';
@@ -75,7 +76,7 @@ const Challenges = ({ children, challenges, dispatch }) => {
           secondary={challenge.shortDescription} />
         <ListItemSecondaryAction>
           <IconButton onClick={() => handleArchive(challenge)} edge="end" aria-label="comments">
-            <ArchiveIcon />
+            { challenge.archived ? <UnarchiveIcon /> : <ArchiveIcon /> }
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>

@@ -12,8 +12,8 @@
     "Challenge": {
       "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Quisque velit nisi, pretium ut lacinia in, elementum id enim.\",\"description\":\"Donec sollicitudin molestie malesuada. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec sollicitudin molestie malesuada. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Nulla porttitor accumsan tincidunt. Sed porttitor lectus nibh. Donec sollicitudin molestie malesuada. Nulla quis lorem ut libero malesuada feugiat.\",\"archived\":false,\"badge\":\" \",\"id\":1}",
       "2": "{\"name\":\"Impact Citizen 2\",\"shortDescription\":\"sadasdasd\",\"description\":\"asdaadfasdfasdf asdfgadfgsadfsdfs\",\"archived\":false,\"badge\":\"badge_ImpactCitizen2\",\"id\":2}",
-      "3": "{\"name\":\"sdfsfsdf\",\"shortDescription\":\"sdfsdfsdf\",\"description\":\"dsfsdfgsdfgsfghsgh\",\"archived\":true,\"badge\":\"badge_sdfsfsdf\",\"id\":3}",
-      "4": "{\"name\":\"dsfsdfgsd\",\"shortDescription\":\"dfgdfgdfg\",\"description\":\"dfgdfgdfg\",\"archived\":true,\"badge\":\"badge_\",\"id\":4}"
+      "3": "{\"name\":\"sdfsfsdf\",\"shortDescription\":\"sdfsdfsdf\",\"description\":\"dsfsdfgsdfgsfghsgh\",\"archived\":false,\"badge\":\"badge_sdfsfsdf\",\"id\":3}",
+      "4": "{\"name\":\"dsfsdfgsd\",\"shortDescription\":\"dfgdfgdfg\",\"description\":\"dfgdfgdfg\",\"archived\":false,\"badge\":\"badge_\",\"id\":4}"
     },
     "Task": {},
     "UserCredentials": {
