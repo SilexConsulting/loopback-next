@@ -11,6 +11,7 @@ import Input from '@material-ui/core/Input';
 import ImageIcon from '@material-ui/icons/Image';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
 
 
 import styles from '../../styles/globalStyles';
@@ -37,10 +38,9 @@ function NewChallengeModal({ onClose, open, dispatch }) {
 
   const handleBadgeSelect = (event) => {
     let {files, value} = event.target;
-    console.log(files[0], value);
     setState({
       ...state,
-      badge: `badge_${state.name.replace(/\s/g, '')}`, 
+      badge: files[0].name, 
       badgeFiles: files 
     });
   }
@@ -51,7 +51,7 @@ function NewChallengeModal({ onClose, open, dispatch }) {
     console.log(state.badgeFiles);
 
     let badgeUploadResponse = await dispatch(uploadBadge({
-      name: state.badge,
+      name: `badge_${state.name.replace(/\s/g, '')}.png`,
       files: state.badgeFiles,
     }))
 
@@ -60,7 +60,7 @@ function NewChallengeModal({ onClose, open, dispatch }) {
       shortDescription: state.shortDescription,
       description: state.description,
       archived: false,
-      badge: state.badge,
+      badge: badgeUploadResponse.files[0].fieldname,
     })).then((response) => {
       dispatch(getChallenges());
     }).then((response) => {
@@ -81,6 +81,7 @@ function NewChallengeModal({ onClose, open, dispatch }) {
             value={state.name}
             onChange={handleInputChange}
             fullWidth
+            required
           />  
           <TextField
             label="Short Description"
@@ -92,6 +93,7 @@ function NewChallengeModal({ onClose, open, dispatch }) {
             value={state.shortDescription}
             onChange={handleInputChange}
             fullWidth
+            required
           /> 
           <TextField
             label="Full Description"
@@ -103,6 +105,7 @@ function NewChallengeModal({ onClose, open, dispatch }) {
             value={state.description}
             onChange={handleInputChange}
             fullWidth
+            required
           />
           <Box py={3}>
             <Input

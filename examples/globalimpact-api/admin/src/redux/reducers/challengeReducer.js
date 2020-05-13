@@ -27,6 +27,15 @@ export const createChallenge = createAsyncThunk(
   }
 )
 
+export const toggleArchiveChallenge = createAsyncThunk(
+  'challenges/archive',
+  async (payload) => {
+    const response = await api.patch(`/api/challenges/${payload.id}`, { 
+      archived: !payload.archived,
+    })
+    return response.data
+  }
+)
 
 export const uploadBadge = createAsyncThunk(
   'challenges/uploadBadge',
