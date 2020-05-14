@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Main from './Main';
+import ModalContainer from './modals/ModalContainer';
 
 const Wrapper = withStyles({
   root: {
@@ -38,6 +39,7 @@ const ViewWrapper = ({ children, dispatch, drawerOpen }) => {
           {children}
         </Grid>
       </Main>
+      <ModalContainer />
     </Wrapper>
   );
 }

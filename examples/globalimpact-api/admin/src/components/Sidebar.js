@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from '@material-ui/icons/Home';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import IconButton from '@material-ui/core/IconButton';
 
 
@@ -49,7 +49,7 @@ const Sidebar = ({ children, dispatch, drawerOpen }) => {
         paper: classes.drawerPaper,
       }}>
       <div className={classes.drawerHeader}>
-        <IconButton onClick={() => dispatch(uiActions.toggleFlag('drawerOpen'))}>
+        <IconButton onClick={() => dispatch(uiActions.toggleNavDrawer())}>
           <ChevronLeftIcon />
         </IconButton>
       </div>
@@ -58,6 +58,10 @@ const Sidebar = ({ children, dispatch, drawerOpen }) => {
         <ListItem button={true} onClick={() => dispatch(push('/'))}>
           <ListItemIcon><HomeIcon /></ListItemIcon>
           <ListItemText primary="Home" />
+        </ListItem>
+        <ListItem button={true} onClick={() => dispatch(push('/challenges'))}>
+          <ListItemIcon><EmojiEventsIcon /></ListItemIcon>
+          <ListItemText primary="Challenges" />
         </ListItem>
       </List>
     </Drawer>

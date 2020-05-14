@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import history from './redux/history';
 import * as serviceWorker from './serviceWorker';
+import { ReactReduxContext } from 'react-redux'
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App history={history} context={ReactReduxContext} />
   </React.StrictMode>,
   document.getElementById('root')
 );

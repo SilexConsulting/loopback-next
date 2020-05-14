@@ -16,7 +16,6 @@ export default createMuiTheme({
     },
     MuiContainer: {
       root: {
-        height: '100%',
       },
       maxWidthLg: {
         maxWidth: '1920px !important',
@@ -24,7 +23,11 @@ export default createMuiTheme({
     },
     MuiGrid: {
       container: {
-        height: '100%',
+      }
+    },
+    MuiTypography: {
+      h6: {
+        marginBottom: '1em'
       }
     }
   }
