@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import Wrapper from '../Wrapper';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
-import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import AddIcon from '@material-ui/icons/Add';
-
-import {SdgGoalData} from '../../Goals';
 
 import { getChallenge } from '../../redux/reducers/challengeReducer';
 import { createTask } from '../../redux/reducers/challengeReducer';
@@ -33,10 +26,10 @@ const NewTaskForm = ({challengeLevel, challengeId, dispatch }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     dispatch(createTask({
       ...state
     })).then((response) => {
+      state.description = '';
       dispatch(getChallenge({
         id: challengeId
       }))
@@ -56,7 +49,7 @@ const NewTaskForm = ({challengeLevel, challengeId, dispatch }) => {
           fullWidth
         />
         <ListItemSecondaryAction>
-          <Button type="submit" size="small" color="primary">
+          <Button disabled={!state.description.length} type="submit" size="small" color="primary">
             <AddIcon />
           </Button>
         </ListItemSecondaryAction>

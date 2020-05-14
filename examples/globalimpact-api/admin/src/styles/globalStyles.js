@@ -1,6 +1,5 @@
 
 import { makeStyles } from '@material-ui/core/styles';
-import theme from './theme';
 
 const styles = makeStyles((theme) => ({
   app: {
@@ -33,6 +32,10 @@ const styles = makeStyles((theme) => ({
   },
   spaceLeft: {
     paddingLeft: theme.spacing(2),
+  },
+  large: {
+    width: `${theme.spacing(8)}px !important`,
+    height: `${theme.spacing(8)}px !important`,
   },
 }));
 

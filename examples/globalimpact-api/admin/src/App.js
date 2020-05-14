@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import { ConnectedRouter } from 'connected-react-router'
 
-import { Provider, ReactReduxContext } from 'react-redux';
+import { Provider } from 'react-redux';
 import store from './redux/store';
 
 import Container from '@material-ui/core/Container';

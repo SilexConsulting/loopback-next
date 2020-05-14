@@ -9,32 +9,18 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import Fab from '@material-ui/core/Fab';
 import ListItem from '@material-ui/core/ListItem';
-import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Avatar from '@material-ui/core/Avatar';
 import Input from '@material-ui/core/Input';
-import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
-import Paper from '@material-ui/core/Paper';
-import TabPanel from '../ui/TabPanel';
 import TextField from '@material-ui/core/TextField';
-import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import ArchiveIcon from '@material-ui/icons/Archive';
-import UnarchiveIcon from '@material-ui/icons/Unarchive';
 import ImageIcon from '@material-ui/icons/Image';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import NewChallengeLevelForm from '../ui/NewChallengeLevelForm';
 import NewTaskForm from '../ui/NewTaskForm';
 
 import {SdgGoalData} from '../../Goals';
@@ -44,9 +30,8 @@ import { deleteTask } from '../../redux/reducers/challengeReducer';
 import { deleteChallengeLevel } from '../../redux/reducers/challengeReducer';
 import { updateChallenge } from '../../redux/reducers/challengeReducer';
 import { uploadBadge } from '../../redux/reducers/challengeReducer';
-import { toggleArchiveChallenge } from '../../redux/reducers/challengeReducer';
 import { uiActions } from '../../redux/reducers/uiReducer';
-import { push } from 'connected-react-router'
+import Avatar from '@material-ui/core/Avatar';
 
 import styles from '../../styles/globalStyles';
 
@@ -79,6 +64,7 @@ const Challenge = ({challenge, match, dispatch }) => {
       badge: payload.badge,
     }) 
   }
+
   useEffect(() => { 
     dispatch(getChallenge({
       id: match.params.id
@@ -107,7 +93,8 @@ const Challenge = ({challenge, match, dispatch }) => {
 
     let payload = { 
       ...state
-    };;
+    };
+
     let badgeUploadResponse;
     if (state.badgeFiles.length) {
       badgeUploadResponse = await dispatch(uploadBadge({
@@ -159,7 +146,6 @@ const Challenge = ({challenge, match, dispatch }) => {
   }
 
   const handleDeleteChallengeLevel = (challengeLevelId) => {
-    console.log(challengeLevelId)
     dispatch(deleteChallengeLevel({
       challengeLevelId
     })).then((response) => {
@@ -234,7 +220,14 @@ const Challenge = ({challenge, match, dispatch }) => {
         <Box mt={3}>
           <Grid container spacing={5}>
             <Grid item md={6}>
-              <Typography variant='h2'>{challenge.name}</Typography>
+              <Grid container spacing={5}>
+                <Grid item md={10}>
+                  <Typography variant='h2'>{challenge.name}</Typography>
+                </Grid>
+                <Grid item md={2}>
+                  <Avatar src={`/api/ProfilePicture/${challenge.badge}`} className={classes.large} />
+                </Grid>
+              </Grid>
               <form onSubmit={handleSubmit}>
                 <TextField
                   label="Name"

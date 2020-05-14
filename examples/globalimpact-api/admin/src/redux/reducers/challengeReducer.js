@@ -93,7 +93,7 @@ export const deleteChallengeLevel = createAsyncThunk(
 export const createTask = createAsyncThunk(
   'challenges/createTask',
   async (payload) => {
-    const response = await api.post(`/api/challenge-levels/${payload.taskId}/tasks`, { ...payload })
+    const response = await api.post(`/api/challenge-levels/${payload.challengeLevelId}/tasks`, { ...payload })
     return response.data
   }
 )
