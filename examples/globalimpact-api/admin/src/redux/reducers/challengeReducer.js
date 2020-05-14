@@ -49,7 +49,6 @@ export const createChallenge = createAsyncThunk(
 export const updateChallenge = createAsyncThunk(
   'challenges/update',
   async (payload) => {
-    console.log(payload);
     const response = await api.patch(`/api/challenges/${payload.id}`, { ...payload })
     return response.data
   }
@@ -71,6 +70,38 @@ export const uploadBadge = createAsyncThunk(
     const formData = new FormData();
     formData.append(payload.name, payload.files[0], payload.name);
     const response = await api.post(`/api/ProfilePicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' }})
+    return response.data
+  }
+)
+
+export const createChallengeLevel = createAsyncThunk(
+  'challenges/createLevel',
+  async (payload) => {
+    const response = await api.post(`/api/challenges/${payload.challengeId}/challenge-levels`, { ...payload })
+    return response.data
+  }
+)
+
+export const deleteChallengeLevel = createAsyncThunk(
+  'challenges/deleteLevel',
+  async (payload) => {
+    const response = await api.delete(`/api/challenge-levels/${payload.challengeLevelId}`)
+    return response.data
+  }
+)
+
+export const createTask = createAsyncThunk(
+  'challenges/createTask',
+  async (payload) => {
+    const response = await api.post(`/api/challenge-levels/${payload.taskId}/tasks`, { ...payload })
+    return response.data
+  }
+)
+
+export const deleteTask = createAsyncThunk(
+  'challenges/deleteTask',
+  async (payload) => {
+    const response = await api.delete(`/api/tasks/${payload.taskId}`)
     return response.data
   }
 )

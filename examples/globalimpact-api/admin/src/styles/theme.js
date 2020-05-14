@@ -23,7 +23,11 @@ export default createMuiTheme({
     },
     MuiGrid: {
       container: {
-        height: '100%',
+      }
+    },
+    MuiTypography: {
+      h6: {
+        marginBottom: '1em'
       }
     }
   }

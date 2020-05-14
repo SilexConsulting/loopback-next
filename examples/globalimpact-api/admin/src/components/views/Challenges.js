@@ -40,7 +40,6 @@ function mapStateToProps(state) {
   }
 }
 
-
 const Challenges = ({ children, challenges, dispatch }) => {
   const classes = styles();
 
@@ -61,13 +60,9 @@ const Challenges = ({ children, challenges, dispatch }) => {
       })
   }
 
-  const populate = async () => {
-    await dispatch(getChallenges());
-  }
-
   useEffect(() => {
-    populate() 
-  }, [challenges]);
+    dispatch(getChallenges());
+  }, []);
 
   const renderChallenge = (challenge) => {
     return (

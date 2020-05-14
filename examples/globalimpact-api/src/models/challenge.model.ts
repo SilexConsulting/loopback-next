@@ -29,6 +29,13 @@ export class Challenge extends Entity {
   description: string;
 
   @property({
+    type: 'array',
+    itemType: 'number',
+    default: [],
+  })
+  sdgGoals?: number[];
+
+  @property({
     type: 'boolean',
     required: true,
     default: false,

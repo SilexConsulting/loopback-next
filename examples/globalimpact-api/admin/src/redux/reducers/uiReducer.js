@@ -9,6 +9,12 @@ const intitialState = {
     newChallenge: {
       visible: false,
       data: {}
+    },
+    newChallengeLevel: {
+      visible: false,
+      data: {
+        challengeId: 0,
+      }
     }
   }
 }
