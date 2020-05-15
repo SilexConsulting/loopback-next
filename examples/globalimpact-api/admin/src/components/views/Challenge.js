@@ -195,14 +195,21 @@ const Challenge = ({challenge, match, dispatch }) => {
                 <List>
                   {
                     level.tasks ? level.tasks.map((task) => {
-                      return (<ListItem>
-                        <ListItemText primary={task.description} />
-                        <ListItemSecondaryAction>
-                          <Button size="small" color="primary" onClick={() => handleDeleteTask(task.id)}>
-                            <DeleteIcon />
-                          </Button>
-                        </ListItemSecondaryAction>
-                      </ListItem>)
+                      return (
+                        <ListItem button onClick={() => dispatch(uiActions.openModal({
+                          modal: 'editTask',
+                          data: {
+                            challengeId: challenge.id,
+                            task: task
+                          }
+                        }))}>
+                          <ListItemText primary={task.description} />
+                          <ListItemSecondaryAction>
+                            <Button size="small" color="primary" onClick={() => handleDeleteTask(task.id)}>
+                              <DeleteIcon />
+                            </Button>
+                          </ListItemSecondaryAction>
+                        </ListItem>)
                     }) : null 
                   }
                   <NewTaskForm challengeLevel={level} challengeId={challenge.id} />

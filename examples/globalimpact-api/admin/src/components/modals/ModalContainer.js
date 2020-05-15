@@ -4,6 +4,7 @@ import Box from '@material-ui/core/Box';
 
 import NewChallengeModal from '../modals/NewChallengeModal';
 import NewChallengeLevelModal from '../modals/NewChallengeLevelModal';
+import EditTaskModal from '../modals/EditTaskModal';
 
 import {uiActions} from '../../redux/reducers/uiReducer';
 
@@ -25,6 +26,7 @@ function ModalContainer({ user, modals, dispatch }) {
     <Box>
       <NewChallengeModal open={modals.newChallenge.visible} onClose={() => handleModalClose('newChallenge')} />
       <NewChallengeLevelModal challengeId={modals.newChallengeLevel.data.challengeId} open={modals.newChallengeLevel.visible} onClose={() => handleModalClose('newChallengeLevel')} />
+      <EditTaskModal challengeId={modals.editTask.data.challengeId}  task={modals.editTask.data.task} open={modals.editTask.visible} onClose={() => handleModalClose('editTask')} />
     </Box>
     );
 }
