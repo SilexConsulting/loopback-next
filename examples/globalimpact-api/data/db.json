@@ -1,31 +1,42 @@
 {
   "ids": {
-    "ChallengeLevel": 5,
+    "ChallengeLevel": 6,
     "Challenge": 2,
-    "Task": 4,
-    "UserCredentials": 4,
-    "UserIdentity": 1,
-    "User": 4
+    "Task": 7,
+    "UserCredentials": 10,
+    "UserIdentity": 108339447509596,
+    "User": 11
   },
   "models": {
     "ChallengeLevel": {
-      "1": "{\"name\":\"Beginner\",\"description\":\"Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Proin eget tortor risus.\",\"challengeId\":1,\"id\":1}",
-      "2": "{\"name\":\"Intermediate\",\"description\":\"Wow!\",\"challengeId\":0,\"id\":2}"
+      "2": "{\"name\":\"Intermediate\",\"description\":\"Wow!\",\"challengeId\":0,\"id\":2}",
+      "5": "{\"name\":\"Beginner\",\"description\":\"Test level\",\"challengeId\":1,\"id\":5}"
     },
     "Challenge": {
       "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Cras ultricies ligula sed magna dictum porta. Curabitur aliquet quam id dui posuere blandit.\",\"description\":\"Sed porttitor lectus nibh. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Pellentesque in ipsum id orci porta dapibus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.\",\"sdgGoals\":[5,11,6],\"archived\":false,\"badge\":\"badge_ImpactCitizen.png\",\"id\":1}"
     },
-    "Task": {},
+    "Task": {
+      "6": "{\"description\":\"Upload a photo\",\"challengeLevelId\":5,\"id\":6}"
+    },
     "UserCredentials": {
       "1": "{\"password\":\"$2a$10$6hqeXbADuZzv2mPmXkwud.Uj9ibTS70WgFpzJHDX9mmUQiUzpWQp2\",\"userId\":\"1\",\"id\":\"1\"}",
       "2": "{\"password\":\"$2a$10$wc353wAJPvhxiVsFtU93Rupr042RrJMDCXagVt7dN.xDjPMhQ18Nm\",\"userId\":\"2\",\"id\":\"2\"}",
-      "3": "{\"password\":\"$2a$10$UG7x79bcocUckQDkeGosqO31JDB.fsnxU8RXyySQZ.HqU7vej4LhS\",\"userId\":\"3\",\"id\":\"3\"}"
+      "3": "{\"password\":\"$2a$10$UG7x79bcocUckQDkeGosqO31JDB.fsnxU8RXyySQZ.HqU7vej4LhS\",\"userId\":\"3\",\"id\":\"3\"}",
+      "4": "{\"password\":\"$2a$10$PkngRFCgJsjunrBV7HDHgOha1KKg4QOtEotf4r3yFDY05qCwy3TyC\",\"userId\":\"4\",\"id\":\"4\"}",
+      "5": "{\"password\":\"$2a$10$z3eokiuolhPrLMV12a/Ene/EZjRDyuI6Br/oyoqlwgX6JnqUk0HM6\",\"userId\":\"5\",\"id\":\"5\"}",
+      "6": "{\"password\":\"$2a$10$138KVOKfajAGTacqidi4N.k9RtKzWX66GappwfqUhXcqGVHgX3psS\",\"userId\":\"6\",\"id\":\"6\"}",
+      "7": "{\"password\":\"$2a$10$TZrudTCyRExBnfgwzjpQE.FZ.igwVJkGYUNMoHPThgbFxYaET61b2\",\"userId\":\"7\",\"id\":\"7\"}",
+      "8": "{\"password\":\"$2a$10$n220L3euVzq.lQOTd0NnX.CONPoX3R6BP030mQiCNNva1ieYekyDO\",\"userId\":\"8\",\"id\":\"8\"}",
+      "9": "{\"password\":\"$2a$10$MZiSszYrrERxUExRTyRPweS/NQRfvp4qa/ED8zzXEZRTU9JQAZSCC\",\"userId\":\"9\",\"id\":\"9\"}"
     },
-    "UserIdentity": {},
+    "UserIdentity": {
+      "108339447509595": "{\"id\":\"108339447509595\",\"provider\":\"facebook\",\"profile\":{\"emails\":[{\"value\":\"j.hyde@silex-consulting.com\"}]},\"authScheme\":\"facebook\",\"created\":\"2020-05-15T09:01:39.574Z\",\"userId\":10}"
+    },
     "User": {
-      "1": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":1}",
-      "2": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":2}",
-      "3": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":3}"
+      "7": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":7}",
+      "8": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":8}",
+      "9": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":9}",
+      "10": "{\"email\":\"j.hyde@silex-consulting.com\",\"name\":\"Joe Redmore\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":10}"
     }
   }
 }
