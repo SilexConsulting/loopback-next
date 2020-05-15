@@ -23,11 +23,16 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import NewTaskForm from '../ui/NewTaskForm';
+import Tab from '@material-ui/core/Tab';
+import Tabs from '@material-ui/core/Tabs';
+import TabPanel from '../ui/TabPanel';
+import ArchiveIcon from '@material-ui/icons/Archive';
+import UnarchiveIcon from '@material-ui/icons/Unarchive';
 
 import {SdgGoalData} from '../../Goals';
 
 import { getChallenge } from '../../redux/reducers/challengeReducer';
-import { deleteTask } from '../../redux/reducers/challengeReducer';
+import { updateTask } from '../../redux/reducers/challengeReducer';
 import { deleteChallengeLevel } from '../../redux/reducers/challengeReducer';
 import { updateChallenge } from '../../redux/reducers/challengeReducer';
 import { uploadBadge } from '../../redux/reducers/challengeReducer';
@@ -46,6 +51,7 @@ const Challenge = ({challenge, match, dispatch }) => {
   const classes = styles();
 
   const [state, setState] = useState({
+    tab: 0,
     name: '',
     shortDescription: '',
     description: '',
@@ -135,9 +141,17 @@ const Challenge = ({challenge, match, dispatch }) => {
     }
   }
 
-  const handleDeleteTask = (taskId) => {
-    dispatch(deleteTask({
-      taskId
+  const handleTabChange = (event, newValue) => {
+    setState({
+      ...state,
+      tab: newValue,
+    });
+  }
+
+  const handleArchiveTask = (task) => {
+    dispatch(updateTask({
+      ...task,
+      archived: !task.archived
     })).then((response) => {
       dispatch(getChallenge({
         id: match.params.id
@@ -191,30 +205,68 @@ const Challenge = ({challenge, match, dispatch }) => {
                 </Grid>
               </Grid>
               <Box py={3}>
-                <Typography variant="subtitle"><strong>Tasks</strong></Typography>
-                <List>
-                  {
-                    level.tasks ? level.tasks.map((task) => {
-                      return (
-                        <ListItem button onClick={() => dispatch(uiActions.openModal({
-                          modal: 'editTask',
-                          data: {
-                            challengeId: challenge.id,
-                            task: task
-                          }
-                        }))}>
-                          <ListItemText primary={task.description} />
-                          <ListItemSecondaryAction>
-                            <Button size="small" color="primary" onClick={() => handleDeleteTask(task.id)}>
-                              <DeleteIcon />
-                            </Button>
-                          </ListItemSecondaryAction>
-                        </ListItem>)
-                    }) : null 
-                  }
-                  <NewTaskForm challengeLevel={level} challengeId={challenge.id} />
-                  
-                </List>
+                {
+                  level.tasks ? (
+                  <Box>
+                    <Tabs
+                      value={state.tab}
+                      indicatorColor="primary"
+                      textColor="primary"
+                      onChange={handleTabChange}
+                    >
+                      <Tab label="Active Tasks" />
+                      <Tab label="Archived Tasks" />
+                    </Tabs>
+                    <TabPanel value={state.tab} index={0}>
+                      <List>
+                        {
+                          level.tasks ? level.tasks.map((task) => {
+                            return !task.archived ? (
+                              <ListItem button onClick={() => dispatch(uiActions.openModal({
+                                modal: 'editTask',
+                                data: {
+                                  challengeId: challenge.id,
+                                  task: task
+                                }
+                              }))}>
+                                <ListItemText primary={task.description} />
+                                <ListItemSecondaryAction>
+                                  <Button size="small" color="primary" onClick={() => handleArchiveTask(task)}>
+                                    <ArchiveIcon />
+                                  </Button>
+                                </ListItemSecondaryAction>
+                              </ListItem>) : null
+                          }) : null 
+                        }
+                        
+                      </List>
+                    </TabPanel>
+                    <TabPanel value={state.tab} index={1}>
+                      <List>
+                        {
+                          level.tasks ? level.tasks.map((task) => {
+                            return task.archived ? (
+                              <ListItem button onClick={() => dispatch(uiActions.openModal({
+                                modal: 'editTask',
+                                data: {
+                                  challengeId: challenge.id,
+                                  task: task
+                                }
+                              }))}>
+                                <ListItemText primary={task.description} />
+                                <ListItemSecondaryAction>
+                                  <Button size="small" color="primary" onClick={() => handleArchiveTask(task)}>
+                                    <UnarchiveIcon />
+                                  </Button>
+                                </ListItemSecondaryAction>
+                              </ListItem>) : null
+                          }) : null 
+                        }
+                      </List>
+                    </TabPanel>
+                  </Box>) : null
+                }
+                <NewTaskForm challengeLevel={level} challengeId={challenge.id} />
               </Box>
             </CardContent>
           </Card>

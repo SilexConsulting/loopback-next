@@ -107,10 +107,12 @@ export const updateTask = createAsyncThunk(
   }
 )
 
-export const deleteTask = createAsyncThunk(
-  'challenges/deleteTask',
+export const toggleArchiveTask = createAsyncThunk(
+  'challenges/archiveTask',
   async (payload) => {
-    const response = await api.delete(`/api/tasks/${payload.taskId}`)
+    const response = await api.patch(`/api/tasks/${payload.taskId}`, { 
+      archived: !payload.archived,
+    })
     return response.data
   }
 )

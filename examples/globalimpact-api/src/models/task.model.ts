@@ -16,6 +16,12 @@ export class Task extends Entity {
   description: string;
 
   @property({
+    type: 'boolean',
+    default: false,
+  })
+  archived: boolean;
+
+  @property({
     type: 'number',
   })
   challengeLevelId?: number;

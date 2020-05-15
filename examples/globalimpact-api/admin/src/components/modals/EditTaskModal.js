@@ -63,7 +63,7 @@ function EditTaskModal({ onClose, open, task, challengeId, dispatch }) {
             Cancel
           </Button>
           <Button type="submit" color="primary">
-            Create
+            Edit
           </Button>
         </DialogActions>
       </form>
