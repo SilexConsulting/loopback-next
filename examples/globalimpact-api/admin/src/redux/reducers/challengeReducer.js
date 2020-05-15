@@ -98,10 +98,21 @@ export const createTask = createAsyncThunk(
   }
 )
 
-export const deleteTask = createAsyncThunk(
-  'challenges/deleteTask',
+export const updateTask = createAsyncThunk(
+  'challenges/updateTask',
   async (payload) => {
-    const response = await api.delete(`/api/tasks/${payload.taskId}`)
+    console.log(payload);
+    const response = await api.patch(`/api/tasks/${payload.id}`, { ...payload })
+    return response.data
+  }
+)
+
+export const toggleArchiveTask = createAsyncThunk(
+  'challenges/archiveTask',
+  async (payload) => {
+    const response = await api.patch(`/api/tasks/${payload.taskId}`, { 
+      archived: !payload.archived,
+    })
     return response.data
   }
 )
@@ -124,11 +135,9 @@ const challenges = createSlice({
   reducers: {},
   extraReducers: {
     [getChallenges.fulfilled]: (state, action) => {
-      console.log('getChallenges fulfilled');
       state.all = action.payload;
     },
     [getChallenge.fulfilled]: (state, action) => {
-      console.log('getOneChallenge fulfilled');
       state.active = action.payload;
     },
   }

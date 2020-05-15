@@ -15,6 +15,16 @@ const intitialState = {
       data: {
         challengeId: 0,
       }
+    },
+    editTask: {
+      visible: false,
+      data: {
+        challengeId: 0,
+        task: {
+          description: '',
+          id: 0,
+        },
+      }
     }
   }
 }
@@ -27,10 +37,10 @@ const ui = createSlice({
       state.nav.drawerOpen = !state.nav.drawerOpen; 
     },
     openModal: (state, action) => {
-      console.log(state, action);
       state.modals[action.payload.modal].visible = true;
       if (action.payload.data) {
         state.modals[action.payload.modal].data = action.payload.data;
+        console.log(state.modals[action.payload.modal].data, action.payload)
       }
     },
     closeModal: (state, action) => {

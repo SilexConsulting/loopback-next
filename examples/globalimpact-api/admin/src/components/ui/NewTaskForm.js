@@ -40,7 +40,7 @@ const NewTaskForm = ({challengeLevel, challengeId, dispatch }) => {
     <ListItem>
       <form onSubmit={handleSubmit} className={classes.w100}>
         <TextField
-          label="Name"
+          label="Add new task..."
           margin="dense"
           name="description"
           type="text"
