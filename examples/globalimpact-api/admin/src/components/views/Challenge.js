@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import Wrapper from '../Wrapper';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { CountryDropdown, CountryRegionData } from 'react-country-region-selector';
 
 
 import List from '@material-ui/core/List';
@@ -50,6 +51,7 @@ const Challenge = ({challenge, match, dispatch }) => {
     description: '',
     badge: '',
     badgeFiles: [],
+    country: '',
     sdgGoals: [],
   });
 
@@ -254,7 +256,7 @@ const Challenge = ({challenge, match, dispatch }) => {
                   margin="dense"
                   name="description"
                   multiline={true}
-                  rows={8}
+                  rows={5}
                   type="text"
                   value={state.description}
                   onChange={handleInputChange}

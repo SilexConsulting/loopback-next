@@ -46,6 +46,11 @@ export class User extends Entity {
 
   @property({
     type: 'string',
+  })
+  country?: string;
+
+  @property({
+    type: 'string',
     default: ''
   })
   profilePicture?: string;
