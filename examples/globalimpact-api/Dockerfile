@@ -25,5 +25,5 @@ COPY --chown=node . .
 
 RUN npm run build
 
-EXPOSE ${PORT}
+EXPOSE 3000
 CMD [ "node", "." ]
