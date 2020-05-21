@@ -10,10 +10,11 @@ import {
   HasOneRepositoryFactory,
   repository,
 } from '@loopback/repository';
-import {User, UserIdentity, UserCredentials} from '../models';
+import {User, UserIdentity, UserCredentials, ChallengeProgress} from '../models';
 import {UserIdentityRepository} from './user-identity.repository';
 import {UserCredentialsRepository} from './user-credentials.repository';
 import {LocaldbDataSource} from '../datasources';
+import {ChallengeProgressRepository} from './challenge-progress.repository';
 
 export type Credentials = {
   email: string;
@@ -34,6 +35,8 @@ export class UserRepository extends DefaultCrudRepository<
     typeof User.prototype.id
   >;
 
+  public readonly challengeProgresses: HasManyRepositoryFactory<ChallengeProgress, typeof User.prototype.id>;
+
   constructor(
     @inject('datasources.localdb') dataSource: LocaldbDataSource,
     @repository.getter('UserIdentityRepository')
@@ -41,9 +44,11 @@ export class UserRepository extends DefaultCrudRepository<
     @repository.getter('UserCredentialsRepository')
     protected userCredentialsRepositoryGetter: Getter<
       UserCredentialsRepository
-    >,
+    >, @repository.getter('ChallengeProgressRepository') protected challengeProgressRepositoryGetter: Getter<ChallengeProgressRepository>,
   ) {
     super(User, dataSource);
+    this.challengeProgresses = this.createHasManyRepositoryFactoryFor('challengeProgresses', challengeProgressRepositoryGetter,);
+    this.registerInclusionResolver('challengeProgresses', this.challengeProgresses.inclusionResolver);
     this.profiles = this.createHasManyRepositoryFactoryFor(
       'profiles',
       profilesGetter,

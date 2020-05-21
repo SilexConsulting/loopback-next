@@ -6,6 +6,7 @@
 import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
 import {UserCredentials} from './user-credentials.model';
 import {UserIdentity} from './user-identity.model';
+import {ChallengeProgress} from './challenge-progress.model';
 
 @model({
   settings: {
@@ -119,6 +120,9 @@ export class User extends Entity {
     default: ['user'],
   })
   roles?: string[];
+
+  @hasMany(() => ChallengeProgress)
+  challengeProgresses: ChallengeProgress[];
 
   constructor(data?: Partial<User>) {
     super(data);
