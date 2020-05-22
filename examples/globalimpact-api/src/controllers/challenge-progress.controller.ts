@@ -1,28 +1,18 @@
-import {
-  Count,
-  CountSchema,
-  Filter,
-  FilterExcludingWhere,
-  repository,
-  Where,
-} from '@loopback/repository';
-import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
-  put,
-  del,
-  requestBody,
-} from '@loopback/rest';
-import {ChallengeProgress} from '../models';
-import {ChallengeProgressRepository} from '../repositories';
+import {Count, CountSchema, Filter, FilterExcludingWhere, repository, Where} from '@loopback/repository';
+import {del, get, getModelSchemaRef, param, patch, post, put, requestBody} from '@loopback/rest';
+import {ChallengeLevel, ChallengeProgress} from '../models';
+import {ChallengeLevelRepository, ChallengeProgressRepository, ChallengeRepository, TaskRepository} from '../repositories';
 
 export class ChallengeProgressController {
   constructor(
     @repository(ChallengeProgressRepository)
-    public challengeProgressRepository : ChallengeProgressRepository,
+    public challengeProgressRepository: ChallengeProgressRepository,
+    @repository(ChallengeRepository)
+    public challengeRepository: ChallengeProgressRepository,
+    @repository(ChallengeLevelRepository)
+    public challengeLevelRepository: ChallengeLevelRepository,
+    @repository(TaskRepository)
+    public taskRepository: ChallengeLevelRepository,
   ) {}
 
   @post('/challenge-progresses', {
@@ -46,6 +36,11 @@ export class ChallengeProgressController {
     })
     challengeProgress: Omit<ChallengeProgress, 'id'>,
   ): Promise<ChallengeProgress> {
+    const existingFilter: Filter = {
+      where: {
+        ...challengeProgress
+      }
+    };
     return this.challengeProgressRepository.create(challengeProgress);
   }
 
@@ -143,7 +138,72 @@ export class ChallengeProgressController {
     })
     challengeProgress: ChallengeProgress,
   ): Promise<void> {
+    console.log(challengeProgress);
     await this.challengeProgressRepository.updateById(id, challengeProgress);
+  }
+
+  @patch('/challenge-progresses/{id}/advance', {
+    responses: {
+      '204': {
+        description: 'ChallengeProgress PATCH success',
+      },
+    },
+  })
+  async advance(
+    @param.path.number('id') id: number,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(ChallengeProgress, {partial: true}),
+        },
+      },
+    })
+    challengeProgress: ChallengeProgress,
+  ): Promise<void> {
+    //Get challenge progress
+    let progress: ChallengeProgress = await this.challengeProgressRepository.findById(id);
+
+    //Get challenge levels
+    let currentLevelIndex: number = (progress as any).currentLevel;
+    const challengeLevelFilter: Filter = {
+      where: {
+        challengeId: progress.challengeId
+      }
+    };
+    let challengeLevels = await this.challengeLevelRepository.find(challengeLevelFilter);
+
+    //Get current level object
+    let currentLevel: ChallengeLevel = challengeLevels[currentLevelIndex];
+
+    //Get current level tasks
+    let currentLevelId: number = (currentLevel as any).id;
+    const taskFilter: Filter = {
+      where: {
+        challengeLevelId: currentLevel.id
+      }
+    };
+    let currentTasks = await this.taskRepository.find(taskFilter);
+
+    //Increment completed tasks
+    (progress as any).completedTasks++;
+
+    // if final task in current level
+    if ((progress as any).completedTasks > currentTasks.length) {
+
+      // if final level
+      if (progress.currentLevel === challengeLevels.length) {
+        // complete challenge
+      } else {
+        //increment level
+        //reset task count
+        (progress as any).currentLevel++;
+        (progress as any).completedTasks = 0;
+      }
+    }
+
+    await this.challengeProgressRepository.updateById(id, {
+      ...progress
+    });
   }
 
   @put('/challenge-progresses/{id}', {

@@ -1,4 +1,5 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {Challenge} from './challenge.model';
 import {User} from './user.model';
 
 @model()
@@ -12,17 +13,27 @@ export class ChallengeProgress extends Entity {
 
   @property({
     type: 'number',
+    default: 0,
   })
   currentLevel?: number;
 
   @property({
-    type: 'array',
-    itemType: 'number',
+    type: 'number',
+    default: 0,
   })
-  completedTasks?: number[];
+  completedTasks?: number;
+
+  @property({
+    type: 'boolean',
+    default: false,
+  })
+  completed?: boolean;
 
   @belongsTo(() => User)
   userId: number;
+
+  @belongsTo(() => Challenge)
+  challengeId: number;
 
   constructor(data?: Partial<ChallengeProgress>) {
     super(data);
