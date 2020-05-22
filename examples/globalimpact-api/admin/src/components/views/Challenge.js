@@ -51,6 +51,8 @@ const Challenge = ({ challenge, match, dispatch }) => {
     shortDescription: '',
     description: '',
     badge: '',
+    badgeAlt: '',
+    badgeCopyright: '',
     badgeFiles: [],
     sdgGoals: [],
   });
@@ -64,6 +66,8 @@ const Challenge = ({ challenge, match, dispatch }) => {
       description: payload.description,
       sdgGoals: payload.sdgGoals,
       badge: payload.badge,
+      badgeAlt: payload.badgeAlt,
+      badgeCopyright: payload.badgeCopyright
     })
   }
 
@@ -341,6 +345,28 @@ const Challenge = ({ challenge, match, dispatch }) => {
                     </Typography>
                   </label>
                 </Box>
+                <TextField
+                  label="Badge Alt Text"
+                  margin="dense"
+                  name="badgeAlt"
+                  multiline={true}
+                  rows={2}
+                  type="text"
+                  value={state.badgeAlt}
+                  onChange={handleInputChange}
+                  fullWidth
+                />
+                <TextField
+                  label="Badge Copyright Notice"
+                  margin="dense"
+                  name="badgeCopyright"
+                  multiline={true}
+                  rows={2}
+                  type="text"
+                  value={state.badgeCopyright}
+                  onChange={handleInputChange}
+                  fullWidth
+                />
                 <Grid container>
                   {renderGoals()}
                 </Grid>
