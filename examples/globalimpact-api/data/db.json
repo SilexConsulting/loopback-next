@@ -1,62 +1,20 @@
 {
   "ids": {
-    "ChallengeLevel": 9,
-    "Challenge": 4,
-    "Task": 9,
-    "UserCredentials": 25,
-    "UserIdentity": 108339447509596,
-    "User": 29
+    "ChallengeLevel": 1,
+    "ChallengeProgress": 1,
+    "Challenge": 1,
+    "Task": 1,
+    "UserCredentials": 1,
+    "UserIdentity": 1,
+    "User": 1
   },
   "models": {
-    "ChallengeLevel": {
-      "2": "{\"name\":\"Intermediate\",\"description\":\"Wow!\",\"challengeId\":0,\"id\":2}",
-      "5": "{\"name\":\"Beginner\",\"description\":\"Test level\",\"challengeId\":1,\"id\":5}",
-      "7": "{\"name\":\"Beginner\",\"description\":\"Prepare a vegetarian meal for your family\",\"challengeId\":3,\"id\":7}"
-    },
-    "Challenge": {
-      "1": "{\"name\":\"Impact Citizen\",\"shortDescription\":\"Cras ultricies ligula sed magna dictum porta. Curabitur aliquet quam id dui posuere blandit.\",\"description\":\"Sed porttitor lectus nibh. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Cras ultricies ligula sed magna dictum porta. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin eget tortor risus. Pellentesque in ipsum id orci porta dapibus. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a.\",\"sdgGoals\":[5,11,6],\"archived\":false,\"badge\":\"badge_ImpactCitizen.png\",\"id\":1}",
-      "2": "{\"name\":\"New Challenge\",\"shortDescription\":\"Test\",\"description\":\"test\",\"sdgGoals\":[1,2,6],\"archived\":true,\"badge\":\"badge_NewChallenge.png\",\"id\":2}",
-      "3": "{\"name\":\"Vegetarian Meal Week\",\"shortDescription\":\"Quisque velit nisi, pretium ut lacinia in, elementum id enim. Quisque velit nisi, pretium ut lacinia in, elementum id enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras ultricies ligula sed magna dictum porta. Sed porttitor lectus nibh. Nulla quis lorem ut libero malesuada feugiat.\",\"description\":\"Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Cras ultricies ligula sed magna dictum porta. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Sed porttitor lectus nibh. Proin eget tortor risus. Donec sollicitudin molestie malesuada. Mauris blandit aliquet elit, eget tincidunt nibh pulvinar a. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Sed porttitor lectus nibh. Curabitur aliquet quam id dui posuere blandit. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui. Quisque velit nisi, pretium ut lacinia in, elementum id enim.\",\"sdgGoals\":[1,5,12],\"archived\":false,\"badge\":\"badge_VegetarianMealWeek.png\",\"id\":3}"
-    },
-    "Task": {
-      "6": "{\"description\":\"Upload a photo\",\"challengeLevelId\":5,\"id\":6}",
-      "7": "{\"description\":\"Prepare a meal on a Sunday\",\"archived\":false,\"challengeLevelId\":7,\"id\":7}",
-      "8": "{\"description\":\"Prepare a vegan meal!\",\"archived\":false,\"challengeLevelId\":8,\"id\":8}"
-    },
-    "UserCredentials": {
-      "1": "{\"password\":\"$2a$10$6hqeXbADuZzv2mPmXkwud.Uj9ibTS70WgFpzJHDX9mmUQiUzpWQp2\",\"userId\":\"1\",\"id\":\"1\"}",
-      "2": "{\"password\":\"$2a$10$wc353wAJPvhxiVsFtU93Rupr042RrJMDCXagVt7dN.xDjPMhQ18Nm\",\"userId\":\"2\",\"id\":\"2\"}",
-      "3": "{\"password\":\"$2a$10$UG7x79bcocUckQDkeGosqO31JDB.fsnxU8RXyySQZ.HqU7vej4LhS\",\"userId\":\"3\",\"id\":\"3\"}",
-      "4": "{\"password\":\"$2a$10$PkngRFCgJsjunrBV7HDHgOha1KKg4QOtEotf4r3yFDY05qCwy3TyC\",\"userId\":\"4\",\"id\":\"4\"}",
-      "5": "{\"password\":\"$2a$10$z3eokiuolhPrLMV12a/Ene/EZjRDyuI6Br/oyoqlwgX6JnqUk0HM6\",\"userId\":\"5\",\"id\":\"5\"}",
-      "6": "{\"password\":\"$2a$10$138KVOKfajAGTacqidi4N.k9RtKzWX66GappwfqUhXcqGVHgX3psS\",\"userId\":\"6\",\"id\":\"6\"}",
-      "7": "{\"password\":\"$2a$10$TZrudTCyRExBnfgwzjpQE.FZ.igwVJkGYUNMoHPThgbFxYaET61b2\",\"userId\":\"7\",\"id\":\"7\"}",
-      "8": "{\"password\":\"$2a$10$n220L3euVzq.lQOTd0NnX.CONPoX3R6BP030mQiCNNva1ieYekyDO\",\"userId\":\"8\",\"id\":\"8\"}",
-      "9": "{\"password\":\"$2a$10$MZiSszYrrERxUExRTyRPweS/NQRfvp4qa/ED8zzXEZRTU9JQAZSCC\",\"userId\":\"9\",\"id\":\"9\"}",
-      "10": "{\"password\":\"$2a$10$1xPiAa7tAVR2GBJUhIlHx.Lw62C.QN7QGO1v46K4l4zkppqdgRQQq\",\"userId\":\"11\",\"id\":\"10\"}",
-      "11": "{\"password\":\"$2a$10$LGX8luwaFTCOg8O3IcSr3ul6JswnR2on1q3dkczoO/uRo3euKcKw2\",\"userId\":\"12\",\"id\":\"11\"}",
-      "12": "{\"password\":\"$2a$10$BaSq8BycelAlgfHUnIlwau.4M9PLBA/mYJ8ePLA2i2SADw.ynHarW\",\"userId\":\"13\",\"id\":\"12\"}",
-      "13": "{\"password\":\"$2a$10$kb6Hatw.1m5m0pUrWZRFIeOuut7uXrR9D1EUZArjx87iiWnSl9wZu\",\"userId\":\"15\",\"id\":\"13\"}",
-      "14": "{\"password\":\"$2a$10$.u1w/rAs86ui2fA2As7wdecayew5YgnBuUDFoHDIG.oqfotav18.S\",\"userId\":\"16\",\"id\":\"14\"}",
-      "15": "{\"password\":\"$2a$10$fdroO7T/7zzBXbrzFgJ3u.P3yGBMy9AR4grL.RUfTcLZ5vF6K9suS\",\"userId\":\"17\",\"id\":\"15\"}",
-      "16": "{\"password\":\"$2a$10$Y9ZbWmFfHIQZsK0DwbEBgewn0VFFR1tLnTqbV5AScv.Tb08VJzwNm\",\"userId\":\"18\",\"id\":\"16\"}",
-      "17": "{\"password\":\"$2a$10$wVJGl9i/uTvfs/ygL1/9MuhGXp1lxQY4x2CJUQ8hzk6rVbyUKhMje\",\"userId\":\"19\",\"id\":\"17\"}",
-      "18": "{\"password\":\"$2a$10$0jN8idJiB2M1nU7HK53xqeXuTSLKXz3dXk4v67Nmx.XFyb9yx8csO\",\"userId\":\"20\",\"id\":\"18\"}",
-      "19": "{\"password\":\"$2a$10$3ZSg9I9EZ13TNLndUN53Segc2iA/XPGlRnN4ihSXhMUywLycPw1bm\",\"userId\":\"21\",\"id\":\"19\"}",
-      "20": "{\"password\":\"$2a$10$Y.b1LrJHwXuacBXQUlLLYuVzGe.Kv.Hq9iDyA0Zg4wM.yUt/37L02\",\"userId\":\"22\",\"id\":\"20\"}",
-      "21": "{\"password\":\"$2a$10$/MHy8B7ASNmtGPZniKXkLOawFU.B/4fwfg3MZV5pltiauzI6F33iq\",\"userId\":\"23\",\"id\":\"21\"}",
-      "22": "{\"password\":\"$2a$10$1M.cbr8xaqMC7Danq3JrdOCgXdpBgiR.99iNUcQURTgx6HABe4dQO\",\"userId\":\"25\",\"id\":\"22\"}",
-      "23": "{\"password\":\"$2a$10$CblF8Uf3AGdKoskZ6u/ag.m/lbfZJMAEVipBkH3oR9jKMRTOmYRju\",\"userId\":\"26\",\"id\":\"23\"}",
-      "24": "{\"password\":\"$2a$10$OT3dRZ7tKSJYMQXqttapROqehSic..LOhbzeMqcTZFih3gCX4GpSa\",\"userId\":\"27\",\"id\":\"24\"}"
-    },
-    "UserIdentity": {
-      "108339447509595": "{\"id\":\"108339447509595\",\"provider\":\"facebook\",\"profile\":{\"userId\":\"28\",\"emails\":[{\"value\":\"j.hyde@silex-consulting.com\"}]},\"authScheme\":\"facebook\",\"created\":\"2020-05-21T12:31:42.905Z\",\"userId\":10}"
-    },
-    "User": {
-      "25": "{\"email\":\"admin@example.com\",\"name\":\"Administrator\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"admin\"],\"id\":25}",
-      "26": "{\"email\":\"john@example.com\",\"name\":\"John Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":26}",
-      "27": "{\"email\":\"jane@example.com\",\"name\":\"Jane Doe\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":27}",
-      "28": "{\"email\":\"j.hyde@silex-consulting.com\",\"name\":\"Joe Redmore\",\"profilePicture\":\"\",\"bio\":\"\",\"hashtags\":[],\"sdgGoals\":{\"1\":false,\"2\":false,\"3\":false,\"4\":false,\"5\":false,\"6\":false,\"7\":false,\"8\":false,\"9\":false,\"10\":false,\"11\":false,\"12\":false,\"13\":false,\"14\":false,\"15\":false,\"16\":false,\"17\":false},\"roles\":[\"user\"],\"id\":28}"
-    }
+    "ChallengeLevel": {},
+    "ChallengeProgress": {},
+    "Challenge": {},
+    "Task": {},
+    "UserCredentials": {},
+    "UserIdentity": {},
+    "User": {}
   }
 }
