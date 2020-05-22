@@ -8,3 +8,4 @@ export * from './user-credentials.repository';
 export * from './challenge.repository';
 export * from './challenge-level.repository';
 export * from './task.repository';
+export * from './challenge-progress.repository';

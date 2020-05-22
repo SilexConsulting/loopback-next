@@ -12,3 +12,7 @@ export * from './challenge-challenge-level.controller';
 export * from './task.controller';
 export * from './challenge-level-task.controller';
 export * from './challenge-level.controller';
+export * from './challenge-progress-user.controller';
+export * from './user-challenge-progress.controller';
+export * from './challenge-progress.controller';
+export * from './challenge-progress-challenge.controller';
