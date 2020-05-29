@@ -1,4 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {ChallengeLevel} from './challenge-level.model';
 
 @model()
@@ -27,6 +27,12 @@ export class Challenge extends Entity {
     required: true,
   })
   description: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
+  hashtag: string;
 
   @property({
     type: 'array',
