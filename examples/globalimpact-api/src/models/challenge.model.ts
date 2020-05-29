@@ -29,6 +29,12 @@ export class Challenge extends Entity {
   description: string;
 
   @property({
+    type: 'string',
+    required: true,
+  })
+  hashtag: string;
+
+  @property({
     type: 'array',
     itemType: 'number',
     default: [],
