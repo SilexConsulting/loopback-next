@@ -3,10 +3,10 @@
 // This file is licensed under the MIT License.
 // License text available at https://opensource.org/licenses/MIT
 
-import {Entity, model, property, hasMany, hasOne} from '@loopback/repository';
+import {Entity, hasMany, hasOne, model, property} from '@loopback/repository';
+import {ChallengeProgress} from './challenge-progress.model';
 import {UserCredentials} from './user-credentials.model';
 import {UserIdentity} from './user-identity.model';
-import {ChallengeProgress} from './challenge-progress.model';
 
 @model({
   settings: {
@@ -71,6 +71,12 @@ export class User extends Entity {
     type: 'boolean',
   })
   emailVerified?: boolean;
+
+  @property({
+    type: 'boolean',
+    default: false,
+  })
+  isCitizen?: boolean;
 
   @property({
     type: 'array',

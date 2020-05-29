@@ -1,20 +1,68 @@
 {
   "ids": {
-    "ChallengeLevel": 1,
-    "ChallengeProgress": 1,
-    "Challenge": 1,
-    "Task": 1,
+    "ChallengeLevel": 7,
+    "ChallengeProgress": 36,
+    "Challenge": 3,
+    "Task": 16,
     "UserCredentials": 1,
-    "UserIdentity": 1,
-    "User": 1
+    "UserIdentity": 108339447509596,
+    "User": 23
   },
   "models": {
-    "ChallengeLevel": {},
-    "ChallengeProgress": {},
-    "Challenge": {},
-    "Task": {},
+    "ChallengeLevel": {
+      "1": "{\"name\":\"Getting Started...\",\"description\":\"Praesent ac imperdiet urna. Cras porta ullamcorper lectus eu convallis. Cras facilisis tempor erat, sed porttitor justo eleifend eget. Suspendisse sagittis fringilla nulla quis consectetur. Vivamus viverra viverra est. Ut convallis lacus vitae nulla lacinia dapibus. Duis dictum finibus nisi, sed maximus purus feugiat bibendum.\",\"challengeId\":1,\"id\":1}",
+      "2": "{\"name\":\"Intermediate\",\"description\":\"Vivamus nec ipsum massa. Quisque neque lacus, vestibulum a nulla vitae, eleifend laoreet turpis. Interdum et malesuada fames ac ante ipsum primis in faucibus. Nam quis nulla vel mauris sollicitudin finibus. In volutpat odio a massa aliquam vestibulum. Sed luctus ex consequat laoreet blandit.\",\"challengeId\":1,\"id\":2}",
+      "3": "{\"name\":\"Advanced\",\"description\":\"In hac habitasse platea dictumst. Maecenas in gravida elit. Integer pharetra vestibulum interdum. Praesent ornare ligula eu est mollis accumsan. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nulla pretium eros ac justo pretium, non consequat elit lacinia. \",\"challengeId\":1,\"id\":3}",
+      "4": "{\"name\":\"Beginner\",\"description\":\"Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce vitae nulla viverra, maximus magna eu, fringilla quam. Ut odio elit, viverra non faucibus nec, molestie a ligula. Cras fringilla fermentum blandit. In ultricies, risus hendrerit lobortis tempus\",\"challengeId\":2,\"id\":4}",
+      "5": "{\"name\":\"Intermediate\",\"description\":\"Vestibulum eros sem, blandit ut accumsan ut, semper at ligula. Mauris at ex pellentesque, sollicitudin tellus mattis, suscipit sapien. Vivamus eros eros, mattis finibus sem ut, pulvinar porta libero. Fusce eget mauris enim. Duis in tellus a urna venenatis pulvinar sed quis velit.\",\"challengeId\":2,\"id\":5}",
+      "6": "{\"name\":\"Advanced\",\"description\":\"Vivamus in tellus non augue malesuada ultrices ac non velit. Cras gravida nisl at nunc sagittis, non tempor leo pulvinar. In elementum nulla urna, quis hendrerit quam aliquam eu. Donec dictum mauris a risus mollis egestas. Maecenas malesuada convallis augue, eu semper mauris laoreet sit amet.\",\"challengeId\":2,\"id\":6}"
+    },
+    "ChallengeProgress": {
+      "17": "{\"currentLevel\":1,\"completedTasks\":1,\"completed\":false,\"userId\":11,\"challengeId\":1,\"id\":17}",
+      "18": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":11,\"challengeId\":2,\"id\":18}",
+      "19": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":13,\"challengeId\":1,\"id\":19}",
+      "20": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":13,\"challengeId\":2,\"id\":20}",
+      "21": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":14,\"challengeId\":1,\"id\":21}",
+      "22": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":14,\"challengeId\":2,\"id\":22}",
+      "23": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":15,\"challengeId\":1,\"id\":23}",
+      "24": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":15,\"challengeId\":2,\"id\":24}",
+      "25": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":16,\"challengeId\":1,\"id\":25}",
+      "26": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":16,\"challengeId\":2,\"id\":26}",
+      "27": "{\"currentLevel\":2,\"completedTasks\":3,\"completed\":false,\"userId\":17,\"challengeId\":1,\"id\":27}",
+      "28": "{\"currentLevel\":2,\"completedTasks\":3,\"completed\":false,\"userId\":18,\"challengeId\":1,\"id\":28}",
+      "29": "{\"currentLevel\":2,\"completedTasks\":2,\"completed\":false,\"userId\":18,\"challengeId\":2,\"id\":29}",
+      "30": "{\"currentLevel\":1,\"completedTasks\":0,\"completed\":false,\"userId\":20,\"challengeId\":1,\"id\":30}",
+      "31": "{\"currentLevel\":0,\"completedTasks\":1,\"completed\":false,\"userId\":20,\"challengeId\":2,\"id\":31}",
+      "32": "{\"currentLevel\":2,\"completedTasks\":2,\"completed\":false,\"userId\":21,\"challengeId\":1,\"id\":32}",
+      "33": "{\"currentLevel\":1,\"completedTasks\":0,\"completed\":false,\"userId\":21,\"challengeId\":2,\"id\":33}",
+      "34": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":22,\"challengeId\":1,\"id\":34}",
+      "35": "{\"currentLevel\":0,\"completedTasks\":0,\"completed\":false,\"userId\":22,\"challengeId\":2,\"id\":35}"
+    },
+    "Challenge": {
+      "1": "{\"name\":\"Tree Planter\",\"shortDescription\":\"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque et porta libero, et mollis orci. Donec ullamcorper suscipit placerat. Morbi molestie lorem id enim ullamcorper, quis efficitur nisl faucibus. Morbi a suscipit justo. Aliquam a ornare enim. Etiam pellentesque vestibulum dui. Aliquam ultrices urna vel libero dapibus faucibus.\",\"description\":\"Fusce quis nibh lobortis, dignissim felis eu, placerat lorem. Duis sapien nulla, interdum vitae augue eu, sodales accumsan ante. Mauris bibendum ornare placerat. Nulla congue ipsum quis arcu iaculis, vel euismod erat aliquam. Maecenas at ullamcorper tortor. Sed fermentum tellus sapien. \",\"sdgGoals\":[13],\"archived\":false,\"badge\":\"badge_TreePlanter.png\",\"id\":1,\"badgeCopyright\":\"Copyright Global Impact 2020. All rights reserved.\",\"badgeAlt\":\"Tree Planter Global Impact Badge\"}",
+      "2": "{\"name\":\"Beach Cleanup\",\"shortDescription\":\"Fusce quis nibh lobortis, dignissim felis eu, placerat lorem. Duis sapien nulla, interdum vitae augue eu, sodales accumsan ante. Mauris bibendum ornare placerat. Nulla congue ipsum quis arcu iaculis, vel euismod erat aliquam. Maecenas at ullamcorper tortor. Sed fermentum tellus sapien. \",\"description\":\"Sed nec massa at purus fringilla rutrum et ut nunc. In interdum purus libero, vitae sollicitudin velit mattis at. Morbi at dictum velit. Donec dictum ligula sed metus dapibus lacinia. Donec lobortis ac mi ut accumsan. Nunc ut mauris a elit consectetur consequat consequat nec urna.\",\"sdgGoals\":[14],\"archived\":false,\"badge\":\"badge_BeachCleanup.png\",\"id\":2,\"badgeAlt\":\"Beach Cleanup Global Impact Badge\",\"badgeCopyright\":\"Copyright Global Impact 2020. All rights reserved.\"}"
+    },
+    "Task": {
+      "1": "{\"description\":\"Plant 1 Tree\",\"archived\":false,\"challengeLevelId\":1,\"id\":1}",
+      "2": "{\"description\":\"Plant 5 Trees\",\"archived\":false,\"challengeLevelId\":1,\"id\":2}",
+      "3": "{\"description\":\"Plant 10 Trees\",\"archived\":false,\"challengeLevelId\":1,\"id\":3}",
+      "4": "{\"description\":\"Plant 15 Trees\",\"archived\":false,\"challengeLevelId\":2,\"id\":4}",
+      "5": "{\"description\":\"Plant 30 Trees\",\"archived\":false,\"challengeLevelId\":2,\"id\":5}",
+      "6": "{\"description\":\"Plant 50 Trees\",\"archived\":false,\"challengeLevelId\":2,\"id\":6}",
+      "7": "{\"description\":\"Plant 100 Trees\",\"archived\":false,\"challengeLevelId\":3,\"id\":7}",
+      "8": "{\"description\":\"Plant 500 Trees\",\"archived\":false,\"challengeLevelId\":3,\"id\":8}",
+      "9": "{\"description\":\"Plant 1000 Trees\",\"archived\":false,\"challengeLevelId\":3,\"id\":9}",
+      "10": "{\"description\":\"Cleanup 1 Beach\",\"archived\":false,\"challengeLevelId\":4,\"id\":10}",
+      "11": "{\"description\":\"Cleanup 2 Beaches\",\"archived\":false,\"challengeLevelId\":4,\"id\":11}",
+      "12": "{\"description\":\"Cleanup 3 Beaches\",\"archived\":false,\"challengeLevelId\":5,\"id\":12}",
+      "13": "{\"description\":\"Cleanup 4 Beaches\",\"archived\":false,\"challengeLevelId\":5,\"id\":13}",
+      "14": "{\"description\":\"Cleanup 5 Beaches\",\"archived\":false,\"challengeLevelId\":6,\"id\":14}",
+      "15": "{\"description\":\"Cleanup 6 Beaches\",\"archived\":false,\"challengeLevelId\":6,\"id\":15}"
+    },
     "UserCredentials": {},
-    "UserIdentity": {},
+    "UserIdentity": {
+      "108339447509595": "{\"id\":\"108339447509595\",\"provider\":\"facebook\",\"profile\":{\"userId\":\"22\",\"emails\":[{\"value\":\"j.hyde@silex-consulting.com\"}]},\"authScheme\":\"facebook\",\"created\":\"2020-05-28T14:41:06.084Z\",\"userId\":1}"
+    },
     "User": {}
   }
 }
