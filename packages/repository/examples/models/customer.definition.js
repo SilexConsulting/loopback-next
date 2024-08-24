@@ -23,5 +23,8 @@ module.exports = {
     address: {
       type: Address,
     },
+    scope: {
+      include: ['order'],
+    },
   },
 };
