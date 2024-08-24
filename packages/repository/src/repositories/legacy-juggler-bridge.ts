@@ -26,6 +26,7 @@ import {EntityNotFoundError, InvalidBodyError} from '../errors';
 import {
   Entity,
   Model,
+  ModelDefinition,
   PropertyType,
   rejectNavigationalPropertiesInData,
 } from '../model';
@@ -133,6 +134,7 @@ export class DefaultCrudRepository<
     public entityClass: typeof Entity & {prototype: T},
     public dataSource: juggler.DataSource,
   ) {
+    entityClass.definition = this.normalizeDefinition(entityClass.definition);
     const definition = entityClass.definition;
     assert(
       !!definition,
@@ -144,6 +146,18 @@ export class DefaultCrudRepository<
     );
 
     this.modelClass = this.ensurePersistedModel(entityClass);
+  }
+
+  private normalizeDefinition(definition: ModelDefinition) {
+    const scope = definition?.settings?.scope as Filter;
+    if (scope?.include) {
+      definition.settings.scope = {
+        ...scope,
+        include: undefined,
+        defaultInclude: scope.include,
+      };
+    }
+    return definition;
   }
 
   // Create an internal legacy Model attached to the datasource
@@ -519,11 +533,14 @@ export class DefaultCrudRepository<
     options?: Options,
   ): Promise<(T & Relations)[]> {
     const include = filter?.include;
+    const defaultInclude =
+      this.modelClass.definition.settings?.scope?.defaultInclude;
+    const allIncludes = this.getAllIncludes(defaultInclude, include);
     const models = await ensurePromise(
       this.modelClass.find(this.normalizeFilter(filter), options),
     );
     const entities = this.toEntities(models);
-    return this.includeRelatedModels(entities, include, options);
+    return this.includeRelatedModels(entities, allIncludes, options);
   }
 
   async findOne(
@@ -536,9 +553,12 @@ export class DefaultCrudRepository<
     if (!model) return null;
     const entity = this.toEntity(model);
     const include = filter?.include;
+    const defaultInclude =
+      this.modelClass.definition.settings?.scope?.defaultInclude;
+    const allIncludes = this.getAllIncludes(defaultInclude, include);
     const resolved = await this.includeRelatedModels(
       [entity],
-      include,
+      allIncludes,
       options,
     );
     return resolved[0];
@@ -550,6 +570,9 @@ export class DefaultCrudRepository<
     options?: Options,
   ): Promise<T & Relations> {
     const include = filter?.include;
+    const defaultInclude =
+      this.modelClass.definition.settings?.scope?.defaultInclude;
+    const allIncludes = this.getAllIncludes(defaultInclude, include);
     const model = await ensurePromise(
       this.modelClass.findById(id, this.normalizeFilter(filter), options),
     );
@@ -559,7 +582,7 @@ export class DefaultCrudRepository<
     const entity = this.toEntity(model);
     const resolved = await this.includeRelatedModels(
       [entity],
-      include,
+      allIncludes,
       options,
     );
     return resolved[0];
@@ -827,6 +850,21 @@ export class DefaultCrudRepository<
   protected normalizeFilter(filter?: Filter<T>): legacy.Filter | undefined {
     if (!filter) return undefined;
     return {...filter, include: undefined} as legacy.Filter;
+  }
+
+  /**
+   * Returns model level default  "include" filter appended to query specific include filter
+   *
+   * @param filter - Query filter
+   */
+  private getAllIncludes(
+    defaultInclude: InclusionFilter[],
+    include: InclusionFilter[] | undefined,
+  ) {
+    const allIncludes = [];
+    if (Array.isArray(defaultInclude)) allIncludes.push(...defaultInclude);
+    if (Array.isArray(include)) allIncludes.push(...include);
+    return [...new Set(allIncludes)];
   }
 }
 
